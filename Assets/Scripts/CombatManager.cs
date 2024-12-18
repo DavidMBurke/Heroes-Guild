@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,71 +6,138 @@ public class CombatManager : MonoBehaviour
     Being[] beings;
     public Button nextTurnButton;
     public Button moveButton;
-    int beingsTurnIndex = 0;
+    public Button endMoveButton;
+    public Button undoMoveButton;
+    public Button attackButton;
+    int turnIndex = 0;
 
     void Start()
+    {
+        InitializeBeings();
+        AddButtonListeners();
+        StartTurn();
+    }
+
+    private void Update()
+    {
+        SetButtonsActiveState();
+    }
+
+    private void InitializeBeings()
     {
         beings = FindObjectsOfType<Being>();
         foreach (Being being in beings)
         {
             being.isTurn = false;
         }
-        beings[beingsTurnIndex].isTurn = true;
-
-        nextTurnButton.onClick.AddListener(NextTurn);
-        moveButton.onClick.AddListener(Move);
-    }
-
-    private void Update()
-    {
-        if (beings[beingsTurnIndex] is PlayerCharacter player)
-        {
-            if (!player.hasMovement)
-            {
-                moveButton.gameObject.SetActive(false);
-            }
-        }
     }
 
     public void NextTurn()
     {
-        if (beings[beingsTurnIndex] is PlayerCharacter lastPlayer)
+        EndTurn();
+        turnIndex++;
+        if (turnIndex >= beings.Length)
         {
-            lastPlayer.EndTurn();
+            turnIndex = 0;
         }
-        if (beings[beingsTurnIndex] is Enemy lastEnemy)
+        StartTurn();
+    }
+
+    private void EndTurn()
+    {
+        if (beings[turnIndex] is PlayerCharacter player)
         {
-            lastEnemy.EndTurn();
+            player.EndTurn();
         }
-        beingsTurnIndex++;
-        if (beingsTurnIndex >= beings.Length)
+        if (beings[turnIndex] is Enemy enemy)
         {
-            beingsTurnIndex = 0;
+            enemy.EndTurn();
         }
-        if (beings[beingsTurnIndex] is PlayerCharacter player)
+    }
+
+    private void StartTurn()
+    {
+        if (beings[turnIndex] is PlayerCharacter player)
         {
-            SetButtonsActive(true);
             player.StartTurn();
         }
-        if (beings[beingsTurnIndex] is Enemy enemy)
+        if (beings[turnIndex] is Enemy enemy)
         {
-            SetButtonsActive(false);
             enemy.StartTurn(this);
         }
     }
 
-    private void SetButtonsActive(bool x)
+    public void Attack()
     {
-        nextTurnButton.gameObject.SetActive(x);
-        moveButton.gameObject.SetActive(x);
+        if (beings[turnIndex] is PlayerCharacter player)
+        {
+            player.StartCombatAction();
+        }
     }
+
 
     public void Move()
     {
-        if (beings[beingsTurnIndex] is PlayerCharacter player)
+        if (beings[turnIndex] is PlayerCharacter player)
         {
             player.StartMovementAction();
         }
-
     }
+
+    public void UndoMove()
+    {
+        if (beings[turnIndex] is PlayerCharacter player)
+        {
+            player.UndoMove();
+        }
+    }
+
+    public void EndMove()
+    {
+        if (beings[turnIndex] is PlayerCharacter player)
+        {
+            player.EndMovementAction();
+        }
+    }
+    private void SetButtonsActiveState()
+    {
+        SetButtonsActiveState(); // Reset 
+        if (beings[turnIndex] is PlayerCharacter player)
+        {
+            if (!player.isInMovementAction)
+            {
+                SetButtonsActiveState(nextTurn: true, move: true, attack: true);
+            }
+            if (player.isInMovementAction)
+            {
+                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, attack: true);
+            }
+            if (!player.hasMovement)
+            {
+                moveButton.gameObject.SetActive(false);
+            }
+            if (player.actionPoints == 0)
+            {
+                attackButton.gameObject.SetActive(false);
+            }
+        }
+        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool attack = false)
+        {
+            nextTurnButton.gameObject.SetActive(nextTurn);
+            moveButton.gameObject.SetActive(move);
+            endMoveButton.gameObject.SetActive(endMove);
+            undoMoveButton.gameObject.SetActive(undoMove);
+            attackButton.gameObject.SetActive(attack);
+        }
+    }
+    private void AddButtonListeners()
+    {
+        nextTurnButton.onClick.AddListener(NextTurn);
+        moveButton.onClick.AddListener(Move);
+        attackButton.onClick.AddListener(Attack);
+        undoMoveButton.onClick.AddListener(UndoMove);
+        endMoveButton.onClick.AddListener(EndMove);
+    }
+
+
 }

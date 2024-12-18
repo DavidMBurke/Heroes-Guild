@@ -8,24 +8,36 @@ public class Being : MonoBehaviour
     public float maxMoveDistance = 5f;
     public bool isTurn = false;
     public LayerMask groundLayer;
+    public LayerMask attackableLayer;
     public float moveSpeed = 5f;
     protected Vector3 targetPosition;
     protected bool isMoving = false;
     public GameObject turnIndicator;
     public GameObject rangeIndicator;
-    public Color rangeIndicatorColor = Color.gray;
+    public Color rangeIndicatorColor;
+    public Color rangeIndicatorCombatColor = Color.red;
+    public Color rangeIndicatorMovementColor = Color.gray;
     public Color characterColor;
     public Color turnIndicatorColor = new Color(.2f, 1f, .2f, .1f);
     public GameObject model;
     public float remainingMovement = 0;
     public bool isInMovementAction = false;
     public Vector3 startingPosition;
+    public int health = 100;
+    public bool isInCombatAction = false;
+    public float attackRange = 1.5f;
 
 
     // Start is called before the first frame update
     protected void Start()
     {
         targetPosition = transform.position;
+        ApplyColors();
+    }
+
+    protected void Update()
+    {
+        turnIndicator.SetActive(isTurn);
         ApplyColors();
     }
 
@@ -53,12 +65,6 @@ public class Being : MonoBehaviour
             rangeIndicatorRenderer.sharedMaterial.color = rangeIndicatorColor;
         }
 
-    }
-
-    // Update is called once per frame
-    protected void Update()
-    {
-        turnIndicator.SetActive(isTurn);
     }
 
     protected void FixedUpdate()
