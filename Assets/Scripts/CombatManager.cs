@@ -1,15 +1,19 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CombatManager : MonoBehaviour
 {
     Being[] beings;
+    public Button rangedAttackButton;
     public Button nextTurnButton;
     public Button moveButton;
     public Button endMoveButton;
     public Button undoMoveButton;
-    public Button attackButton;
+    public Button meleeAttackButton;
     int turnIndex = 0;
+
+    public CameraController cameraController;
 
     void Start()
     {
@@ -57,6 +61,7 @@ public class CombatManager : MonoBehaviour
 
     private void StartTurn()
     {
+        cameraController.FocusOn(beings[turnIndex].transform);
         if (beings[turnIndex] is PlayerCharacter player)
         {
             player.StartTurn();
@@ -67,11 +72,11 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void Attack()
+    public void MakeAttack(Attack attack)
     {
         if (beings[turnIndex] is PlayerCharacter player)
         {
-            player.StartCombatAction();
+            player.StartCombatAction(attack);
         }
     }
 
@@ -106,11 +111,11 @@ public class CombatManager : MonoBehaviour
         {
             if (!player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, move: true, attack: true);
+                SetButtonsActiveState(nextTurn: true, move: true, meleeAttack: true, rangedAttack: true);
             }
             if (player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, attack: true);
+                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, meleeAttack: true, rangedAttack: true);
             }
             if (!player.hasMovement)
             {
@@ -118,23 +123,26 @@ public class CombatManager : MonoBehaviour
             }
             if (player.actionPoints == 0)
             {
-                attackButton.gameObject.SetActive(false);
+                meleeAttackButton.gameObject.SetActive(false);
+                rangedAttackButton.gameObject.SetActive(false);
             }
         }
-        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool attack = false)
+        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool meleeAttack = false, bool rangedAttack = false)
         {
             nextTurnButton.gameObject.SetActive(nextTurn);
             moveButton.gameObject.SetActive(move);
             endMoveButton.gameObject.SetActive(endMove);
             undoMoveButton.gameObject.SetActive(undoMove);
-            attackButton.gameObject.SetActive(attack);
+            meleeAttackButton.gameObject.SetActive(meleeAttack);
+            rangedAttackButton.gameObject.SetActive(rangedAttack);
         }
     }
     private void AddButtonListeners()
     {
         nextTurnButton.onClick.AddListener(NextTurn);
         moveButton.onClick.AddListener(Move);
-        attackButton.onClick.AddListener(Attack);
+        meleeAttackButton.onClick.AddListener(() => MakeAttack(Attack.basicMeleeAttack));
+        rangedAttackButton.onClick.AddListener(() => MakeAttack(Attack.basicRangedAttack));
         undoMoveButton.onClick.AddListener(UndoMove);
         endMoveButton.onClick.AddListener(EndMove);
     }

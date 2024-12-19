@@ -25,13 +25,16 @@ public class Being : MonoBehaviour
     public Vector3 startingPosition;
     public int health = 100;
     public bool isInCombatAction = false;
-    public float attackRange = 1.5f;
+    public bool isAlive = true;
+    private Rigidbody rb;
+    public Attack selectedAttack; 
 
 
     // Start is called before the first frame update
     protected void Start()
     {
         targetPosition = transform.position;
+        rb = GetComponentInChildren<Rigidbody>();
         ApplyColors();
     }
 
@@ -39,6 +42,21 @@ public class Being : MonoBehaviour
     {
         turnIndicator.SetActive(isTurn);
         ApplyColors();
+        checkStatus();
+    }
+
+    private void checkStatus()
+    {
+        if (health <= 0 && isAlive)
+        {
+            die();
+        }
+    }
+
+    private void die()
+    {
+        isAlive = false;
+        rb.AddTorque(new Vector3(0, 0, 1.5f), ForceMode.Impulse);
     }
 
     protected void OnValidate()
@@ -74,6 +92,10 @@ public class Being : MonoBehaviour
 
     private void FixVertical()
     {
+        if (!isAlive)
+        {
+            return;
+        }
         Vector3 rotation = transform.eulerAngles;
         rotation.z = 0;
         rotation.x = 0;

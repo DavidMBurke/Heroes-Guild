@@ -3,10 +3,12 @@ using System.Net;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class PlayerCharacter : Being
 {
-    public int actionPoints = 1;
+    public int maxActionPoints = 1;
+    public int actionPoints = 0;
     public bool hasMovement = false;
     new void Start()
     {
@@ -34,6 +36,7 @@ public class PlayerCharacter : Being
         isTurn = true;
         hasMovement = true;
         startingPosition = transform.position;
+        actionPoints = maxActionPoints;
     }
 
     public void EndTurn()
@@ -50,8 +53,9 @@ public class PlayerCharacter : Being
         }
     }
 
-    public void StartCombatAction()
+    public void StartCombatAction(Attack attack)
     {
+        selectedAttack = attack;
         if (isInMovementAction)
         {
             EndMovementAction();
@@ -98,7 +102,6 @@ public class PlayerCharacter : Being
 
     void AttackClickedBeing()
     {
-        Debug.Log("Attack Attempt");
         CheckForUIElement();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, attackableLayer)) 
@@ -106,21 +109,25 @@ public class PlayerCharacter : Being
             return;
         }
 
-        if (hit.collider.gameObject != this)
+        Being target = hit.collider.gameObject.GetComponentInParent<Being>();
+        float distanceToTarget = (target.transform.position - transform.position).magnitude;
+        if (target == this || distanceToTarget > selectedAttack.range)
         {
-            Debug.Log(hit.collider.gameObject);
+            return;
         }
+        target.health -= selectedAttack.damage;
+        actionPoints -= 1;
+        EndCombatAction();
     }
 
     void Combat()
     {
         Vector3 scale = rangeIndicator.gameObject.transform.localScale;
-        rangeIndicator.gameObject.transform.localScale = new Vector3(attackRange * 2, scale.y, attackRange * 2);
+        rangeIndicator.gameObject.transform.localScale = new Vector3(selectedAttack.range * 2, scale.y, selectedAttack.range * 2);
         if (Input.GetMouseButtonDown(0))
         {
             AttackClickedBeing();
         }
-
     }
 
     void MoveToClick()
@@ -177,6 +184,7 @@ public class PlayerCharacter : Being
         }
 
     }
+
     public void UndoMove()
     {
         transform.position = startingPosition;

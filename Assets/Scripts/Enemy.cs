@@ -11,8 +11,14 @@ public class Enemy : Being
     {
         base.Start();
     }
+
     public void StartTurn(CombatManager combatManager)
     {
+        if (!isAlive)
+        {
+            combatManager.NextTurn();
+            return;
+        }
         isTurn = true;
         startingPosition = transform.position;
         StartCoroutine(EnemyTurnCoroutine(combatManager));
