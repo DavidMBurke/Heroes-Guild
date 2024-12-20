@@ -1,17 +1,18 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CombatManager : MonoBehaviour
 {
     Being[] beings;
-    public Button rangedAttackButton;
-    public Button nextTurnButton;
-    public Button moveButton;
-    public Button endMoveButton;
-    public Button undoMoveButton;
-    public Button meleeAttackButton;
-    int turnIndex = 0;
+    public Button nextTurnButton; // - 
+    public Button moveButton;     // | These buttons will have fixed positions on the action bar
+    public Button endMoveButton;  // |
+    public Button undoMoveButton; // -
+    public Button meleeAttackButton;  // - 
+    public Button rangedAttackButton; // | These attack and spell buttons are placeholders, they will be added to the action bar dynamically depending on player abilities
+    public Button spell1Button;       // | Deciding whether I want to have spells and attacks utilize the same system or be separate
+    public Button spell2Button;       // -
+    int turnIndex = 0;                
 
     public CameraController cameraController;
 
@@ -72,15 +73,6 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void MakeAttack(Attack attack)
-    {
-        if (beings[turnIndex] is PlayerCharacter player)
-        {
-            player.StartCombatAction(attack);
-        }
-    }
-
-
     public void Move()
     {
         if (beings[turnIndex] is PlayerCharacter player)
@@ -104,18 +96,27 @@ public class CombatManager : MonoBehaviour
             player.EndMovementAction();
         }
     }
+
+    public void ExecuteCharacterAction(CharacterAction action)
+    {
+        if (beings[turnIndex] is PlayerCharacter player)
+        {
+            player.StartCharacterAction(action);
+        }
+    }
+
     private void SetButtonsActiveState()
     {
-        SetButtonsActiveState(); // Reset 
+        SetButtonsActiveState(); // Reset button states
         if (beings[turnIndex] is PlayerCharacter player)
         {
             if (!player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, move: true, meleeAttack: true, rangedAttack: true);
+                SetButtonsActiveState(nextTurn: true, move: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
             if (player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, meleeAttack: true, rangedAttack: true);
+                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
             if (!player.hasMovement)
             {
@@ -125,9 +126,11 @@ public class CombatManager : MonoBehaviour
             {
                 meleeAttackButton.gameObject.SetActive(false);
                 rangedAttackButton.gameObject.SetActive(false);
+                spell1Button.gameObject.SetActive(false);
+                spell2Button.gameObject.SetActive(false);
             }
         }
-        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool meleeAttack = false, bool rangedAttack = false)
+        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)
         {
             nextTurnButton.gameObject.SetActive(nextTurn);
             moveButton.gameObject.SetActive(move);
@@ -135,16 +138,21 @@ public class CombatManager : MonoBehaviour
             undoMoveButton.gameObject.SetActive(undoMove);
             meleeAttackButton.gameObject.SetActive(meleeAttack);
             rangedAttackButton.gameObject.SetActive(rangedAttack);
+            spell1Button.gameObject.SetActive(spells);
+            spell2Button.gameObject.SetActive(spells);
+
         }
     }
     private void AddButtonListeners()
     {
         nextTurnButton.onClick.AddListener(NextTurn);
         moveButton.onClick.AddListener(Move);
-        meleeAttackButton.onClick.AddListener(() => MakeAttack(Attack.basicMeleeAttack));
-        rangedAttackButton.onClick.AddListener(() => MakeAttack(Attack.basicRangedAttack));
+        meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 2, 10), beings[turnIndex])));
+        rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 15, 10), beings[turnIndex])));
         undoMoveButton.onClick.AddListener(UndoMove);
         endMoveButton.onClick.AddListener(EndMove);
+        spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.Spell1Coroutine(caster), beings[turnIndex])));
+        spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.FireBall(caster), beings[turnIndex])));
     }
 
 

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundTile : MonoBehaviour
@@ -10,9 +8,4 @@ public class GroundTile : MonoBehaviour
         tileRenderer.material.color = Color.black;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

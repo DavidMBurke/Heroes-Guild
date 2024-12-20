@@ -1,15 +1,11 @@
-using System;
-using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class PlayerCharacter : Being
 {
     public int maxActionPoints = 1;
     public int actionPoints = 0;
     public bool hasMovement = false;
+
     new void Start()
     {
         base.Start();
@@ -23,10 +19,6 @@ public class PlayerCharacter : Being
             if (isInMovementAction)
             {
                 Move();
-            }
-            if (isInCombatAction)
-            {
-                Combat();
             }
         }
     }
@@ -47,35 +39,32 @@ public class PlayerCharacter : Being
         {
             EndMovementAction();
         }
-        if (isInCombatAction)
+        if (isInCharacterAction)
         {
-            EndCombatAction();
+            EndCharacterAction();
         }
     }
 
-    public void StartCombatAction(Attack attack)
+    public void StartCharacterAction(CharacterAction action)
     {
-        selectedAttack = attack;
         if (isInMovementAction)
         {
             EndMovementAction();
         }
-        isInCombatAction = true;
-        rangeIndicator.gameObject.SetActive(true);
-        rangeIndicatorColor = rangeIndicatorCombatColor;
+        StartCoroutine(action.actionFunction(action.character));
+        isInCharacterAction = true;
     }
 
-    public void EndCombatAction()
+    public void EndCharacterAction()
     {
-        isInCombatAction = false;
-        rangeIndicator.gameObject.SetActive(false);
+        isInCharacterAction = false;
     }
 
     public void StartMovementAction()
     {
-        if (isInCombatAction)
+        if (isInCharacterAction)
         {
-            EndCombatAction();
+            EndCharacterAction();
         }
         isInMovementAction = true;
         remainingMovement = maxMoveDistance;
@@ -100,46 +89,15 @@ public class PlayerCharacter : Being
         base.FixedUpdate();
     }
 
-    void AttackClickedBeing()
-    {
-        CheckForUIElement();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, attackableLayer)) 
-        {
-            return;
-        }
-
-        Being target = hit.collider.gameObject.GetComponentInParent<Being>();
-        float distanceToTarget = (target.transform.position - transform.position).magnitude;
-        if (target == this || distanceToTarget > selectedAttack.range)
-        {
-            return;
-        }
-        target.health -= selectedAttack.damage;
-        actionPoints -= 1;
-        EndCombatAction();
-    }
-
-    void Combat()
-    {
-        Vector3 scale = rangeIndicator.gameObject.transform.localScale;
-        rangeIndicator.gameObject.transform.localScale = new Vector3(selectedAttack.range * 2, scale.y, selectedAttack.range * 2);
-        if (Input.GetMouseButtonDown(0))
-        {
-            AttackClickedBeing();
-        }
-    }
-
     void MoveToClick()
     {
-        CheckForUIElement();
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        UIManager.CheckForUIElement();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
         {
             return;
         }
-
         targetPosition = hit.point;
         targetPosition.y = transform.position.y;
 
@@ -166,7 +124,7 @@ public class PlayerCharacter : Being
         Vector3 scale = rangeIndicator.gameObject.transform.localScale;
         rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) & !isMoving)
         {
             MoveToClick();
         }
@@ -189,13 +147,5 @@ public class PlayerCharacter : Being
     {
         transform.position = startingPosition;
         remainingMovement = maxMoveDistance;
-    }
-
-    public void CheckForUIElement()
-    {
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
     }
 }

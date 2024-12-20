@@ -24,7 +24,7 @@ public class Being : MonoBehaviour
     public bool isInMovementAction = false;
     public Vector3 startingPosition;
     public int health = 100;
-    public bool isInCombatAction = false;
+    public bool isInCharacterAction = false;
     public bool isAlive = true;
     private Rigidbody rb;
     public Attack selectedAttack; 
