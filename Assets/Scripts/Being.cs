@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Being : MonoBehaviour
 {
-    public float maxMoveDistance = 5f;
+    public float moveDistance = 5f;
     public bool isTurn = false;
     public float moveSpeed = 5f;
     protected Vector3 targetPosition;
-    protected bool isMoving = false;
+    public bool isMoving = false;
     public GameObject turnIndicator;
     public GameObject rangeIndicator;
     public Color rangeIndicatorColor;
@@ -18,7 +18,6 @@ public class Being : MonoBehaviour
     public Color characterColor;
     public Color turnIndicatorColor = new Color(.2f, 1f, .2f, .1f);
     public GameObject model;
-    public float remainingMovement = 0;
     public bool isInMovementAction = false;
     public Vector3 startingPosition;
     public int health = 100;

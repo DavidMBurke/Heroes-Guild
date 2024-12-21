@@ -7,7 +7,6 @@ public class CombatManager : MonoBehaviour
     public Button nextTurnButton; // - 
     public Button moveButton;     // | These buttons will have fixed positions on the action bar
     public Button endMoveButton;  // |
-    public Button undoMoveButton; // -
     public Button meleeAttackButton;  // - 
     public Button rangedAttackButton; // | These attack and spell buttons are placeholders, they will be added to the action bar dynamically depending on player abilities
     public Button spell1Button;       // | 
@@ -76,27 +75,11 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void Move()
-    {
-        if (currentBeing is PlayerCharacter player)
-        {
-            player.StartMovementAction();
-        }
-    }
-
-    public void UndoMove()
-    {
-        if (currentBeing is PlayerCharacter player)
-        {
-            player.UndoMove();
-        }
-    }
-
     public void EndMove()
     {
         if (currentBeing is PlayerCharacter player)
         {
-            player.EndMovementAction();
+            player.endMove = true;
         }
     }
 
@@ -119,7 +102,7 @@ public class CombatManager : MonoBehaviour
             }
             if (player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, endMove: true, undoMove: true, meleeAttack: true, rangedAttack: true, spells: true);
+                SetButtonsActiveState(nextTurn: true, endMove: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
             if (!player.hasMovement)
             {
@@ -133,12 +116,11 @@ public class CombatManager : MonoBehaviour
                 spell2Button.gameObject.SetActive(false);
             }
         }
-        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool undoMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)
+        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)
         {
             nextTurnButton.gameObject.SetActive(nextTurn);
             moveButton.gameObject.SetActive(move);
             endMoveButton.gameObject.SetActive(endMove);
-            undoMoveButton.gameObject.SetActive(undoMove);
             meleeAttackButton.gameObject.SetActive(meleeAttack);
             rangedAttackButton.gameObject.SetActive(rangedAttack);
             spell1Button.gameObject.SetActive(spells);
@@ -149,11 +131,10 @@ public class CombatManager : MonoBehaviour
     private void AddButtonListeners()
     {
         nextTurnButton.onClick.AddListener(NextTurn);
-        moveButton.onClick.AddListener(Move);
+        moveButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((player) => Movement.Move(player), currentBeing)));
+        endMoveButton.onClick.AddListener(EndMove);
         meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 2, 10), currentBeing)));
         rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 15, 10), currentBeing)));
-        undoMoveButton.onClick.AddListener(UndoMove);
-        endMoveButton.onClick.AddListener(EndMove);
         spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.Spell1Coroutine(caster), currentBeing)));
         spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.FireBall(caster), currentBeing)));
     }

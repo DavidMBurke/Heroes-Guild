@@ -40,10 +40,4 @@ public class Enemy : Being
         isTurn = false;
         combatManager.NextTurn();
     }
-
-    public void StartMovementAction()
-    {
-        isInMovementAction = true;
-        remainingMovement = maxMoveDistance;
-    }
 }
