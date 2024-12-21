@@ -6,15 +6,15 @@ using UnityEngine.Analytics;
 
 public class Attack
 {
-    public static IEnumerator BasicAttack(Being attacker, float range, int damage)
+    public static IEnumerator BasicAttack(Being attacker, float range, int damage, CharacterAction action)
     {
         bool inAttack = true;
         Vector3 scale = attacker.rangeIndicator.gameObject.transform.localScale;
-        attacker.rangeIndicator.gameObject.SetActive(true);
-        attacker.rangeIndicator.gameObject.transform.localScale = new Vector3(range * 2, scale.y, range * 2);
         attacker.rangeIndicatorColor = attacker.rangeIndicatorCombatColor;
         while (inAttack)
         {
+            attacker.rangeIndicator.gameObject.SetActive(true);
+            attacker.rangeIndicator.gameObject.transform.localScale = new Vector3(range * 2, scale.y, range * 2);
             if (Input.GetMouseButtonDown(0))
             {
                 UIManager.CheckForUIElement();
@@ -45,7 +45,7 @@ public class Attack
                     break;
                 }
             }
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || action.endSignal)
             {
                 inAttack = false;
             }

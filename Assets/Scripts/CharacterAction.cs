@@ -4,13 +4,19 @@ using System.Collections;
 public class CharacterAction
 {
 
-    public Func<Being, IEnumerator> actionFunction;
-    public Being character;
+    public Func<Being, CharacterAction, IEnumerator> action;
 
-    public CharacterAction(Func<Being, IEnumerator> actionFunction, Being character)
+    public Being character;
+    public bool endSignal = false;
+
+    public CharacterAction(Func<Being, CharacterAction, IEnumerator> action, Being character)
     {
-        this.actionFunction = actionFunction;
+        this.action = action;
         this.character = character;
     }
 
+    public void EndAction()
+    {
+        endSignal = true;
+    }
 }

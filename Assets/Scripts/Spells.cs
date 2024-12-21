@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class Spells
         Debug.Log($"Ending Spell Cast");
     }
 
-    public static IEnumerator FireBall(Being caster)
+    public static IEnumerator FireBall(Being caster, CharacterAction action)
     {
         bool inSpell = true;
 
@@ -45,6 +46,11 @@ public class Spells
             }
             if (Input.GetMouseButtonDown(0))
             {
+                if (UIManager.CheckForUIElement())
+                {
+                    yield return null;
+                    continue;
+                }
                 foreach (Being being in overlappingBeings)
                 {
                     being.health -= 10;
@@ -55,7 +61,7 @@ public class Spells
                 }
                 inSpell = false;
             }
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) || action.endSignal)
             {
                 inSpell = false;
             }

@@ -13,7 +13,6 @@ public class CombatManager : MonoBehaviour
     public Button spell2Button;       // -
     int turnIndex = 0;
     private Being currentBeing;
-
     public CameraController cameraController;
 
     void Start()
@@ -85,6 +84,13 @@ public class CombatManager : MonoBehaviour
 
     public void ExecuteCharacterAction(CharacterAction action)
     {
+        if (currentBeing.currentAction != null)
+        {
+            currentBeing.currentAction.EndAction();
+        }
+
+        currentBeing.currentAction = action;
+
         if (currentBeing is PlayerCharacter player)
         {
             player.StartCharacterAction(action);
@@ -96,9 +102,13 @@ public class CombatManager : MonoBehaviour
         SetButtonsActiveState(); // Reset button states
         if (currentBeing is PlayerCharacter player)
         {
-            if (!player.isInMovementAction)
+            if (!player.isInCharacterAction)
             {
                 SetButtonsActiveState(nextTurn: true, move: true, meleeAttack: true, rangedAttack: true, spells: true);
+            }
+            if (player.isInCharacterAction)
+            {
+                SetButtonsActiveState(nextTurn: true);
             }
             if (player.isInMovementAction)
             {
@@ -131,12 +141,12 @@ public class CombatManager : MonoBehaviour
     private void AddButtonListeners()
     {
         nextTurnButton.onClick.AddListener(NextTurn);
-        moveButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((player) => Movement.Move(player), currentBeing)));
+        moveButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((player, action) => Movement.Move(player, action), currentBeing)));
         endMoveButton.onClick.AddListener(EndMove);
-        meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 2, 10), currentBeing)));
-        rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 15, 10), currentBeing)));
-        spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.Spell1Coroutine(caster), currentBeing)));
-        spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.FireBall(caster), currentBeing)));
+        meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), currentBeing)));
+        rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), currentBeing)));
+        spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.Spell1Coroutine(caster), currentBeing)));
+        spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.FireBall(caster, action), currentBeing)));
     }
 
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Movement
 {
-    public static IEnumerator Move(Being being)
+    public static IEnumerator Move(Being being, CharacterAction action)
     {
         if (being is PlayerCharacter player)
         {
@@ -14,7 +14,7 @@ public class Movement
             Vector3 targetPosition = player.startingPosition;
             player.rangeIndicatorColor = player.rangeIndicatorMovementColor;
             bool isMoving = false;
-            while (remainingMovement > 0 && player.endMove == false)
+            while (remainingMovement > 0 && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
                 player.rangeIndicator.gameObject.SetActive(true);

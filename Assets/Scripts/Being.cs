@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Being : MonoBehaviour
@@ -13,10 +10,10 @@ public class Being : MonoBehaviour
     public GameObject turnIndicator;
     public GameObject rangeIndicator;
     public Color rangeIndicatorColor;
-    public Color rangeIndicatorCombatColor = Color.red;
-    public Color rangeIndicatorMovementColor = Color.gray;
+    public Color rangeIndicatorCombatColor = new Color(.5f, 0, 0, .25f);
+    public Color rangeIndicatorMovementColor = new Color(.5f, .5f, .5f, .25f);
     public Color characterColor;
-    public Color turnIndicatorColor = new Color(.2f, 1f, .2f, .1f);
+    public Color turnIndicatorColor = new Color(0, 1f, 0, .2f);
     public GameObject model;
     public bool isInMovementAction = false;
     public Vector3 startingPosition;
@@ -24,6 +21,7 @@ public class Being : MonoBehaviour
     public bool isInCharacterAction = false;
     public bool isAlive = true;
     private Rigidbody rb;
+    public CharacterAction currentAction;
 
     // Start is called before the first frame update
     protected void Start()
@@ -69,6 +67,9 @@ public class Being : MonoBehaviour
         // but material was throwing errors for instantiating materials in edit mode
         if (Application.isPlaying)
         {
+            turnIndicatorRenderer.material = new Material(Shader.Find("Transparent/Diffuse"));
+            rangeIndicatorRenderer.material = new Material(Shader.Find("Transparent/Diffuse"));
+
             renderer.material.color = characterColor;
             turnIndicatorRenderer.material.color = turnIndicatorColor;
             rangeIndicatorRenderer.material.color = rangeIndicatorColor;

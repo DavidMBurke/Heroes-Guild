@@ -15,13 +15,6 @@ public class PlayerCharacter : Being
     private new void Update()
     {
         base.Update();
-        if (isTurn)
-        {
-            if (isInMovementAction)
-            {
-                Movement.Move(this);
-            }
-        }
     }
 
     public void StartTurn()
@@ -48,13 +41,13 @@ public class PlayerCharacter : Being
         {
             EndCharacterAction();
         }
-        StartCoroutine(action.actionFunction(action.character));
-        isInCharacterAction = true;
+        StartCoroutine(action.action(action.character, action));
     }
 
     public void EndCharacterAction()
     {
         isInCharacterAction = false;
+        currentAction.EndAction();
     }
 
     new private void FixedUpdate()

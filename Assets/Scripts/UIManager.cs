@@ -3,12 +3,13 @@ using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
-    public static void CheckForUIElement()
+    public static bool CheckForUIElement()
     {
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            return;
+            return true;
         }
+        return false;
     }
 
 }
