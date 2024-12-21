@@ -7,8 +7,6 @@ public class Being : MonoBehaviour
 {
     public float maxMoveDistance = 5f;
     public bool isTurn = false;
-    public LayerMask groundLayer;
-    public LayerMask attackableLayer;
     public float moveSpeed = 5f;
     protected Vector3 targetPosition;
     protected bool isMoving = false;
@@ -27,8 +25,6 @@ public class Being : MonoBehaviour
     public bool isInCharacterAction = false;
     public bool isAlive = true;
     private Rigidbody rb;
-    public Attack selectedAttack; 
-
 
     // Start is called before the first frame update
     protected void Start()

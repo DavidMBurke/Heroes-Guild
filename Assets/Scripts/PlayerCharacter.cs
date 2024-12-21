@@ -94,7 +94,7 @@ public class PlayerCharacter : Being
 
         UIManager.CheckForUIElement();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayer))
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
         {
             return;
         }

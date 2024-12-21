@@ -10,9 +10,10 @@ public class CombatManager : MonoBehaviour
     public Button undoMoveButton; // -
     public Button meleeAttackButton;  // - 
     public Button rangedAttackButton; // | These attack and spell buttons are placeholders, they will be added to the action bar dynamically depending on player abilities
-    public Button spell1Button;       // | Deciding whether I want to have spells and attacks utilize the same system or be separate
+    public Button spell1Button;       // | 
     public Button spell2Button;       // -
-    int turnIndex = 0;                
+    int turnIndex = 0;
+    private Being currentBeing;
 
     public CameraController cameraController;
 
@@ -35,6 +36,7 @@ public class CombatManager : MonoBehaviour
         {
             being.isTurn = false;
         }
+        currentBeing = beings[turnIndex];
     }
 
     public void NextTurn()
@@ -45,16 +47,17 @@ public class CombatManager : MonoBehaviour
         {
             turnIndex = 0;
         }
+        currentBeing = beings[turnIndex];
         StartTurn();
     }
 
     private void EndTurn()
     {
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             player.EndTurn();
         }
-        if (beings[turnIndex] is Enemy enemy)
+        if (currentBeing is Enemy enemy)
         {
             enemy.EndTurn();
         }
@@ -67,7 +70,7 @@ public class CombatManager : MonoBehaviour
         {
             player.StartTurn();
         }
-        if (beings[turnIndex] is Enemy enemy)
+        if (currentBeing is Enemy enemy)
         {
             enemy.StartTurn(this);
         }
@@ -75,7 +78,7 @@ public class CombatManager : MonoBehaviour
 
     public void Move()
     {
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             player.StartMovementAction();
         }
@@ -83,7 +86,7 @@ public class CombatManager : MonoBehaviour
 
     public void UndoMove()
     {
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             player.UndoMove();
         }
@@ -91,7 +94,7 @@ public class CombatManager : MonoBehaviour
 
     public void EndMove()
     {
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             player.EndMovementAction();
         }
@@ -99,7 +102,7 @@ public class CombatManager : MonoBehaviour
 
     public void ExecuteCharacterAction(CharacterAction action)
     {
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             player.StartCharacterAction(action);
         }
@@ -108,7 +111,7 @@ public class CombatManager : MonoBehaviour
     private void SetButtonsActiveState()
     {
         SetButtonsActiveState(); // Reset button states
-        if (beings[turnIndex] is PlayerCharacter player)
+        if (currentBeing is PlayerCharacter player)
         {
             if (!player.isInMovementAction)
             {
@@ -147,12 +150,12 @@ public class CombatManager : MonoBehaviour
     {
         nextTurnButton.onClick.AddListener(NextTurn);
         moveButton.onClick.AddListener(Move);
-        meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 2, 10), beings[turnIndex])));
-        rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 15, 10), beings[turnIndex])));
+        meleeAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 2, 10), currentBeing)));
+        rangedAttackButton.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((attacker) => Attack.BasicAttack(attacker, 15, 10), currentBeing)));
         undoMoveButton.onClick.AddListener(UndoMove);
         endMoveButton.onClick.AddListener(EndMove);
-        spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.Spell1Coroutine(caster), beings[turnIndex])));
-        spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.FireBall(caster), beings[turnIndex])));
+        spell1Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.Spell1Coroutine(caster), currentBeing)));
+        spell2Button.onClick.AddListener(() => ExecuteCharacterAction(new CharacterAction((caster) => Spells.FireBall(caster), currentBeing)));
     }
 
 
