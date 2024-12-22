@@ -12,10 +12,11 @@ public class ButtonManager : MonoBehaviour
     public Button rangedAttackButton; // | These attack and spell buttons are placeholders, they will be added to the action bar dynamically depending on player abilities
     public Button spell1Button;       // | 
     public Button spell2Button;       // -
-    public CombatManager combatManager;
+    public ActionManager actionManager;
 
     private void Start()
     {
+        actionManager = FindObjectOfType<ActionManager>();
         AddButtonListeners();
     }
 
@@ -27,7 +28,7 @@ public class ButtonManager : MonoBehaviour
     private void SetButtonsActiveState()
     {
         SetButtonsActiveState(); // Reset button states
-        if (combatManager.currentBeing is PlayerCharacter player)
+        if (actionManager.currentBeing is PlayerCharacter player)
         {
             if (!player.isInCharacterAction)
             {
@@ -66,12 +67,12 @@ public class ButtonManager : MonoBehaviour
     }
     private void AddButtonListeners()
     {
-        nextTurnButton.onClick.AddListener(combatManager.NextTurn);
-        moveButton.onClick.AddListener(() => combatManager.ExecuteCharacterAction(new CharacterAction((player, action) => Movement.Move(player, action), combatManager.currentBeing)));
-        endMoveButton.onClick.AddListener(combatManager.EndMove);
-        meleeAttackButton.onClick.AddListener(() => combatManager.ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), combatManager.currentBeing)));
-        rangedAttackButton.onClick.AddListener(() => combatManager.ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), combatManager.currentBeing)));
-        spell1Button.onClick.AddListener(() => combatManager.ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.Spell1Coroutine(caster), combatManager.currentBeing)));
-        spell2Button.onClick.AddListener(() => combatManager. ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.FireBall(caster, action), combatManager.currentBeing)));
+        nextTurnButton.onClick.AddListener(actionManager.NextTurn);
+        moveButton.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((player, action) => Movement.Move(player, action), actionManager.currentBeing)));
+        endMoveButton.onClick.AddListener(actionManager.EndMove);
+        meleeAttackButton.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), actionManager.currentBeing)));
+        rangedAttackButton.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), actionManager.currentBeing)));
+        spell1Button.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.Spell1Coroutine(caster), actionManager.currentBeing)));
+        spell2Button.onClick.AddListener(() => actionManager. ExecuteCharacterAction(new CharacterAction((caster, action) => Spells.FireBall(caster, action), actionManager.currentBeing)));
     }
 }

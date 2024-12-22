@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BeingTurnOrderDisplay : MonoBehaviour
 {
-    public CombatManager combatManager;
+    public ActionManager actionManager;
     public int beingIndex;
     private Being being;
     private TextMeshProUGUI characterName;
@@ -17,6 +17,7 @@ public class BeingTurnOrderDisplay : MonoBehaviour
 
     private void Start()
     {
+        actionManager = FindObjectOfType<ActionManager>();
         textComponents = GetComponentsInChildren<TextMeshProUGUI>().ToList();
         characterName = textComponents.FirstOrDefault(t => t.name == "Name Text");
         health = textComponents.FirstOrDefault(t => t.name == "Health Text");
@@ -25,12 +26,16 @@ public class BeingTurnOrderDisplay : MonoBehaviour
     }
     private void Update()
     {
-        if (combatManager.beings.Length <= beingIndex) // There should only be as many turn order displays as beings in combat
+        if (actionManager == null)
+        {
+            return;
+        }
+        if (actionManager.beings.Count <= beingIndex) // There should only be as many turn order displays as beings in combat
         {
             Destroy(gameObject);
             return;
         }
-        being = combatManager.beings[beingIndex];
+        being = actionManager.beings[beingIndex];
         turnIndicator.SetActive(being.isTurn);
         characterName.text = being.characterName;
         health.text = $"{being.health}/{being.maxHealth}";

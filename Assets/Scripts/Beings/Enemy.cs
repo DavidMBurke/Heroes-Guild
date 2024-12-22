@@ -12,7 +12,7 @@ public class Enemy : Being
         base.Start();
     }
 
-    public void StartTurn(CombatManager combatManager)
+    public void StartTurn(ActionManager combatManager)
     {
         if (!isAlive)
         {
@@ -29,7 +29,7 @@ public class Enemy : Being
         isTurn = false;
     }
 
-    private IEnumerator EnemyTurnCoroutine(CombatManager combatManager)
+    private IEnumerator EnemyTurnCoroutine(ActionManager combatManager)
     {
         float timer = 0f;
         while (timer < enemyTurnTime)
