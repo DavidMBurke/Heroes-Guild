@@ -2,26 +2,39 @@ using UnityEngine;
 
 public class Being : MonoBehaviour
 {
+    // Info
+    public string characterName;
+
+    // Movement
     public float moveDistance = 5f;
-    public bool isTurn = false;
     public float moveSpeed = 5f;
+    public bool isMoving = false; // To prevent mid-movement, probably will expand this to isInterruptable for any action that needs to complete
+    public bool isInMovementAction = false; // For button logic
     protected Vector3 targetPosition;
-    public bool isMoving = false;
+    public Vector3 startingPosition;
+
+    // Action
+    public bool isTurn = false;
+    public bool isInCharacterAction = false;
+    public CharacterAction currentAction;
+
+    // Stats
+    public int health = 100;
+    public int maxHealth = 100;
+    public bool isAlive = true;
+    
+    // Model
+    private Rigidbody rb;
+    public GameObject model;
+    public Color characterColor;
+
+    // Indicators TODO - Move these to their own class and single object in scene
     public GameObject turnIndicator;
     public GameObject rangeIndicator;
     public Color rangeIndicatorColor;
     public Color rangeIndicatorCombatColor = new Color(.5f, 0, 0, .25f);
     public Color rangeIndicatorMovementColor = new Color(.5f, .5f, .5f, .25f);
-    public Color characterColor;
     public Color turnIndicatorColor = new Color(0, 1f, 0, .2f);
-    public GameObject model;
-    public bool isInMovementAction = false;
-    public Vector3 startingPosition;
-    public int health = 100;
-    public bool isInCharacterAction = false;
-    public bool isAlive = true;
-    private Rigidbody rb;
-    public CharacterAction currentAction;
 
     // Start is called before the first frame update
     protected void Start()
