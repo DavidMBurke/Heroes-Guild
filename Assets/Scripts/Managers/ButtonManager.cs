@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonManager : MonoBehaviour
 {
-    public Button nextTurnButton; // - 
+    public Button endTurnButton; // - 
     public Button moveButton;     // | These buttons will have fixed positions on the action bar
     public Button endMoveButton;  // |
     public Button meleeAttackButton;  // - 
@@ -32,31 +32,35 @@ public class ButtonManager : MonoBehaviour
         {
             if (!player.isInCharacterAction)
             {
-                SetButtonsActiveState(nextTurn: true, move: true, meleeAttack: true, rangedAttack: true, spells: true);
+                SetButtonsActiveState(endTurn: true, move: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
             if (player.isInCharacterAction)
             {
-                SetButtonsActiveState(nextTurn: true);
+                SetButtonsActiveState(endTurn: true);
             }
             if (player.isInMovementAction)
             {
-                SetButtonsActiveState(nextTurn: true, endMove: true, meleeAttack: true, rangedAttack: true, spells: true);
+                SetButtonsActiveState(endTurn: true, endMove: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
-            if (!player.hasMovement)
+            if (!player.hasMovement && actionManager.actionMode == ActionManager.ActionModes.TurnBased)
             {
                 moveButton.gameObject.SetActive(false);
             }
-            if (player.actionPoints == 0)
+            if (player.actionPoints == 0 && actionManager.actionMode == ActionManager.ActionModes.TurnBased)
             {
                 meleeAttackButton.gameObject.SetActive(false);
                 rangedAttackButton.gameObject.SetActive(false);
                 spell1Button.gameObject.SetActive(false);
                 spell2Button.gameObject.SetActive(false);
             }
+            if (actionManager.actionMode == ActionManager.ActionModes.Free)
+            {
+                endTurnButton.gameObject.SetActive(false);
+            }
         }
-        void SetButtonsActiveState(bool nextTurn = false, bool move = false, bool endMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)
+        void SetButtonsActiveState(bool endTurn = false, bool move = false, bool endMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)
         {
-            nextTurnButton.gameObject.SetActive(nextTurn);
+            endTurnButton.gameObject.SetActive(endTurn);
             moveButton.gameObject.SetActive(move);
             endMoveButton.gameObject.SetActive(endMove);
             meleeAttackButton.gameObject.SetActive(meleeAttack);
@@ -67,7 +71,7 @@ public class ButtonManager : MonoBehaviour
     }
     private void AddButtonListeners()
     {
-        nextTurnButton.onClick.AddListener(actionManager.NextTurn);
+        endTurnButton.onClick.AddListener(actionManager.NextTurn);
         moveButton.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((player, action) => Movement.Move(player, action), actionManager.currentBeing)));
         endMoveButton.onClick.AddListener(actionManager.EndMove);
         meleeAttackButton.onClick.AddListener(() => actionManager.ExecuteCharacterAction(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), actionManager.currentBeing)));

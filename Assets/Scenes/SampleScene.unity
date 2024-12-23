@@ -1063,8 +1063,8 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   isTurn: 0
   isInCharacterAction: 0
-  health: 30
-  maxHealth: 30
+  health: 10
+  maxHealth: 10
   isAlive: 1
   model: {fileID: 887345476}
   characterColor: {r: 0.9490196, g: 0.4477109, b: 0.07058823, a: 0}
@@ -5016,8 +5016,8 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   isTurn: 0
   isInCharacterAction: 0
-  health: 30
-  maxHealth: 30
+  health: 10
+  maxHealth: 10
   isAlive: 1
   model: {fileID: 437870424}
   characterColor: {r: 0.9490196, g: 0.4477109, b: 0.07058823, a: 0}
@@ -5978,7 +5978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8280633024a9889459b1eb3df58e2951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextTurnButton: {fileID: 599091570}
+  endTurnButton: {fileID: 599091570}
   moveButton: {fileID: 433303500}
   endMoveButton: {fileID: 1994958484}
   meleeAttackButton: {fileID: 1582893937}
@@ -6344,8 +6344,8 @@ MonoBehaviour:
   startingPosition: {x: 0, y: 0, z: 0}
   isTurn: 0
   isInCharacterAction: 0
-  health: 30
-  maxHealth: 30
+  health: 10
+  maxHealth: 10
   isAlive: 1
   model: {fileID: 1418644490}
   characterColor: {r: 0.9490196, g: 0.4477109, b: 0.07058823, a: 0}

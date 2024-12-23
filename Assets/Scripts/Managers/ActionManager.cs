@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class ActionManager : MonoBehaviour
 {
+    public static ActionManager instance;
     public List<Being> beings;
-    int turnIndex = 0;
     public Being currentBeing;
     public CameraController cameraController;
-    private PartyManager partyManager;
+    int turnIndex = 0;
+    PartyManager partyManager;
 
     public enum ActionModes
     {
@@ -22,6 +23,11 @@ public class ActionManager : MonoBehaviour
     {
         partyManager = FindObjectOfType<PartyManager>();
         currentBeing = partyManager.partyMembers.First();
+    }
+
+    private void Awake()
+    {
+        instance = this;
     }
 
     private void Update()
@@ -38,7 +44,6 @@ public class ActionManager : MonoBehaviour
             StartFreeMode();
         }
     }
-
     
     private void StartTurnBasedMode()
     {
@@ -49,6 +54,7 @@ public class ActionManager : MonoBehaviour
 
     private void StartFreeMode()
     {
+        currentBeing = partyManager.partyMembers.First(p => p.isAlive);
         actionMode = ActionModes.Free;
     }
 
@@ -97,6 +103,17 @@ public class ActionManager : MonoBehaviour
             enemy.StartTurn(this);
         }
         cameraController.FocusOn(currentBeing.transform);
+    }
+
+    public void selectCharacter(PlayerCharacter selectedPlayer)
+    {
+        if (selectedPlayer == currentBeing)
+        {
+            return;
+        }
+        EndTurn();
+        currentBeing = selectedPlayer;
+        selectedPlayer.StartTurn();
     }
 
     public void EndMove()

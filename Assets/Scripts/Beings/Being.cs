@@ -1,3 +1,4 @@
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class Being : MonoBehaviour
@@ -22,6 +23,7 @@ public class Being : MonoBehaviour
     public int health = 100;
     public int maxHealth = 100;
     public bool isAlive = true;
+    ActionManager actionManager;
     
     // Model
     private Rigidbody rb;
@@ -39,6 +41,7 @@ public class Being : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
+        actionManager = ActionManager.instance;
         targetPosition = transform.position;
         rb = GetComponentInChildren<Rigidbody>();
         ApplyColors();
@@ -62,6 +65,7 @@ public class Being : MonoBehaviour
     private void die()
     {
         isAlive = false;
+        rb.constraints = RigidbodyConstraints.None;
         rb.AddTorque(new Vector3(0, 0, 1.5f), ForceMode.Impulse);
     }
 
@@ -103,12 +107,14 @@ public class Being : MonoBehaviour
     {
         if (!isAlive)
         {
+            rb.constraints = RigidbodyConstraints.None;
             return;
         }
         Vector3 rotation = transform.eulerAngles;
         rotation.z = 0;
         rotation.x = 0;
         transform.eulerAngles = rotation;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
 }

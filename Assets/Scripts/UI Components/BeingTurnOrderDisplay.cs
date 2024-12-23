@@ -26,13 +26,9 @@ public class BeingTurnOrderDisplay : MonoBehaviour
     }
     private void Update()
     {
-        if (actionManager == null)
+        if (actionManager.actionMode == ActionManager.ActionModes.Free || actionManager.beings.Count <= beingIndex) // second half is placeholder logic until these load dynamically for each being in combat
         {
-            return;
-        }
-        if (actionManager.beings.Count <= beingIndex) // There should only be as many turn order displays as beings in combat
-        {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             return;
         }
         being = actionManager.beings[beingIndex];
