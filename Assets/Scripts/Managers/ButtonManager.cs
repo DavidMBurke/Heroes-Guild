@@ -42,20 +42,21 @@ public class ButtonManager : MonoBehaviour
             {
                 SetButtonsActiveState(endTurn: true, endMove: true, meleeAttack: true, rangedAttack: true, spells: true);
             }
-            if (!player.hasMovement && actionManager.actionMode == ActionManager.ActionModes.TurnBased)
+            if (!player.hasMovement && actionManager.IsTurnBasedMode())
             {
                 moveButton.gameObject.SetActive(false);
             }
-            if (player.actionPoints == 0 && actionManager.actionMode == ActionManager.ActionModes.TurnBased)
+            if (player.actionPoints == 0 && actionManager.IsTurnBasedMode())
             {
                 meleeAttackButton.gameObject.SetActive(false);
                 rangedAttackButton.gameObject.SetActive(false);
                 spell1Button.gameObject.SetActive(false);
                 spell2Button.gameObject.SetActive(false);
             }
-            if (actionManager.actionMode == ActionManager.ActionModes.Free)
+            if (actionManager.IsFreeMode())
             {
                 endTurnButton.gameObject.SetActive(false);
+                endMoveButton.gameObject.SetActive(false);
             }
         }
         void SetButtonsActiveState(bool endTurn = false, bool move = false, bool endMove = false, bool meleeAttack = false, bool rangedAttack = false, bool spells = false)

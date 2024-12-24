@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor.Build.Content;
 using UnityEngine;
 
@@ -37,8 +38,10 @@ public class Being : MonoBehaviour
     public Color rangeIndicatorCombatColor = new Color(.5f, 0, 0, .25f);
     public Color rangeIndicatorMovementColor = new Color(.5f, .5f, .5f, .25f);
     public Color turnIndicatorColor = new Color(0, 1f, 0, .2f);
+    public float interactDistance = 1.5f;
 
-    // Start is called before the first frame update
+    // Inventory
+    public List<Interactable> inventory;
     protected void Start()
     {
         actionManager = ActionManager.instance;

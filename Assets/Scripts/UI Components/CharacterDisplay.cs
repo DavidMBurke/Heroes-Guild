@@ -38,7 +38,7 @@ public class CharacterDisplay : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
-        bool showActionPoints = character.isTurn && actionManager.actionMode == ActionManager.ActionModes.TurnBased;
+        bool showActionPoints = character.isTurn && actionManager.IsTurnBasedMode();
         actionPointsObject.gameObject.SetActive(showActionPoints);
         gameObject.SetActive(true);
         characterName.text = character.characterName;
@@ -51,11 +51,10 @@ public class CharacterDisplay : MonoBehaviour
     }
     public void OnClick()
     {
-        if (actionManager.actionMode == ActionManager.ActionModes.TurnBased)
+        if (actionManager.IsTurnBasedMode())
         {
             return;
         }
-        actionManager.selectCharacter(character);
-        Debug.Log("Character assign attempt");
+        actionManager.SelectCharacter(character);
     }
 }

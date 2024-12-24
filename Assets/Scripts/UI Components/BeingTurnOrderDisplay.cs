@@ -26,7 +26,7 @@ public class BeingTurnOrderDisplay : MonoBehaviour
     }
     private void Update()
     {
-        if (actionManager.actionMode == ActionManager.ActionModes.Free || actionManager.beings.Count <= beingIndex) // second half is placeholder logic until these load dynamically for each being in combat
+        if (actionManager.IsFreeMode() || actionManager.beings.Count <= beingIndex) // second half is placeholder logic until these load dynamically for each being in combat
         {
             gameObject.SetActive(false);
             return;

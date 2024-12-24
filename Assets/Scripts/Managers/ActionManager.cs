@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ActionManager : MonoBehaviour
@@ -17,12 +18,22 @@ public class ActionManager : MonoBehaviour
         Free
     }
 
-    public ActionModes actionMode = ActionModes.Free;
+    private ActionModes actionMode = ActionModes.Free;
+
+    public bool IsTurnBasedMode()
+    {
+        return (actionMode == ActionModes.TurnBased);
+    }
+
+    public bool IsFreeMode()
+    {
+        return (actionMode == ActionModes.Free);
+    }
 
     void Start()
     {
         partyManager = FindObjectOfType<PartyManager>();
-        currentBeing = partyManager.partyMembers.First();
+        SelectCharacter(partyManager.partyMembers.FirstOrDefault());
     }
 
     private void Awake()
@@ -42,6 +53,9 @@ public class ActionManager : MonoBehaviour
         if (actionMode == ActionModes.TurnBased && !enemiesAreAlive)
         {
             StartFreeMode();
+        }
+        if (Input.GetMouseButtonDown(1)) {
+            ExecuteCharacterAction(new CharacterAction((player, action) => Interaction.Interact(player, action), currentBeing));
         }
     }
     
@@ -105,7 +119,7 @@ public class ActionManager : MonoBehaviour
         cameraController.FocusOn(currentBeing.transform);
     }
 
-    public void selectCharacter(PlayerCharacter selectedPlayer)
+    public void SelectCharacter(PlayerCharacter selectedPlayer)
     {
         if (selectedPlayer == currentBeing)
         {
