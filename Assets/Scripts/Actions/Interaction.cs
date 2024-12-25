@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Interaction
 {
-    public static IEnumerator Interact(Being being, CharacterAction action) {
+    public static IEnumerator InteractWithWorldItem(Being being, CharacterAction action) {
         InteractableDisplay interactableDisplay = Object.FindObjectOfType<InteractableDisplay>();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Interactable")))
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Interactable", "Attackable")))
         {
             interactableDisplay.gameObject.transform.position = interactableDisplay.offScreenPosition;
             yield break;
@@ -38,6 +38,24 @@ public class Interaction
             }
             yield return null;
         }
+        interactableDisplay.gameObject.transform.position = interactableDisplay.offScreenPosition;
+        yield break;
+    }
+
+    public static IEnumerator InteractWithInventoryItem(Being being, CharacterAction action, Interactable interactable)
+    {
+        InteractableDisplay interactableDisplay = Object.FindObjectOfType<InteractableDisplay>();
+        interactableDisplay.gameObject.SetActive(true);
+        interactableDisplay.Display(interactable, canInspect: true, canDrop: true);
+        while (action.endSignal == false)
+        {
+            if (Input.GetMouseButtonUp(0) || Input.GetKeyDown(KeyCode.Escape) || !being.isTurn)
+            {
+                action.EndAction();
+            }
+            yield return null;
+        }
+        Debug.Log("ended");
         interactableDisplay.gameObject.transform.position = interactableDisplay.offScreenPosition;
         yield break;
     }

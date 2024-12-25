@@ -34,7 +34,7 @@ public class InventoryDisplay : MonoBehaviour
         UpdateDisplay();
     }
 
-    void UpdateDisplay()
+    public void UpdateDisplay()
     {
         if (currentPlayer == null)
         {

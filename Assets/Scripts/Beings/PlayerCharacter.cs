@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class PlayerCharacter : Being
@@ -74,7 +75,6 @@ public class PlayerCharacter : Being
     {
         if (item == null)
         {
-            Debug.LogWarning("Attempted to add null item to inventory");
             return;
         }
         inventory.Add(item);
@@ -88,7 +88,6 @@ public class PlayerCharacter : Being
             OnInventoryUpdated?.Invoke();
             return;
         }
-        Debug.LogWarning("Attempted to remove item not in inventory");
     }
 
 }

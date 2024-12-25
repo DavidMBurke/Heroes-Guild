@@ -57,8 +57,8 @@ public class ActionManager : MonoBehaviour
         {
             StartFreeMode();
         }
-        if (Input.GetMouseButtonDown(1)) {
-            ExecuteCharacterAction(new CharacterAction((player, action) => Interaction.Interact(player, action), currentBeing));
+        if (Input.GetMouseButtonDown(1) && !UIManager.CheckForUIElement()) {
+            ExecuteCharacterAction(new CharacterAction((player, action) => Interaction.InteractWithWorldItem(player, action), currentBeing));
         }
     }
     
