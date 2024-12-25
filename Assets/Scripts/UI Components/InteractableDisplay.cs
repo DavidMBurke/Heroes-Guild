@@ -13,6 +13,7 @@ public class InteractableDisplay : MonoBehaviour
     private Interactable selectedInteractable;
     private Button pickUpButton;
     private Button inspectButton;
+    private Button dropButton;
     public Vector3 offScreenPosition;
     private bool moveBeforePickup;
 
@@ -23,6 +24,7 @@ public class InteractableDisplay : MonoBehaviour
         itemName = textComponents.FirstOrDefault(t => t.name == "Interactable Name");
         pickUpButton = buttonComponents.FirstOrDefault(b => b.name == "Pick Up Button");
         inspectButton = buttonComponents.FirstOrDefault(b => b.name == "Inspect Button");
+        dropButton = buttonComponents.FirstOrDefault(b => b.name == "Drop Button");
         pickUpButton.onClick.AddListener(() => Pickup(moveBeforePickup));
         inspectButton.onClick.AddListener(() => Interaction.Inspect(selectedInteractable));
         Vector3 offScreenPosition = new Vector3(-500, -500, 0);
@@ -37,13 +39,14 @@ public class InteractableDisplay : MonoBehaviour
         itemName.text = selectedInteractable.name;
     }
 
-    public void Display(Interactable interactable, bool canInspect = false, bool canPickUp = false, bool moveFirst = false)
+    public void Display(Interactable interactable, bool canInspect = false, bool canPickUp = false, bool canDrop = false, bool moveFirst = false)
     {
         moveBeforePickup = moveFirst;
         selectedInteractable = interactable;
         transform.position = Input.mousePosition;
         pickUpButton.gameObject.SetActive(canPickUp && interactable.canBePickedUp);
         inspectButton.gameObject.SetActive(canInspect);
+        dropButton.gameObject.SetActive(canDrop);
     }
 
     private void Pickup(bool moveFirst = false)

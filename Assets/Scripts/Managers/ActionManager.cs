@@ -12,6 +12,9 @@ public class ActionManager : MonoBehaviour
     int turnIndex = 0;
     PartyManager partyManager;
 
+    public delegate void PlayerSelected(PlayerCharacter newPlayer);
+    public event PlayerSelected OnPlayerSelected;
+
     public enum ActionModes
     {
         TurnBased,
@@ -128,6 +131,11 @@ public class ActionManager : MonoBehaviour
         EndTurn();
         currentBeing = selectedPlayer;
         selectedPlayer.StartTurn();
+
+        if (currentBeing is PlayerCharacter player)
+        {
+            OnPlayerSelected?.Invoke(player);
+        }
     }
 
     public void EndMove()
