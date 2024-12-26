@@ -11,11 +11,17 @@ public class InventorySlot : MonoBehaviour
     public Image image;
     private Being being;
 
+    /// <summary>
+    /// Identify Image component
+    /// </summary>
     private void Start()
     {
         image = GetComponentsInChildren<Image>().ToList().FirstOrDefault(i => i.name == "Icon");
     }
 
+    /// <summary>
+    /// Check for right click
+    /// </summary>
     private void Update()
     {
         if (Input.GetMouseButtonDown(1) && IsMouseOverUI())
@@ -24,12 +30,16 @@ public class InventorySlot : MonoBehaviour
         }
     }
 
-    public void UpdateItem(Interactable i)
+    /// <summary>
+    /// Update Inventory Slot to given Interactable
+    /// </summary>
+    /// <param name="interactable"></param>
+    public void UpdateItem(Interactable interactable)
     {
-        if (i != null && i.sprite != null)
+        if (interactable != null && interactable.sprite != null)
         {
-            interactable = i;
-            image.sprite = i.sprite;
+            this.interactable = interactable;
+            image.sprite = interactable.sprite;
             image.color = Color.white;
             return;
         }        
@@ -37,6 +47,9 @@ public class InventorySlot : MonoBehaviour
         image.color = Color.clear;
     }
 
+    /// <summary>
+    /// Show interaction popup on inventory item
+    /// </summary>
     public void OnRightClick()
     {
         if (interactable == null)
@@ -47,6 +60,10 @@ public class InventorySlot : MonoBehaviour
         ActionManager.instance.ExecuteCharacterAction(new CharacterAction((player, action) => Interaction.InteractWithInventoryItem(player, action, interactable), being));
     }
 
+    /// <summary>
+    /// Check if mouse is over this element
+    /// </summary>
+    /// <returns></returns>
     private bool IsMouseOverUI()
     {
         PointerEventData pointerData = new PointerEventData(EventSystem.current)

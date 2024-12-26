@@ -4,8 +4,19 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Analytics;
 
+/// <summary>
+/// Collection of Attack functions to be passed in as coroutines
+/// </summary>
 public class Attack
 {
+    /// <summary>
+    /// Basic attack that does damage at a range
+    /// </summary>
+    /// <param name="attacker"></param>
+    /// <param name="range"></param>
+    /// <param name="damage"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
     public static IEnumerator BasicAttack(Being attacker, float range, int damage, CharacterAction action)
     {
         bool inAttack = true;

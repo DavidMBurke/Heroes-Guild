@@ -3,8 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Collection of Spells to be passed in as coroutines
+/// </summary>
 public class Spells
 {
+    /// <summary>
+    /// Placeholder
+    /// </summary>
+    /// <param name="caster"></param>
+    /// <returns></returns>
     public static IEnumerator Spell1Coroutine(Being caster)
     {
         float timer = 0f;
@@ -21,6 +29,12 @@ public class Spells
         Debug.Log($"Ending Spell Cast");
     }
 
+    /// <summary>
+    /// Does damage within a radius area of effect
+    /// </summary>
+    /// <param name="caster"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
     public static IEnumerator FireBall(Being caster, CharacterAction action)
     {
         bool inSpell = true;

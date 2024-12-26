@@ -27,6 +27,7 @@ public class InteractableDisplay : MonoBehaviour
         dropButton = buttonComponents.FirstOrDefault(b => b.name == "Drop Button");
         pickUpButton.onClick.AddListener(() => Pickup(moveBeforePickup));
         inspectButton.onClick.AddListener(() => Interaction.Inspect(selectedInteractable));
+        dropButton.onClick.AddListener(() => Interaction.Drop(selectedInteractable, ActionManager.instance.currentBeing));
         Vector3 offScreenPosition = new Vector3(-500, -500, 0);
     }
 

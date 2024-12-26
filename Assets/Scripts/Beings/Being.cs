@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
+/// <summary>
+/// Umbrella class for everything creature-like
+/// </summary>
 public class Being : MonoBehaviour
 {
     // Info
@@ -19,6 +21,7 @@ public class Being : MonoBehaviour
     public bool isTurn = false;
     public bool isInCharacterAction = false;
     public CharacterAction currentAction;
+    public float initiative;
 
     // Stats
     public int health = 100;
@@ -42,6 +45,7 @@ public class Being : MonoBehaviour
 
     // Inventory
     public List<Interactable> inventory;
+
     protected void Start()
     {
         actionManager = ActionManager.instance;
@@ -57,6 +61,9 @@ public class Being : MonoBehaviour
         checkStatus();
     }
 
+    /// <summary>
+    /// Check status indicators
+    /// </summary>
     private void checkStatus()
     {
         if (health <= 0 && isAlive)
@@ -65,6 +72,9 @@ public class Being : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set isAlive to false, renove rotational lock and push over
+    /// </summary>
     private void die()
     {
         isAlive = false;
@@ -77,6 +87,9 @@ public class Being : MonoBehaviour
         ApplyColors();
     }
 
+    /// <summary>
+    /// Set colors and transparency of being, turn indicator and range indicator
+    /// </summary>
     private void ApplyColors()
     {
         MeshRenderer renderer = model.GetComponent<MeshRenderer>();
@@ -106,6 +119,10 @@ public class Being : MonoBehaviour
         FixVertical();
     }
 
+    /// <summary>
+    /// Set and lock being upright
+    /// </summary>
+    /// note: For some reason only doing one of locking rotation and setting to zero still allowed falling over but both do not
     private void FixVertical()
     {
         if (!isAlive)

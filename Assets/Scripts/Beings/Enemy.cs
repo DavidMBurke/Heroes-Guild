@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Enemy NPC
+/// </summary>
 public class Enemy : Being
 {
     public float enemyTurnTime = 3;
@@ -12,6 +15,10 @@ public class Enemy : Being
         base.Start();
     }
 
+    /// <summary>
+    /// Skip turn if not alive, set turn to true and initiate actions (currently a 3 second pause placeholder)
+    /// </summary>
+    /// <param name="combatManager"></param>
     public void StartTurn(ActionManager combatManager)
     {
         if (!isAlive)

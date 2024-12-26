@@ -1,9 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-
+/// <summary>
+/// Interaction functions to be passed in as coroutines
+/// </summary>
 public class Interaction
 {
+    /// <summary>
+    /// Bring up the interaction popup for items in the world (non-UI items)
+    /// </summary>
+    /// <param name="being"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
     public static IEnumerator InteractWithWorldItem(Being being, CharacterAction action) {
         InteractableDisplay interactableDisplay = Object.FindObjectOfType<InteractableDisplay>();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -42,6 +50,13 @@ public class Interaction
         yield break;
     }
 
+    /// <summary>
+    /// Bring up interaction popup for item in the inventory
+    /// </summary>
+    /// <param name="being"></param>
+    /// <param name="action"></param>
+    /// <param name="interactable"></param>
+    /// <returns></returns>
     public static IEnumerator InteractWithInventoryItem(Being being, CharacterAction action, Interactable interactable)
     {
         InteractableDisplay interactableDisplay = Object.FindObjectOfType<InteractableDisplay>();
@@ -60,6 +75,12 @@ public class Interaction
         yield break;
     }
 
+    /// <summary>
+    /// Move being to an item and take it from world to being inventory once in pickup range
+    /// </summary>
+    /// <param name="interactable"></param>
+    /// <param name="being"></param>
+    /// <returns></returns>
     public static IEnumerator MoveAndPickUp(Interactable interactable, Being being)
     {
         float distanceToTarget = Vector3.Distance(interactable.transform.position, being.transform.position);    
@@ -74,6 +95,11 @@ public class Interaction
         PickUp(interactable, being);
     }
 
+    /// <summary>
+    /// Move an item from world to being inventory
+    /// </summary>
+    /// <param name="interactable"></param>
+    /// <param name="being"></param>
     public static void PickUp(Interactable interactable, Being being)
     {
         if (being is PlayerCharacter player)
@@ -85,9 +111,22 @@ public class Interaction
         being.inventory.Add(interactable);
         interactable.gameObject.SetActive(false);
     }
-
+    
+    /// <summary>
+    /// Remove item from being inventory and drop it on the ground around them
+    /// </summary>
+    /// <param name="interactable"></param>
+    /// <param name="being"></param>
     public static void Drop(Interactable interactable, Being being)
     {
+        if (being is PlayerCharacter player)
+        {
+            player.RemoveFromInventory(interactable);
+        }
+        if (being is Enemy enemy)
+        {
+            enemy.inventory.Remove(interactable);
+        }
         interactable.gameObject.SetActive(true);
         Vector3 p = being.gameObject.transform.position;
         p.x += Random.Range(-being.interactDistance, being.interactDistance);
@@ -95,6 +134,10 @@ public class Interaction
         interactable.gameObject.transform.position = p;
     }
 
+    /// <summary>
+    /// TBI - Currently puts description in console, will show in UI in a way TBD
+    /// </summary>
+    /// <param name="interactable"></param>
     public static void Inspect(Interactable interactable)
     {
         Debug.Log(interactable.description);

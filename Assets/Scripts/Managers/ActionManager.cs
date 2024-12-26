@@ -81,7 +81,9 @@ public class ActionManager : MonoBehaviour
         foreach (Being being in beings)
         {
             being.isTurn = false;
+            being.initiative = Random.Range(0, 100);
         }
+        beings = beings.OrderBy(b => b.initiative).ToList();
         currentBeing = beings[turnIndex];
     }
 

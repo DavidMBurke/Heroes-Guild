@@ -1,8 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Movement actions to be passed as coroutines
+/// </summary>
 public class Movement
 {
+    /// <summary>
+    /// Show range indicator if in turn-based mode, and move a character to position if within movement range, or indefinitely if free mode
+    /// </summary>
+    /// TODO - Pathing
+    /// TODO --- Go around collidable things
+    /// TODO --- Indication of accessible areas on move indicator
+    /// TODO --- Stop movement if spotted by enemy
+    /// <param name="being"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
     public static IEnumerator Move(Being being, CharacterAction action)
     {
         if (being is PlayerCharacter player)
@@ -67,6 +80,12 @@ public class Movement
         }
     }
 
+    /// <summary>
+    /// Check if a point can be moved to, return that point's position if it can or the player's current position if not.
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="remainingMovement"></param>
+    /// <returns></returns>
     public static Vector3 MoveToClick(PlayerCharacter player, float remainingMovement)
     {
         UIManager.CheckForUIElement();
@@ -88,6 +107,10 @@ public class Movement
 
     }
 
+    /// <summary>
+    /// Return player to starting position and end move action
+    /// </summary>
+    /// <param name="player"></param>
     public static void UndoMove(PlayerCharacter player)
     {
         player.transform.position = player.startingPosition;
