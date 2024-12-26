@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Pop up for items when right clicked to provide available options
+/// </summary>
 public class InteractableDisplay : MonoBehaviour
 {
     private List<TextMeshProUGUI> textComponents;
@@ -40,6 +43,14 @@ public class InteractableDisplay : MonoBehaviour
         itemName.text = selectedInteractable.name;
     }
 
+    /// <summary>
+    /// Move the popup to the cursor position and include the applicable options
+    /// </summary>
+    /// <param name="interactable"></param>
+    /// <param name="canInspect"></param>
+    /// <param name="canPickUp"></param>
+    /// <param name="canDrop"></param>
+    /// <param name="moveFirst"></param>
     public void Display(Interactable interactable, bool canInspect = false, bool canPickUp = false, bool canDrop = false, bool moveFirst = false)
     {
         moveBeforePickup = moveFirst;
@@ -50,6 +61,10 @@ public class InteractableDisplay : MonoBehaviour
         dropButton.gameObject.SetActive(canDrop);
     }
 
+    /// <summary>
+    /// Pick up interactable. If allowed, move into range of the item before picking up.
+    /// </summary>
+    /// <param name="moveFirst"></param>
     private void Pickup(bool moveFirst = false)
     {
         if (moveFirst)

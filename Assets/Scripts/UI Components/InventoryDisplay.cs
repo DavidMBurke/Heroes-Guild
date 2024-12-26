@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Display for inventory items
+/// </summary>
 public class InventoryDisplay : MonoBehaviour
 {
     public PlayerCharacter currentPlayer;
@@ -22,6 +25,10 @@ public class InventoryDisplay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Apply event listener to the selected player to show their inventory
+    /// </summary>
+    /// <param name="newPlayer"></param>
     void HandlePlayerSelected(PlayerCharacter newPlayer)
     {
         if (currentPlayer != null)
@@ -34,6 +41,9 @@ public class InventoryDisplay : MonoBehaviour
         UpdateDisplay();
     }
 
+    /// <summary>
+    /// Update inventory to dislay selected player's current items
+    /// </summary>
     public void UpdateDisplay()
     {
         if (currentPlayer == null)

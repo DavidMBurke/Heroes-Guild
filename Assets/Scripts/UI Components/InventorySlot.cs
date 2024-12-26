@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Component for individual item slots
+/// </summary>
 public class InventorySlot : MonoBehaviour
 {
     public Interactable interactable;

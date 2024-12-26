@@ -22,7 +22,7 @@ public class TurnOrderDisplay : MonoBehaviour
     {
         for (int i = 0; i < beingDisplays.Count; i++)
         {
-            if (i < actionManager.beings.Count)
+            if (i < actionManager.beings.Count && actionManager.IsTurnBasedMode())
             {
                 beingDisplays[i].gameObject.SetActive(true);
                 beingDisplays[i].UpdateBeing(actionManager.beings[i]);

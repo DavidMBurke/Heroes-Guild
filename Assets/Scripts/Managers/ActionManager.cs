@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Manage state related to Actions and Turn Order
+/// </summary>
 public class ActionManager : MonoBehaviour
 {
     public static ActionManager instance;
@@ -23,11 +25,19 @@ public class ActionManager : MonoBehaviour
 
     private ActionModes actionMode = ActionModes.Free;
 
+    /// <summary>
+    /// Return true if in Turn Based Mode
+    /// </summary>
+    /// <returns></returns>
     public bool IsTurnBasedMode()
     {
         return (actionMode == ActionModes.TurnBased);
     }
 
+    /// <summary>
+    /// Return true if in Free Mode
+    /// </summary>
+    /// <returns></returns>
     public bool IsFreeMode()
     {
         return (actionMode == ActionModes.Free);
@@ -62,6 +72,10 @@ public class ActionManager : MonoBehaviour
         }
     }
     
+
+    /// <summary>
+    /// Set Mode to Turn Based Mode, initialize beings and start the first turn
+    /// </summary>
     private void StartTurnBasedMode()
     {
         actionMode = ActionModes.TurnBased;
@@ -69,12 +83,18 @@ public class ActionManager : MonoBehaviour
         StartTurn();
     }
 
+    /// <summary>
+    /// Set Mode to Free Mode, switch to a live party member
+    /// </summary>
     private void StartFreeMode()
     {
         currentBeing = partyManager.partyMembers.First(p => p.isAlive);
         actionMode = ActionModes.Free;
     }
 
+    /// <summary>
+    /// Set initiative values and sort beings into turn order
+    /// </summary>
     private void InitializeBeings()
     {
         beings = FindObjectsOfType<Being>().ToList();
@@ -86,7 +106,10 @@ public class ActionManager : MonoBehaviour
         beings = beings.OrderBy(b => b.initiative).ToList();
         currentBeing = beings[turnIndex];
     }
-
+    
+    /// <summary>
+    /// End the current turn, select the next being in turn order, and start their turn
+    /// </summary>
     public void NextTurn()
     {
         EndTurn();
@@ -99,6 +122,9 @@ public class ActionManager : MonoBehaviour
         StartTurn();
     }
 
+    /// <summary>
+    /// End the current being's turn
+    /// </summary>
     private void EndTurn()
     {
         if (currentBeing is PlayerCharacter player)
@@ -111,6 +137,9 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Start the current being's turn
+    /// </summary>
     private void StartTurn()
     {
         if (beings[turnIndex] is PlayerCharacter player)
@@ -124,6 +153,10 @@ public class ActionManager : MonoBehaviour
         cameraController.FocusOn(currentBeing.transform);
     }
 
+    /// <summary>
+    /// Change turns to another character (used in Free Mode)
+    /// </summary>
+    /// <param name="selectedPlayer"></param>
     public void SelectCharacter(PlayerCharacter selectedPlayer)
     {
         if (selectedPlayer == currentBeing)
@@ -140,6 +173,10 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Update endMove flag on player to true
+    /// </summary>
+    /// TODO - This probably isn't necessary with the endSignal flags on actions, see if it can be removed
     public void EndMove()
     {
         if (currentBeing is PlayerCharacter player)
@@ -148,6 +185,10 @@ public class ActionManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// End the current being's action and start a new one
+    /// </summary>
+    /// <param name="action"></param>
     public void ExecuteCharacterAction(CharacterAction action)
     {
         if (currentBeing.currentAction != null)

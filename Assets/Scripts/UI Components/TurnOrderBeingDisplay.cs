@@ -3,6 +3,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Component containing turn order icons
+/// </summary>
 public class TurnOrderBeingDisplay : MonoBehaviour
 {
     private Being being;
@@ -27,7 +30,10 @@ public class TurnOrderBeingDisplay : MonoBehaviour
         healthBar.UpdateHealthBar(being.health, being.maxHealth);
     }
 
-
+    /// <summary>
+    /// Update display slot with selected being
+    /// </summary>
+    /// <param name="b"></param>
     public void UpdateBeing(Being b)
     {
         being = b;

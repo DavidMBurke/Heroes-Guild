@@ -1,14 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Component for detecting overlapping items
+/// </summary>
 public class OverlapDetector : MonoBehaviour
 {
+    /// <summary>
+    /// List of overlapping beings
+    /// </summary>
     private List<Being> beingsList;
-
+    
+    /// <summary>
+    /// Update beings list
+    /// </summary>
+    /// <param name="list"></param>
     public void SetBeingList(List<Being> list)
     {
         beingsList = list;
     }
+
     private void OnTriggerEnter(Collider other)
     {
         Being being = other.GetComponentInParent<Being>();

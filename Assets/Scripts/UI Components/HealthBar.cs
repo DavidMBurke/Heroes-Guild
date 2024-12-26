@@ -1,15 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Health Bar component
+/// </summary>
 public class HealthBar : MonoBehaviour
 {
-    public List<Image> images;
-    public Image image;
-    public TextMeshProUGUI tmp;
+    private List<Image> images;
+    private Image image;
+    private TextMeshProUGUI tmp;
 
     private void Start()
     {
