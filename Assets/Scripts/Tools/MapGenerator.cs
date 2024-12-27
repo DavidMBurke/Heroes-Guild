@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Drawing;
 using UnityEditor;
+using TreeEditor;
 
 /// <summary>
 /// Generate maps
@@ -22,7 +23,18 @@ public class MapGenerator : MonoBehaviour
     public int conwayMaxNeighborsToComeAlive;
     public int conwayMinNeighborsToStayAlive;
     public int conwayMaxNeighborsToStayAlive;
-    private List<bool> tileIsFullTracker;
+
+    public bool updatePerlinOnSettingsChange;
+    public bool subtractPerlin;
+    public bool addPerlin;
+    [Range(0f, 1f)]
+    public float perlinThreshold;
+    [Range(0f, 1f)]
+    public float perlinScaleFactor1;
+    [Range(0f, 1f)]
+    public float perlinScaleFactor2;
+    [Range(0f, 1f)]
+    public float dropOffRate;
     private float seedX1, seedZ1;
     private float seedX2, seedZ2;
     MaterialPropertyBlock emptyPropertyBlock;
@@ -30,7 +42,7 @@ public class MapGenerator : MonoBehaviour
 
     private void OnValidate()
     {
-        if (tileMap == null || tileIsFullTracker == null || tileMap.Count != tileIsFullTracker.Count)
+        if (tileMap == null)
         {
             GenerateBlankMap();
         }
@@ -40,8 +52,12 @@ public class MapGenerator : MonoBehaviour
         fullPropertyBlock = new MaterialPropertyBlock();
         emptyPropertyBlock.SetColor("_Color", UnityEngine.Color.white);
         fullPropertyBlock.SetColor("_Color", UnityEngine.Color.black);
-        GeneratePerlinNoise();
+        if (updatePerlinOnSettingsChange)
+        {
+            GeneratePerlinNoise();
+        }
         GenerateBorder();
+        UpdateEditorViews();
     }
 
     /// <summary>
@@ -54,7 +70,6 @@ public class MapGenerator : MonoBehaviour
             DestroyImmediate(tile);
         }
         tileMap = new List<GroundTile>();
-        tileIsFullTracker = new List<bool>();
         for (int x = 0; x < xCount; x++)
         {
             for (int z = 0; z < zCount; z++)
@@ -62,8 +77,7 @@ public class MapGenerator : MonoBehaviour
                 int index = x * zCount + z;
                 GroundTile tile = Instantiate(tilePrefab, transform);
                 tile.transform.localPosition = new Vector3(x * tileSize.x, 0, z * tileSize.z);
-                tileIsFullTracker.Add(true);
-                SetFull(tile, index);
+                SetFull(tile);
                 tileMap.Add(tile);
             }
         }
@@ -73,15 +87,9 @@ public class MapGenerator : MonoBehaviour
     /// Set tile to passable
     /// </summary>
     /// <param name="tile"></param>
-    public void SetEmpty(GroundTile tile, int index)
+    public void SetEmpty(GroundTile tile)
     {
-        if (index > -1)
-        {
-            tileIsFullTracker[index] = false;
-        } else
-        {
-            Debug.Log("Error on SetEmpty");
-        }
+        tile.isFull = false;
         Renderer renderer = tile.GetComponent<Renderer>();
         renderer.SetPropertyBlock(emptyPropertyBlock);
     }
@@ -90,15 +98,9 @@ public class MapGenerator : MonoBehaviour
     /// Set tile to impassable
     /// </summary>
     /// <param name="tile"></param>
-    public void SetFull(GroundTile tile, int index)
+    public void SetFull(GroundTile tile)
     {
-        if (index > -1)
-        {
-            tileIsFullTracker[index] = true;
-        } else
-        {
-            Debug.Log("Error on SetFull");
-        }
+        tile.isFull = true;
         Renderer renderer = tile.GetComponent<Renderer>();
         renderer.SetPropertyBlock(fullPropertyBlock);
     }
@@ -113,24 +115,14 @@ public class MapGenerator : MonoBehaviour
             for (int z = roomCorner1z; z < roomCorner2z; z++) 
             {
                 int index = x * zCount + z;
-                SetEmpty(tileMap[index], index);
+                SetEmpty(tileMap[index]);
             }
         }
 
         UpdateEditorViews();
     }
 
-    public bool updatePerlinOnSettingsChange;
-    public bool subtractPerlin;
-    public bool addPerlin;
-    [Range(0f,1f)] 
-    public float perlinThreshold;
-    [Range(0f, 1f)]
-    public float perlinScaleFactor1;
-    [Range(0f, 1f)]
-    public float perlinScaleFactor2;
-    [Range(0f, 1f)]
-    public float dropOffRate;
+
     public void GeneratePerlinNoise()
     {
         for (int x = 0; x < xCount; x++)
@@ -147,11 +139,11 @@ public class MapGenerator : MonoBehaviour
                 float noiseValue = noiseValue1 + noiseValue2 * dropOffRate;
                 if (noiseValue < perlinThreshold && subtractPerlin)
                 {
-                    SetEmpty(tileMap[index], index);
+                    SetEmpty(tileMap[index]);
                 }
                 if (noiseValue >= perlinThreshold && addPerlin)
                 {
-                    SetFull(tileMap[index], index);
+                    SetFull(tileMap[index]);
                 }
             }
         }
@@ -182,7 +174,7 @@ public class MapGenerator : MonoBehaviour
                 if (x < borderThickess || x >= (xCount - borderThickess) || z < borderThickess || z >= (zCount - borderThickess))
                 {
                     int index = x * zCount + z;
-                    SetFull(tileMap[index], index);
+                    SetFull(tileMap[index]);
                 }
             }
         }
@@ -191,7 +183,11 @@ public class MapGenerator : MonoBehaviour
 
     public void Conway()
     {
-        List<bool> tileNewStateTracker = new List<bool>(tileIsFullTracker);
+        List<bool> tileNewStateTracker = new List<bool>();
+        foreach (GroundTile tile in tileMap)
+        {
+            tileNewStateTracker.Add(tile.isFull);
+        }
         for (int x = 1; x < xCount - 1; x++)
         {
             for (int z = 1; z < zCount - 1; z++)
@@ -203,11 +199,11 @@ public class MapGenerator : MonoBehaviour
                     for (int n = -1; n < 2; n++) // Ogres are like onions
                     {
                         int index = (x + m) * zCount + (z + n);
-                        if (tileIsFullTracker[index])
+                        if (tileMap[index].isFull)
                         {
                             neighbors++;
                         }
-                        if (m == 0 && n == 0 && tileIsFullTracker[index])
+                        if (m == 0 && n == 0 && tileMap[index].isFull)
                         {
                             neighbors--;
                             thisCellAlive = true;
@@ -241,20 +237,17 @@ public class MapGenerator : MonoBehaviour
             for (int z = 0; z < zCount; z++)
             {
                 int index = x * zCount + z;
-                if (tileIsFullTracker[index] != tileNewStateTracker[index])
+                if (tileMap[index].isFull != tileNewStateTracker[index])
                 {
                     if (tileNewStateTracker[index])
                     {
-                        SetFull(tileMap[index], index);
+                        SetFull(tileMap[index]);
                         continue;
                     }
-                    SetEmpty(tileMap[index], index);
+                    SetEmpty(tileMap[index]);
                 }
             }
         }
-
-
-        tileIsFullTracker = tileNewStateTracker;
 
         UpdateEditorViews();
     }
