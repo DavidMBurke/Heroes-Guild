@@ -45,5 +45,21 @@ public class MapGeneratorEditor : Editor
         {
             mapGenerator.DestroyAllTiles();
         }
+        if (GUILayout.Button("Random Walk"))
+        {
+            mapGenerator.randomWalkFromSmallestGroup();
+        }
+        if (GUILayout.Button("Generate Random Forest Map"))
+        {
+            mapGenerator.generateRandomForestMap();
+        }
+        if (GUILayout.Button("Raise Walls"))
+        {
+            mapGenerator.raiseWalls();
+        }
+        if (GUILayout.Button("Update Color"))
+        {
+            mapGenerator.updateColor();
+        }
     }
 }

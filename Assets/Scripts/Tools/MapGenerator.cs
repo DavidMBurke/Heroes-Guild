@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
-using System.Threading;
-using JetBrains.Annotations;
 
 /// <summary>
 /// Generate maps
@@ -24,7 +22,9 @@ public class MapGenerator : MonoBehaviour
     public int conwayMaxNeighborsToComeAlive;
     public int conwayMinNeighborsToStayAlive;
     public int conwayMaxNeighborsToStayAlive;
-    private bool canMoveDiagonal = false;
+    private bool canMoveDiagonal = false;//
+    public Color emptyColor;
+    public Color wallColor;
 
     public bool updatePerlinOnSettingsChange;
     public bool subtractPerlin;
@@ -39,13 +39,23 @@ public class MapGenerator : MonoBehaviour
     public float dropOffRate;
     private float seedX1, seedZ1;
     private float seedX2, seedZ2;
-    public List<Color> colorList = new List<Color>();
+    private List<Color> colorList = new List<Color>();
+    [Range(1f, 20f)]
+    public float wallHeight;
 
+
+    private void Start()
+    {
+        updateColor();
+        raiseWalls();
+    }
 
     private void OnValidate()
     {
         Renderer renderer = tilePrefab.GetComponent<Renderer>();
         tileSize = renderer.bounds.size;
+        updateColor();
+        raiseWalls();
     }
 
     /// <summary>
@@ -97,10 +107,19 @@ public class MapGenerator : MonoBehaviour
                 Renderer renderer = tileMap[index].GetComponent<Renderer>();
                 MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
                 int group = tileMap[index].group;
+                int timeOut = xCount * zCount;
                 if (group >= 0)
-                while (colorList.Count <= group)
                 {
-                    colorList.Add(new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+                    while (colorList.Count <= group && timeOut > 0)
+                    {
+                        colorList.Add(new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+                        timeOut--;
+                        if (timeOut <= 0)
+                        {
+                            Debug.LogWarning("Timed out on UpdateEditorViews");
+                        }
+                    }
+
                 }
                 switch (group)
                 {
@@ -289,11 +308,12 @@ public class MapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Find all contiguous groups
+    /// Find all contiguous groups, return list of group numbers and their counts
     /// </summary>
-    public void FindGroups()
+    public List<(int, int)> FindGroups()
     {
-        int group = 0;
+        List<(int, int)> groupCount = new List<(int, int)>();
+        (int group, int count) = (0, 0);
         foreach (GroundTile tile in tileMap)
         {
             tile.group = tile.isWall ? -1 : -2; // -1 = wall, -2 = unassigned
@@ -307,8 +327,8 @@ public class MapGenerator : MonoBehaviour
                 Queue<int> neighbors = new Queue<int>();
                 neighbors.Enqueue(index);
                 tileMap[index].group = group;
-                int overflow = 0;
-                while (neighbors.Count > 0 && overflow < 100000)
+                int timeOut = xCount * zCount;
+                while (neighbors.Count > 0 && timeOut > 0)
                 {
                     int currentIndex = neighbors.Dequeue();
 
@@ -317,16 +337,26 @@ public class MapGenerator : MonoBehaviour
                         if (tileMap[neighborIndex].group == -2)
                         {
                             tileMap[neighborIndex].group = group;
+                            count++;
                             neighbors.Enqueue(neighborIndex);
                         }
                     }
-                    overflow++;
+                    timeOut--;
                 }
+                groupCount.Add((group, count));
+                count = 1;
                 group++;
+                if (timeOut <= 0)
+                {
+                    Debug.LogWarning("Timed out on FindGroups");
+                }
             }
         }
         UpdateEditorViews();
+        return groupCount;
     }
+
+
 
     /// <summary>
     /// Return indices of all neighboring cells
@@ -356,5 +386,106 @@ public class MapGenerator : MonoBehaviour
             }
         }
         return neighbors;
+    }
+
+   public void randomWalkFromSmallestGroup()
+    {
+        List<(int, int)> groupsAndCounts = FindGroups();
+        int smallestGroup = groupsAndCounts.OrderBy((g) => g.Item2).ToList()[0].Item1;
+        List<GroundTile> groupTiles = tileMap.Where(t => t.group == smallestGroup).ToList();
+        int index = Random.Range(0, groupTiles.Count);
+        (int currentX, int currentZ) = (groupTiles[index].x, groupTiles[index].z);
+        int nextGroup = smallestGroup;
+        int timeOut = 1000;
+        while ((nextGroup == smallestGroup || nextGroup < 0) && timeOut > 0)
+        {
+            int option = Random.Range(0, 4);
+            (int, int)[] shift = { (0, -1), (-1, 0), (1, 0), (0, 1) };
+            int nextX = currentX + shift[option].Item1;
+            int nextZ = currentZ + shift[option].Item2;
+
+            if (nextX < borderThickess || nextX >= (xCount - borderThickess) || nextZ < borderThickess || nextZ >= (zCount - borderThickess)) 
+            {
+                continue;
+            }
+
+            int i = nextX * zCount + nextZ;
+            currentX = nextX;
+            currentZ = nextZ;
+            nextGroup = tileMap[i].group;
+            SetEmpty(tileMap[i]);
+            tileMap[i].group = smallestGroup;
+            timeOut--;
+            if (timeOut <= 0)
+            {
+                Debug.LogWarning("Timed out on randomWalkFromSmallestGroup");
+            }
+        }
+        UpdateEditorViews();
+    }
+
+    public void generateRandomForestMap()
+    {
+        perlinThreshold = .5f;
+        perlinScaleFactor1 = .15f;
+        perlinScaleFactor2 = .85f;
+        dropOffRate = .33f;
+        addPerlin = true;
+        subtractPerlin = true;
+        conwayCanComeAlive = true;
+        conwayCanDie = true;
+        conwayMinNeighborsToComeAlive = 5;
+        conwayMaxNeighborsToComeAlive = 8;
+        conwayMinNeighborsToStayAlive = 3;
+        conwayMaxNeighborsToStayAlive = 8;
+        borderThickess = 1;
+        GenerateBlankMap();
+        Reseed();
+        GeneratePerlinNoise();
+        GenerateBorder();
+        Conway();
+        int groups = 10;
+        int timeOut = 1000;
+        while (groups > 1 & timeOut > 0) {
+            randomWalkFromSmallestGroup();
+            groups = FindGroups().Count;
+            timeOut--;
+            if (timeOut <= 0) {
+                Debug.LogWarning("Timed out on generateRandomForestMap");
+            }
+        }
+        UpdateEditorViews();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void raiseWalls()
+    {
+        Vector3 s = tilePrefab.transform.localScale;
+        foreach (GroundTile tile in tileMap)
+        {
+            if (!tile.isWall) continue;
+            tile.transform.localScale = new Vector3(s.x, s.y * wallHeight, s.z);
+        }
+    }
+
+    /// <summary>
+    /// Update map color 
+    /// </summary>
+    public void updateColor()
+    {
+        foreach (GroundTile tile in tileMap)
+        {
+            Renderer renderer = tile.GetComponent<Renderer>();
+            MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+            switch (tile.group)
+            {
+                case -2: propertyBlock.SetColor("_Color", Color.white); break;
+                case -1: propertyBlock.SetColor("_Color", wallColor); break;
+                default: propertyBlock.SetColor("_Color", emptyColor); break;
+            }
+            renderer.SetPropertyBlock(propertyBlock);
+        }
     }
 }
