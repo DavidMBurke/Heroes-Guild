@@ -150,7 +150,6 @@ public class ActionManager : MonoBehaviour
         {
             enemy.StartTurn(this);
         }
-        cameraController.FocusOn(currentBeing.transform);
     }
 
     /// <summary>

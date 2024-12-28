@@ -13,10 +13,15 @@ public class CameraController : MonoBehaviour
     public float offsetZ = 0;
 
     private Vector3 dragOrigin;
+
+    private float currentRotationAngle = 0f;
+
     void Update()
     {
         HandlePan();
         HandleZoom();
+        HandleRotation();
+        FollowCurrentBeing();
     }
 
     void HandlePan()
@@ -47,22 +52,32 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void FocusOn(Transform target, float focusSpeed = 2f)
+    void HandleRotation()
     {
-        Vector3 targetPosition = new Vector3(
-            target.position.x + offsetX,
-            target.position.y + offsetY,
-            target.position.z + offsetZ
-        );
-        StartCoroutine(SmoothFocus(targetPosition, focusSpeed));
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            currentRotationAngle -= 90f;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            currentRotationAngle += 90f;
+        }
     }
 
-    private IEnumerator SmoothFocus(Vector3 targetPosition, float focusSpeed)
+    void FollowCurrentBeing()
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.01f)
+        Vector3 currentBeingPos;
+        if (ActionManager.instance?.currentBeing?.transform == null)
         {
-            transform.position = Vector3.Lerp(transform.position, targetPosition, focusSpeed * Time.deltaTime);
-            yield return null;
+            Debug.LogWarning("CameraController.FollowCurrentBeing could not find currentBeingPos");
+            return;
         }
+        currentBeingPos = ActionManager.instance.currentBeing.transform.position;
+
+        Quaternion rotation = Quaternion.Euler(0, currentRotationAngle, 0);
+        Vector3 offset = rotation * new Vector3(offsetX, offsetY, offsetZ);
+        Vector3 targetPosition = currentBeingPos + offset;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * panSpeed);
+        transform.LookAt(currentBeingPos);
     }
 }
