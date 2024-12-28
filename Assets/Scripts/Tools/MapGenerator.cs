@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Threading;
+using JetBrains.Annotations;
 
 /// <summary>
 /// Generate maps
@@ -43,19 +44,8 @@ public class MapGenerator : MonoBehaviour
 
     private void OnValidate()
     {
-        if (tileMap == null)
-        {
-            GenerateBlankMap();
-        }
         Renderer renderer = tilePrefab.GetComponent<Renderer>();
         tileSize = renderer.bounds.size;
-
-        if (updatePerlinOnSettingsChange && tileMap.Count > 0)
-        {
-            GeneratePerlinNoise();
-        }
-        GenerateBorder();
-        UpdateEditorViews();
     }
 
     /// <summary>
@@ -63,11 +53,7 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     public void GenerateBlankMap()
     {
-        List<GroundTile> tilesToDelete = GetComponentsInChildren<GroundTile>().ToList();
-        foreach (GroundTile tile in tilesToDelete)
-        {
-            DestroyImmediate(tile);
-        }
+        DestroyAllTiles();
         tileMap = new List<GroundTile>();
         for (int x = 0; x < xCount; x++)
         {
@@ -82,6 +68,20 @@ public class MapGenerator : MonoBehaviour
             }
         }
         UpdateEditorViews();
+    }
+
+    public void DestroyAllTiles()
+    {
+        if (tileMap != null)
+        {
+            foreach (GroundTile tile in tileMap)
+            {
+                if (tile != null && tile.gameObject != null)
+                {
+                    DestroyImmediate(tile.gameObject);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -157,6 +157,7 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     public void GeneratePerlinNoise()
     {
+        if (tileMap == null) return;
         for (int x = 0; x < xCount; x++)
         {
             for (int z = 0; z < zCount; z++)

@@ -41,5 +41,9 @@ public class MapGeneratorEditor : Editor
         {
             mapGenerator.FindGroups();
         }
+        if (GUILayout.Button("Delete Map"))
+        {
+            mapGenerator.DestroyAllTiles();
+        }
     }
 }
