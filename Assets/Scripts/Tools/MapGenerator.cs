@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Drawing;
 using UnityEditor;
-using TreeEditor;
+using System.Linq;
+using System.Threading;
 
 /// <summary>
 /// Generate maps
@@ -19,10 +19,11 @@ public class MapGenerator : MonoBehaviour
     public int borderThickess;
     public bool conwayCanComeAlive;
     public bool conwayCanDie;
-    public int conwayMinNeighborsToComeAlive; // Neighbors = full tiles adjacent or diagonal to
+    public int conwayMinNeighborsToComeAlive; // Neighbors = walls tiles adjacent or diagonal to
     public int conwayMaxNeighborsToComeAlive;
     public int conwayMinNeighborsToStayAlive;
     public int conwayMaxNeighborsToStayAlive;
+    private bool canMoveDiagonal = false;
 
     public bool updatePerlinOnSettingsChange;
     public bool subtractPerlin;
@@ -37,8 +38,8 @@ public class MapGenerator : MonoBehaviour
     public float dropOffRate;
     private float seedX1, seedZ1;
     private float seedX2, seedZ2;
-    MaterialPropertyBlock emptyPropertyBlock;
-    MaterialPropertyBlock fullPropertyBlock;
+    public List<Color> colorList = new List<Color>();
+
 
     private void OnValidate()
     {
@@ -48,11 +49,8 @@ public class MapGenerator : MonoBehaviour
         }
         Renderer renderer = tilePrefab.GetComponent<Renderer>();
         tileSize = renderer.bounds.size;
-        emptyPropertyBlock = new MaterialPropertyBlock();
-        fullPropertyBlock = new MaterialPropertyBlock();
-        emptyPropertyBlock.SetColor("_Color", UnityEngine.Color.white);
-        fullPropertyBlock.SetColor("_Color", UnityEngine.Color.black);
-        if (updatePerlinOnSettingsChange)
+
+        if (updatePerlinOnSettingsChange && tileMap.Count > 0)
         {
             GeneratePerlinNoise();
         }
@@ -65,7 +63,8 @@ public class MapGenerator : MonoBehaviour
     /// </summary>
     public void GenerateBlankMap()
     {
-        foreach (GroundTile tile in tileMap)
+        List<GroundTile> tilesToDelete = GetComponentsInChildren<GroundTile>().ToList();
+        foreach (GroundTile tile in tilesToDelete)
         {
             DestroyImmediate(tile);
         }
@@ -74,13 +73,46 @@ public class MapGenerator : MonoBehaviour
         {
             for (int z = 0; z < zCount; z++)
             {
-                int index = x * zCount + z;
                 GroundTile tile = Instantiate(tilePrefab, transform);
                 tile.transform.localPosition = new Vector3(x * tileSize.x, 0, z * tileSize.z);
-                SetFull(tile);
+                tile.x = x;
+                tile.z = z;
+                SetWall(tile);
                 tileMap.Add(tile);
             }
         }
+        UpdateEditorViews();
+    }
+
+    /// <summary>
+    /// Update scenes immediately outside of runtime
+    /// </summary>
+    private void UpdateEditorViews()
+    {
+        for (int x = 0; x < xCount; x++)
+        {
+            for (int z = 0; z < zCount; z++)
+            {
+                int index = x * zCount + z;
+                Renderer renderer = tileMap[index].GetComponent<Renderer>();
+                MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+                int group = tileMap[index].group;
+                if (group >= 0)
+                while (colorList.Count <= group)
+                {
+                    colorList.Add(new Color(Random.Range(0f,1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
+                }
+                switch (group)
+                {
+                    case -2: propertyBlock.SetColor("_Color", Color.white); break;
+                    case -1: propertyBlock.SetColor("_Color", Color.black); break;
+                    default: propertyBlock.SetColor("_Color", colorList[group]); break;
+                }
+                renderer.SetPropertyBlock(propertyBlock);
+            }
+        }
+        SceneView.RepaintAll();
+        EditorApplication.QueuePlayerLoopUpdate();
     }
 
     /// <summary>
@@ -89,20 +121,18 @@ public class MapGenerator : MonoBehaviour
     /// <param name="tile"></param>
     public void SetEmpty(GroundTile tile)
     {
-        tile.isFull = false;
-        Renderer renderer = tile.GetComponent<Renderer>();
-        renderer.SetPropertyBlock(emptyPropertyBlock);
+        tile.isWall = false;
+        tile.group = -2;
     }
 
     /// <summary>
     /// Set tile to impassable
     /// </summary>
     /// <param name="tile"></param>
-    public void SetFull(GroundTile tile)
+    public void SetWall(GroundTile tile)
     {
-        tile.isFull = true;
-        Renderer renderer = tile.GetComponent<Renderer>();
-        renderer.SetPropertyBlock(fullPropertyBlock);
+        tile.isWall = true;
+        tile.group = -1;
     }
 
     /// <summary>
@@ -122,7 +152,9 @@ public class MapGenerator : MonoBehaviour
         UpdateEditorViews();
     }
 
-
+    /// <summary>
+    /// Generate two layers of perlin noise, with the second diminished by dropOffRate
+    /// </summary>
     public void GeneratePerlinNoise()
     {
         for (int x = 0; x < xCount; x++)
@@ -143,19 +175,16 @@ public class MapGenerator : MonoBehaviour
                 }
                 if (noiseValue >= perlinThreshold && addPerlin)
                 {
-                    SetFull(tileMap[index]);
+                    SetWall(tileMap[index]);
                 }
             }
         }
         UpdateEditorViews();
     }
 
-    private void UpdateEditorViews()
-    {
-        SceneView.RepaintAll();
-        EditorApplication.QueuePlayerLoopUpdate();
-    }
-
+    /// <summary>
+    /// Change seed for perlin noise generation
+    /// </summary>
     public void Reseed()
     {
         seedX1 = Random.Range(0f, 10000f);
@@ -165,6 +194,9 @@ public class MapGenerator : MonoBehaviour
         GeneratePerlinNoise();
     }
 
+    /// <summary>
+    /// Add a border of walls around the map
+    /// </summary>
     public void GenerateBorder()
     {
         for (int x = 0; x < xCount; x++)
@@ -174,19 +206,22 @@ public class MapGenerator : MonoBehaviour
                 if (x < borderThickess || x >= (xCount - borderThickess) || z < borderThickess || z >= (zCount - borderThickess))
                 {
                     int index = x * zCount + z;
-                    SetFull(tileMap[index]);
+                    SetWall(tileMap[index]);
                 }
             }
         }
         UpdateEditorViews();
     }
 
+    /// <summary>
+    /// Apply conway game of life rules with adjustable neighbor counts.
+    /// </summary>
     public void Conway()
     {
         List<bool> tileNewStateTracker = new List<bool>();
         foreach (GroundTile tile in tileMap)
         {
-            tileNewStateTracker.Add(tile.isFull);
+            tileNewStateTracker.Add(tile.isWall);
         }
         for (int x = 1; x < xCount - 1; x++)
         {
@@ -199,11 +234,11 @@ public class MapGenerator : MonoBehaviour
                     for (int n = -1; n < 2; n++) // Ogres are like onions
                     {
                         int index = (x + m) * zCount + (z + n);
-                        if (tileMap[index].isFull)
+                        if (tileMap[index].isWall)
                         {
                             neighbors++;
                         }
-                        if (m == 0 && n == 0 && tileMap[index].isFull)
+                        if (m == 0 && n == 0 && tileMap[index].isWall)
                         {
                             neighbors--;
                             thisCellAlive = true;
@@ -237,11 +272,11 @@ public class MapGenerator : MonoBehaviour
             for (int z = 0; z < zCount; z++)
             {
                 int index = x * zCount + z;
-                if (tileMap[index].isFull != tileNewStateTracker[index])
+                if (tileMap[index].isWall != tileNewStateTracker[index])
                 {
                     if (tileNewStateTracker[index])
                     {
-                        SetFull(tileMap[index]);
+                        SetWall(tileMap[index]);
                         continue;
                     }
                     SetEmpty(tileMap[index]);
@@ -250,5 +285,75 @@ public class MapGenerator : MonoBehaviour
         }
 
         UpdateEditorViews();
+    }
+
+    /// <summary>
+    /// Find all contiguous groups
+    /// </summary>
+    public void FindGroups()
+    {
+        int group = 0;
+        foreach (GroundTile tile in tileMap)
+        {
+            tile.group = tile.isWall ? -1 : -2; // -1 = wall, -2 = unassigned
+        }
+        for (int x = 0; x < xCount; x++)
+        {
+            for (int z = 0; z < zCount; z++)
+            {
+                int index = x * zCount + z;
+                if (tileMap[index].group != -2) continue;
+                Queue<int> neighbors = new Queue<int>();
+                neighbors.Enqueue(index);
+                tileMap[index].group = group;
+                int overflow = 0;
+                while (neighbors.Count > 0 && overflow < 100000)
+                {
+                    int currentIndex = neighbors.Dequeue();
+
+                    foreach (int neighborIndex in findNeighbors(currentIndex))
+                    {
+                        if (tileMap[neighborIndex].group == -2)
+                        {
+                            tileMap[neighborIndex].group = group;
+                            neighbors.Enqueue(neighborIndex);
+                        }
+                    }
+                    overflow++;
+                }
+                group++;
+            }
+        }
+        UpdateEditorViews();
+    }
+
+    /// <summary>
+    /// Return indices of all neighboring cells
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public List<int> findNeighbors(int index)
+    {
+        List<int> neighbors = new List<int>();
+        int x = index / zCount;
+        int z = index % zCount;
+        {
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+                    if (!canMoveDiagonal && Mathf.Abs(i) == 1 && Mathf.Abs(j) == 1) continue;
+                    int neighborX = x + i;
+                    int neighborZ = z + j;
+                    if (neighborX >= 0 && neighborX < xCount && neighborZ >= 0 && neighborZ < zCount)
+                    {
+                        int neighborIndex = neighborX * zCount + neighborZ;
+                        neighbors.Add(neighborIndex);
+                    }
+                }
+            }
+        }
+        return neighbors;
     }
 }

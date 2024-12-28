@@ -37,5 +37,9 @@ public class MapGeneratorEditor : Editor
         {
             mapGenerator.Conway();
         }
+        if (GUILayout.Button("Find Groups"))
+        {
+            mapGenerator.FindGroups();
+        }
     }
 }
