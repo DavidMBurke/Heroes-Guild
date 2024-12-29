@@ -162,6 +162,11 @@ public class ActionManager : MonoBehaviour
         {
             return;
         }
+        if (currentBeing is PlayerCharacter previousPlayer)
+        {
+            previousPlayer.endMove = true;
+            previousPlayer.isInMovementAction = false;
+        }
         EndTurn();
         currentBeing = selectedPlayer;
         selectedPlayer.StartTurn();

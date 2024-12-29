@@ -57,6 +57,7 @@ public class PlayerCharacter : Being
         {
             EndCharacterAction();
         }
+        currentAction = action;
         StartCoroutine(action.action(action.character, action));
     }
 
