@@ -70,7 +70,6 @@ public class Interaction
             }
             yield return null;
         }
-        Debug.Log("ended");
         interactableDisplay.gameObject.transform.position = interactableDisplay.offScreenPosition;
         yield break;
     }

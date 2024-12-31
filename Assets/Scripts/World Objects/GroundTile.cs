@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GroundTile : MonoBehaviour
 {
-    public bool isWall;
     public int group;
     public int x;
     public int z;

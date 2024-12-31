@@ -27,7 +27,6 @@ public class Being : MonoBehaviour
     public int health = 100;
     public int maxHealth = 100;
     public bool isAlive = true;
-    ActionManager actionManager;
     
     // Model
     private Rigidbody rb;
@@ -48,7 +47,6 @@ public class Being : MonoBehaviour
 
     protected void Start()
     {
-        actionManager = ActionManager.instance;
         targetPosition = transform.position;
         rb = GetComponentInChildren<Rigidbody>();
         ApplyColors();

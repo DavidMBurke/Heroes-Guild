@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -9,10 +10,25 @@ using UnityEngine;
 public class Enemy : Being
 {
     public float enemyTurnTime = 3;
+    public int group;
+    public bool isAwareOfPlayers = false;
+    public GameObject sightSphere;
+    List<Being> overlappingBeings = new List<Being>();
+    OverlapDetector detector;
 
     new void Start()
     {
         base.Start();
+        detector = sightSphere.AddComponent<OverlapDetector>();
+        detector.SetBeingList(overlappingBeings);
+    }
+
+    private void Update()
+    {
+        if (detector != null && !isAwareOfPlayers && overlappingBeings.OfType<PlayerCharacter>().ToList().Count > 0)
+        {
+            SpotPlayers();
+        }
     }
 
     /// <summary>
@@ -46,5 +62,18 @@ public class Enemy : Being
         }
         isTurn = false;
         combatManager.NextTurn();
+    }
+
+    public void SpotPlayers()
+    {
+        if (!isAlive)
+        {
+            return;
+        }
+        List<Enemy> groupEnemies = LevelManager.instance.enemies.Where(e => e.group == group).ToList();
+        foreach (Enemy enemy in groupEnemies)
+        {
+            enemy.isAwareOfPlayers = true;
+        }
     }
 }

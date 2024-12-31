@@ -57,7 +57,7 @@ public class ActionManager : MonoBehaviour
     private void Update()
     {
         // TODO - Lots of unneccessary list generation here, can be done once and updated at turn ends
-        List<Being> enemies = FindObjectsOfType<Being>().ToList().Where(b => b.GetType() == typeof(Enemy)).ToList();
+        List<Enemy> enemies = FindObjectsOfType<Being>().OfType<Enemy>().Where(e => e.isAwareOfPlayers).ToList();
         bool enemiesAreAlive = enemies.FirstOrDefault(e => e.isAlive == true) != null;
         if (actionMode == ActionModes.Free && enemiesAreAlive)
         {
@@ -97,7 +97,17 @@ public class ActionManager : MonoBehaviour
     /// </summary>
     private void InitializeBeings()
     {
-        beings = FindObjectsOfType<Being>().ToList();
+        beings = new List<Being>();
+        List<Being> players = FindObjectsOfType<Being>().Where(b => b.isAlive && b.GetType() == typeof(PlayerCharacter)).ToList();
+        foreach (Being player in players)
+        {
+            beings.Add(player);
+        }
+        List<Being> engagedEnemy = FindObjectsOfType<Being>().Where(b => b.isAlive).OfType<Enemy>().Where(e => e.isAwareOfPlayers).OfType<Being>().ToList();
+        foreach (Being enemy in engagedEnemy)
+        {
+            beings.Add(enemy);
+        }
         foreach (Being being in beings)
         {
             being.isTurn = false;

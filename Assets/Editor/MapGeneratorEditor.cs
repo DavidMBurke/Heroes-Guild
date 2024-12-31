@@ -17,9 +17,13 @@ public class MapGeneratorEditor : Editor
         {
             mapGenerator.GenerateBlankMap();
         }
-        if (GUILayout.Button("Generate Room"))
+        if (GUILayout.Button("Clear Circle"))
         {
-            mapGenerator.GenerateRoom();
+            mapGenerator.ClearCircle();
+        }
+        if (GUILayout.Button("Clear Room"))
+        {
+            mapGenerator.ClearRect();
         }
         if (GUILayout.Button("Generate Perlin Noise"))
         {
@@ -60,6 +64,10 @@ public class MapGeneratorEditor : Editor
         if (GUILayout.Button("Update Color"))
         {
             mapGenerator.updateColor();
+        }
+        if (GUILayout.Button("Place Beings"))
+        {
+            mapGenerator.PopulateMap();
         }
     }
 }

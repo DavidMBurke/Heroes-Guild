@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System;
+using Random = UnityEngine.Random;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Generate maps
@@ -9,12 +13,15 @@ using System.Linq;
 public class MapGenerator : MonoBehaviour
 {
     public GroundTile tilePrefab;
+    public Enemy enemyPrefab;
     public List<GroundTile> tileMap;
     public int xCount = 10;
     public int zCount = 10;
     private Vector3 tileSize;
     public int roomCorner1x, roomCorner1z;
     public int roomCorner2x, roomCorner2z;
+    public int circleX, circleZ;
+    public float radius;
     public int borderThickess;
     public bool conwayCanComeAlive;
     public bool conwayCanDie;
@@ -22,9 +29,14 @@ public class MapGenerator : MonoBehaviour
     public int conwayMaxNeighborsToComeAlive;
     public int conwayMinNeighborsToStayAlive;
     public int conwayMaxNeighborsToStayAlive;
-    private bool canMoveDiagonal = false;//
+    private bool canMoveDiagonal = false;
     public Color emptyColor;
     public Color wallColor;
+    public int playerSpawnX;
+    public int playerSpawnZ;
+    public float playerSpawnRadius;
+    public int enemyCellSize;
+    public int minCellSize;
 
     public bool updatePerlinOnSettingsChange;
     public bool subtractPerlin;
@@ -80,6 +92,9 @@ public class MapGenerator : MonoBehaviour
         UpdateEditorViews();
     }
 
+    /// <summary>
+    /// Clear map by destroying all tile gameObjects
+    /// </summary>
     public void DestroyAllTiles()
     {
         if (tileMap != null)
@@ -103,7 +118,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int z = 0; z < zCount; z++)
             {
-                int index = x * zCount + z;
+                int index = GetIndex(x,z);
                 Renderer renderer = tileMap[index].GetComponent<Renderer>();
                 MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
                 int group = tileMap[index].group;
@@ -123,6 +138,7 @@ public class MapGenerator : MonoBehaviour
                 }
                 switch (group)
                 {
+                    case -3: propertyBlock.SetColor("_Color", Color.green); break;
                     case -2: propertyBlock.SetColor("_Color", Color.white); break;
                     case -1: propertyBlock.SetColor("_Color", Color.black); break;
                     default: propertyBlock.SetColor("_Color", colorList[group]); break;
@@ -140,7 +156,6 @@ public class MapGenerator : MonoBehaviour
     /// <param name="tile"></param>
     public void SetEmpty(GroundTile tile)
     {
-        tile.isWall = false;
         tile.group = -2;
     }
 
@@ -150,21 +165,52 @@ public class MapGenerator : MonoBehaviour
     /// <param name="tile"></param>
     public void SetWall(GroundTile tile)
     {
-        tile.isWall = true;
         tile.group = -1;
     }
 
     /// <summary>
     /// Draw a rectangle of clear tiles from corner to corner
     /// </summary>
-    public void GenerateRoom()
+    public void ClearRect()
     {
         for (int x = roomCorner1x; x < roomCorner2x; x++)
         {
             for (int z = roomCorner1z; z < roomCorner2z; z++) 
             {
-                int index = x * zCount + z;
+                int index = GetIndex(x,z);
                 SetEmpty(tileMap[index]);
+            }
+        }
+
+        UpdateEditorViews();
+    }
+
+    /// <summary>
+    /// Create a circle of empty tiles
+    /// </summary>
+    public void ClearCircle(int group = -2)
+    {
+
+        for (int m = -(int)radius; m <= (int)radius; m++)
+        {
+            for (int n =  -(int)radius; n <= (int)radius; n++)
+            {
+                int x = circleX + m;
+                int z = circleZ + n;
+                if (dimensionsOutOfBounds(x, z)) 
+                {
+                    continue;
+                }
+                int index = GetIndex(x,z);
+                if ((m*m + n*n) <= (radius*radius)) 
+                {
+                    if (group == -2)
+                    {
+                        SetEmpty(tileMap[index]);
+                        continue;
+                    }
+                    tileMap[index].group = group;
+                }
             }
         }
 
@@ -181,7 +227,7 @@ public class MapGenerator : MonoBehaviour
         {
             for (int z = 0; z < zCount; z++)
             {
-                int index = x * zCount + z;
+                int index = GetIndex(x,z);
                 float xIn1 = perlinScaleFactor1 * x + seedX1;
                 float zIn1 = perlinScaleFactor1 * z + seedZ1;
                 float xIn2 = perlinScaleFactor2 * x + seedX2;
@@ -223,14 +269,19 @@ public class MapGenerator : MonoBehaviour
         {
             for (int z = 0; z < zCount; z++)
             {
-                if (x < borderThickess || x >= (xCount - borderThickess) || z < borderThickess || z >= (zCount - borderThickess))
+                if (dimensionsOutOfBounds(x, z))
                 {
-                    int index = x * zCount + z;
+                    int index = GetIndex(x,z);
                     SetWall(tileMap[index]);
                 }
             }
         }
         UpdateEditorViews();
+    }
+
+    private bool dimensionsOutOfBounds(int x, int z)
+    {
+        return (x < borderThickess || x >= (xCount - borderThickess) || z < borderThickess || z >= (zCount - borderThickess));
     }
 
     /// <summary>
@@ -241,7 +292,7 @@ public class MapGenerator : MonoBehaviour
         List<bool> tileNewStateTracker = new List<bool>();
         foreach (GroundTile tile in tileMap)
         {
-            tileNewStateTracker.Add(tile.isWall);
+            tileNewStateTracker.Add(tile.group == -1);
         }
         for (int x = 1; x < xCount - 1; x++)
         {
@@ -254,11 +305,11 @@ public class MapGenerator : MonoBehaviour
                     for (int n = -1; n < 2; n++) // Ogres are like onions
                     {
                         int index = (x + m) * zCount + (z + n);
-                        if (tileMap[index].isWall)
+                        if (tileMap[index].group == -1)
                         {
                             neighbors++;
                         }
-                        if (m == 0 && n == 0 && tileMap[index].isWall)
+                        if (m == 0 && n == 0 && tileMap[index].group == -1)
                         {
                             neighbors--;
                             thisCellAlive = true;
@@ -291,8 +342,8 @@ public class MapGenerator : MonoBehaviour
         {
             for (int z = 0; z < zCount; z++)
             {
-                int index = x * zCount + z;
-                if (tileMap[index].isWall != tileNewStateTracker[index])
+                int index = GetIndex(x,z);
+                if (tileMap[index].group == -1 != tileNewStateTracker[index])
                 {
                     if (tileNewStateTracker[index])
                     {
@@ -310,25 +361,30 @@ public class MapGenerator : MonoBehaviour
     /// <summary>
     /// Find all contiguous groups, return list of group numbers and their counts
     /// </summary>
-    public List<(int, int)> FindGroups()
+    public List<(int, int)> FindGroups(bool makeSpawnCells = false)
     {
         List<(int, int)> groupCount = new List<(int, int)>();
         (int group, int count) = (0, 0);
         foreach (GroundTile tile in tileMap)
         {
-            tile.group = tile.isWall ? -1 : -2; // -1 = wall, -2 = unassigned
+            if (tile.group == -3)
+            {
+                continue;
+            }
+            tile.group = tile.group == -1 ? -1 : -2; // -1 = wall, -2 = unassigned
         }
         for (int x = 0; x < xCount; x++)
         {
             for (int z = 0; z < zCount; z++)
             {
-                int index = x * zCount + z;
+                int index = GetIndex(x,z);
                 if (tileMap[index].group != -2) continue;
                 Queue<int> neighbors = new Queue<int>();
                 neighbors.Enqueue(index);
                 tileMap[index].group = group;
                 int timeOut = xCount * zCount;
-                while (neighbors.Count > 0 && timeOut > 0)
+                int cellsCount = enemyCellSize;
+                while (neighbors.Count > 0 && timeOut > 0 && (cellsCount > 0 || !makeSpawnCells))
                 {
                     int currentIndex = neighbors.Dequeue();
 
@@ -342,6 +398,10 @@ public class MapGenerator : MonoBehaviour
                         }
                     }
                     timeOut--;
+                    if (makeSpawnCells)
+                    {
+                        cellsCount--;
+                    }
                 }
                 groupCount.Add((group, count));
                 count = 1;
@@ -388,6 +448,9 @@ public class MapGenerator : MonoBehaviour
         return neighbors;
     }
 
+    /// <summary>
+    /// Find smallest group and carve empty spaces in random cardinal directions until another group is connected
+    /// </summary>
    public void randomWalkFromSmallestGroup()
     {
         List<(int, int)> groupsAndCounts = FindGroups();
@@ -424,6 +487,9 @@ public class MapGenerator : MonoBehaviour
         UpdateEditorViews();
     }
 
+    /// <summary>
+    /// Generate a contiguous bordered map for forest dungeon
+    /// </summary>
     public void generateRandomForestMap()
     {
         perlinThreshold = .5f;
@@ -454,18 +520,19 @@ public class MapGenerator : MonoBehaviour
                 Debug.LogWarning("Timed out on generateRandomForestMap");
             }
         }
+        PopulateMap();
         UpdateEditorViews();
     }
 
     /// <summary>
-    /// 
+    /// Raise all wall tiles.
     /// </summary>
     public void raiseWalls()
     {
         Vector3 s = tilePrefab.transform.localScale;
         foreach (GroundTile tile in tileMap)
         {
-            if (!tile.isWall) continue;
+            if (tile.group != -1) continue;
             tile.transform.localScale = new Vector3(s.x, s.y * wallHeight, s.z);
         }
     }
@@ -488,4 +555,95 @@ public class MapGenerator : MonoBehaviour
             renderer.SetPropertyBlock(propertyBlock);
         }
     }
+
+    /// <summary>
+    /// Place a player spawn circle and connect it to map if it isn't, partition map into groups, then spawn players and enemies in groups
+    /// </summary>
+    public void PopulateMap()
+    {
+        circleX = playerSpawnX;
+        circleZ = playerSpawnZ;
+        radius = playerSpawnRadius;
+        ClearCircle(-3);
+        if (FindGroups().Count > 1)
+        {
+            randomWalkFromSmallestGroup();
+        };
+        List<(int, int)> groupsAndCounts = FindGroups(makeSpawnCells: true);
+        List<int> undersizedGroups = groupsAndCounts.Where(g => g.Item2 < minCellSize).Select(g => g.Item1).ToList(); // will be small and at the edges of map, good place for item spawns
+        List<int> fullSizeGroups = groupsAndCounts.Where(g => g.Item2 >= minCellSize).Select(g => g.Item1).ToList(); // enemy spawn locations
+        List<GroundTile> tilesInFullGroups = tileMap.Where(t => fullSizeGroups.Contains(t.group)).ToList();
+        List<GroundTile> tilesInUndersizeGroups = tileMap.Where(t => undersizedGroups.Contains(t.group)).ToList();
+
+        //// Uncomment to visualize groupings
+        //foreach (GroundTile tile in tilesInUndersizeGroups)
+        //{
+        //    tile.group = 0;
+        //}
+        //foreach (GroundTile tile in tilesInFullGroups)
+        //{
+        //    tile.group = 1;
+        //}
+
+        List<Being> charBeings = new List<Being>(); //TODO - This was a stupid quick fix for a bug to get a recording, in case I forget to come back.
+        List<Being> playerCharacters = PartyManager.instance.partyMembers.Select(p => (Being)p).ToList();
+        for (int i = 0; i < LevelManager.instance.partyCount; i++)
+        {
+            charBeings.Add(playerCharacters[i]);
+        }
+        SpawnInGroupLocation(charBeings, -3);
+        for(int i = 1; i < fullSizeGroups.Count; i += 5)
+        {
+            int group = fullSizeGroups[i];
+            int count = Random.Range(1, 5);
+            List<Being> beings = new List<Being>(); 
+            for (int j = 0; j < count; j++)
+            {
+                Being being = Instantiate(enemyPrefab);
+                if (being is Enemy enemy)
+                {
+                    enemy.group = group;
+                    LevelManager.instance.enemies.Add(enemy);
+                }
+                beings.Add(being);
+            }
+            SpawnInGroupLocation(beings, group);
+        }
+        UpdateEditorViews();
+    }
+    
+    /// <summary>
+    /// Spawn beings at tiles with the given group number
+    /// </summary>
+    /// <param name="beings"></param>
+    /// <param name="group"></param>
+    private void SpawnInGroupLocation(List<Being> beings, int group)
+    {
+        List<GroundTile> spawnTiles = tileMap.Where(t => t.group == group).ToList();
+
+        if (beings.Count > spawnTiles.Count)
+        {
+            Debug.LogWarning($"Not enough tiles to spawn {beings[0].name} group at tile group {group}");
+        }
+        Methods.Shuffle(spawnTiles);
+        for (int i = 0; i < beings.Count; i++)
+        {
+            Vector3 p = spawnTiles[i].transform.position;
+            float tileHeight = spawnTiles[i].transform.localScale.y;
+            beings[i].transform.position = new Vector3(p.x, p.y + tileHeight, p.z);
+            //Debug.Log($"\nbeing pos {beings[i].transform.position.x} {beings[i].transform.position.y} {beings[i].transform.position.z} \ntile pos {p.x} {p.y} {p.z}");
+        }
+    }
+
+    /// <summary>
+    /// Get index from x and z coords
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
+    private int GetIndex(int x, int z)
+    {
+        return (x * zCount + z);
+    }
+    
 }

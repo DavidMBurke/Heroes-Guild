@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +7,13 @@ using UnityEngine;
 /// Note: Will be populated eventually with inter-party interaction states and logic
 public class PartyManager : MonoBehaviour
 {
+    public GameObject playerCharacterPrefab;
+    public static PartyManager instance;
     public PlayerCharacter[] partyMembers = new PlayerCharacter[6];
-    
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
 }
