@@ -49,6 +49,14 @@ public class Movement
                 if (isMoving)
                 {
                     player.rangeIndicator.gameObject.SetActive(false);
+                    Debug.Log("Check for wall collision");
+                    if (Physics.Raycast(player.transform.position, (targetPosition - player.transform.position).normalized, player.moveSpeed * Time.deltaTime + .5f, LayerMask.GetMask("Ground"))) {
+                        Debug.Log("Wall collision");
+                        isMoving = false;
+                        player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
+                        yield return null;
+                        continue;
+                    }
                     player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, player.moveSpeed * Time.deltaTime);
                     if (actionManager.IsTurnBasedMode())
                     {

@@ -115,6 +115,7 @@ public class Being : MonoBehaviour
     protected void FixedUpdate()
     {
         FixVertical();
+        FixPosition();
     }
 
     /// <summary>
@@ -133,6 +134,12 @@ public class Being : MonoBehaviour
         rotation.x = 0;
         transform.eulerAngles = rotation;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    private void FixPosition()
+    {
+        transform.position = model.gameObject.transform.position;
+        model.gameObject.transform.localPosition = Vector3.zero;
     }
 
 }
