@@ -4,8 +4,7 @@ using UnityEditor;
 using System.Linq;
 using System;
 using Random = UnityEngine.Random;
-using static UnityEditor.Experimental.GraphView.GraphView;
-using Unity.VisualScripting;
+using Unity.AI.Navigation;
 
 /// <summary>
 /// Generate maps
@@ -15,6 +14,7 @@ public class MapGenerator : MonoBehaviour
     public GroundTile tilePrefab;
     public Enemy enemyPrefab;
     public List<GroundTile> tileMap;
+    public NavMeshSurface navMeshSurface;
     public int xCount = 10;
     public int zCount = 10;
     private Vector3 tileSize;
@@ -66,8 +66,6 @@ public class MapGenerator : MonoBehaviour
     {
         Renderer renderer = tilePrefab.GetComponent<Renderer>();
         tileSize = renderer.bounds.size;
-        updateColor();
-        raiseWalls();
     }
 
     /// <summary>
@@ -151,12 +149,13 @@ public class MapGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Set tile to passable
+    /// Set tile to ground layer
     /// </summary>
     /// <param name="tile"></param>
     public void SetEmpty(GroundTile tile)
     {
         tile.group = -2;
+        tile.gameObject.layer = LayerMask.NameToLayer("Ground");
     }
 
     /// <summary>
@@ -166,6 +165,7 @@ public class MapGenerator : MonoBehaviour
     public void SetWall(GroundTile tile)
     {
         tile.group = -1;
+        tile.gameObject.layer = LayerMask.NameToLayer("Wall");
     }
 
     /// <summary>
@@ -493,7 +493,7 @@ public class MapGenerator : MonoBehaviour
     public void generateRandomForestMap()
     {
         perlinThreshold = .5f;
-        perlinScaleFactor1 = .15f;
+        perlinScaleFactor1 = .3f;
         perlinScaleFactor2 = .85f;
         dropOffRate = .33f;
         addPerlin = true;
@@ -520,7 +520,10 @@ public class MapGenerator : MonoBehaviour
                 Debug.LogWarning("Timed out on generateRandomForestMap");
             }
         }
+        BakeNavMesh();
         PopulateMap();
+        updateColor();
+        raiseWalls();
         UpdateEditorViews();
     }
 
@@ -644,6 +647,16 @@ public class MapGenerator : MonoBehaviour
     private int GetIndex(int x, int z)
     {
         return (x * zCount + z);
+    }
+
+    public void BakeNavMesh()
+    {
+        if (navMeshSurface == null)
+        {
+            Debug.LogError("NavMeshSurface is not assigned");
+            return;
+        }
+        navMeshSurface.BuildNavMesh();
     }
     
 }

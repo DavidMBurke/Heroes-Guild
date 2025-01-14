@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Movement actions to be passed as coroutines
@@ -27,13 +28,13 @@ public class Movement
             Vector3 targetPosition = player.startingPosition;
             player.rangeIndicatorColor = player.rangeIndicatorMovementColor;
             bool isMoving = false;
-            while ((remainingMovement > 0 || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
+            while ((remainingMovement > 1f || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
                 player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (isMoving || UIManager.CheckForUIElement())
+                    if ((isMoving && actionManager.IsTurnBasedMode()) || UIManager.CheckForUIElement())
                     {
                         yield return null;
                         continue;
@@ -44,30 +45,29 @@ public class Movement
                         yield return null;
                         continue;
                     }
-                    isMoving = true;
-                }
-                if (isMoving)
-                {
-                    player.rangeIndicator.gameObject.SetActive(false);
-                    Debug.Log("Check for wall collision");
-                    if (Physics.Raycast(player.transform.position, (targetPosition - player.transform.position).normalized, player.moveSpeed * Time.deltaTime + .5f, LayerMask.GetMask("Ground"))) {
-                        Debug.Log("Wall collision");
-                        isMoving = false;
-                        player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
+                    NavMeshPath path = new NavMeshPath();
+                    if (NavMesh.CalculatePath(player.transform.position, targetPosition, NavMesh.AllAreas, path))
+                    {
+                        player.rangeIndicator.gameObject.SetActive(false);
+                        isMoving = true;
+                        foreach (Vector3 corner in path.corners)
+                        {
+                            while (Vector3.Distance(player.transform.position, corner) > 1f)
+                            {
+                                player.transform.position = Vector3.MoveTowards(player.transform.position, corner, player.moveSpeed * Time.deltaTime);
+                                if (actionManager.IsTurnBasedMode())
+                                {
+                                    remainingMovement -= player.moveSpeed * Time.deltaTime;
+                                }
+                                yield return null;
+                            }
+                        }
+                    } else
+                    {
+                        Debug.LogWarning("Path is invalid or incomplete");
                         yield return null;
-                        continue;
                     }
-                    player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, player.moveSpeed * Time.deltaTime);
-                    if (actionManager.IsTurnBasedMode())
-                    {
-                        remainingMovement -= player.moveSpeed * Time.deltaTime;
-                    }
-
-                    if (Vector3.Distance(player.transform.position, targetPosition) < 0.001f)
-                    {
-                        isMoving = false;
-                        player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
-                    }
+                    isMoving = false;
                 }
                 if (Input.GetMouseButtonDown(1) && actionManager.IsTurnBasedMode())
                 {
@@ -84,7 +84,6 @@ public class Movement
             }
             player.endMove = false;
             player.isInMovementAction = false;
-            yield break;
         }
     }
 
@@ -96,21 +95,26 @@ public class Movement
     /// <returns></returns>
     public static Vector3 MoveToClick(PlayerCharacter player, float remainingMovement)
     {
-        UIManager.CheckForUIElement();
+        if (UIManager.CheckForUIElement())
+        {
+            return player.startingPosition;
+        };
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
         {
             return player.startingPosition;
         }
         Vector3 targetPosition = hit.point;
-        targetPosition.y = player.transform.position.y;
-
-        float distanceToTarget = Vector3.Distance(player.transform.position, targetPosition);
-
-        if ((remainingMovement > 0 && distanceToTarget <= remainingMovement) || ActionManager.instance.IsFreeMode())
+        if (NavMesh.SamplePosition(targetPosition, out NavMeshHit navMeshHit, 1.0f, NavMesh.AllAreas))
         {
-            return targetPosition;
+            targetPosition = navMeshHit.position;
+            if ((remainingMovement > 0 && Vector3.Distance(player.transform.position, targetPosition) <= remainingMovement) || ActionManager.instance.IsFreeMode())
+            {
+                targetPosition.y = player.transform.position.y;
+                return targetPosition;
+            }
         }
+
         return player.startingPosition;
 
     }

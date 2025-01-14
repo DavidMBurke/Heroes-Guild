@@ -23,12 +23,15 @@ public class Enemy : Being
         detector.SetBeingList(overlappingBeings);
     }
 
-    private void Update()
+    private new void Update()
     {
+        base.Update();
         if (detector != null && !isAwareOfPlayers && overlappingBeings.OfType<PlayerCharacter>().ToList().Count > 0)
         {
             SpotPlayers();
         }
+       
+
     }
 
     /// <summary>
@@ -75,5 +78,6 @@ public class Enemy : Being
         {
             enemy.isAwareOfPlayers = true;
         }
+        ActionManager.instance.currentBeing.currentAction.endSignal = true;
     }
 }
