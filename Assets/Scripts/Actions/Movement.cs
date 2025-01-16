@@ -27,14 +27,14 @@ public class Movement
             Vector3 scale = player.rangeIndicator.gameObject.transform.localScale;
             Vector3 targetPosition = player.startingPosition;
             player.rangeIndicatorColor = player.rangeIndicatorMovementColor;
-            bool isMoving = false;
+            player.isMoving = false;
             while ((remainingMovement > 1f || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
                 player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if ((isMoving && actionManager.IsTurnBasedMode()) || UIManager.CheckForUIElement())
+                    if ((player.isMoving && actionManager.IsTurnBasedMode()) || UIManager.CheckForUIElement())
                     {
                         yield return null;
                         continue;
@@ -49,10 +49,10 @@ public class Movement
                     if (NavMesh.CalculatePath(player.transform.position, targetPosition, NavMesh.AllAreas, path))
                     {
                         player.rangeIndicator.gameObject.SetActive(false);
-                        isMoving = true;
+                        player.isMoving = true;
                         foreach (Vector3 corner in path.corners)
                         {
-                            while (Vector3.Distance(player.transform.position, corner) > 1f)
+                            while (Vector3.Distance(player.transform.position, corner) > 1f && player.isMoving)
                             {
                                 player.transform.position = Vector3.MoveTowards(player.transform.position, corner, player.moveSpeed * Time.deltaTime);
                                 if (actionManager.IsTurnBasedMode())
@@ -67,7 +67,7 @@ public class Movement
                         Debug.LogWarning("Path is invalid or incomplete");
                         yield return null;
                     }
-                    isMoving = false;
+                    player.isMoving = false;
                 }
                 if (Input.GetMouseButtonDown(1) && actionManager.IsTurnBasedMode())
                 {
@@ -97,11 +97,13 @@ public class Movement
     {
         if (UIManager.CheckForUIElement())
         {
+            Debug.Log("Cannot move to target location due to clicking UI Element");
             return player.startingPosition;
         };
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
         {
+            Debug.Log("Cannot move to target location due to incorrect layer mask");
             return player.startingPosition;
         }
         Vector3 targetPosition = hit.point;
@@ -113,6 +115,7 @@ public class Movement
                 targetPosition.y = player.transform.position.y;
                 return targetPosition;
             }
+            Debug.Log("Cannot move to target location: Not enough movement");
         }
 
         return player.startingPosition;

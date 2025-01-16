@@ -4,12 +4,15 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Character panels on the For Hire screen
+/// </summary>
 public class CharacterForHirePanel : MonoBehaviour
 {
     private List<TextMeshProUGUI> tmps;
     private TextMeshProUGUI column1;
     private TextMeshProUGUI column2;
-    private Character character;
+    private PlayerCharacter character;
 
     void Start()
     {
@@ -22,7 +25,7 @@ public class CharacterForHirePanel : MonoBehaviour
     {
         if (character == null)
         {
-            character = Character.CreateNewCharacter();
+            character = PlayerCharacter.CreateNewCharacter();
         }
         column1.text =
             $"Race: {character.race.name} \n" +

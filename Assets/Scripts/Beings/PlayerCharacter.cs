@@ -1,7 +1,19 @@
 using System.Collections.Generic;
+using UnityEngine;
 
+/// <summary>
+/// Playable character
+/// </summary>
 public class PlayerCharacter : Being
 {
+    public Race race = Race.races[(int)RaceEnum.Unassigned];
+    public Class playerClass = Class.classes[(int)ClassEnum.Unassigned];
+    public Attributes attributes = new Attributes();
+    public Affinities affinities = new Affinities();
+    public CombatSkills combatSkills = new CombatSkills();
+    public NonCombatSkills nonCombatSkills = new NonCombatSkills();
+    public List<CharacterAction> actionList = new List<CharacterAction>();
+
     public int maxActionPoints = 1;
     public int actionPoints = 0;
     public bool hasMovement = true;
@@ -40,6 +52,7 @@ public class PlayerCharacter : Being
 
     public void EndTurn()
     {
+        endMove = true;
         isTurn = false;
         hasMovement = false;
         if (isInCharacterAction)
@@ -85,6 +98,61 @@ public class PlayerCharacter : Being
         {
             OnInventoryUpdated?.Invoke();
             return;
+        }
+    }
+
+    public static void RollStat(ref int stat, int diceCount, int diceMin, int diceMax)
+    {
+        stat = 0;
+        for (int i = 0; i < diceCount; i++)
+        {
+            stat += Random.Range(diceMin, diceMax + 1);
+        }
+        if (stat < 0) stat = 0;
+    }
+
+    /// <summary>
+    /// Generate a new random character with random race, class and stats rolled
+    /// </summary>
+    /// <returns></returns>
+    public static PlayerCharacter CreateNewCharacter()
+    {
+        PlayerCharacter character = new PlayerCharacter();
+        character.RollNewStats();
+        return character;
+    }
+
+    /// <summary>
+    /// Roll race, class, attributes, affinities, combat and non-combat skills
+    /// TODO - Move this somewhere else for static character generation methods
+    /// </summary>
+    public void RollNewStats()
+    {
+        int raceRoll = Random.Range(1, Race.races.Count);
+        race = Race.races[raceRoll];
+        int classRoll = Random.Range(0, race.rollableClasses.Count);
+        int classNum = race.rollableClasses[classRoll];
+        playerClass = Class.classes[classNum];
+        attributes = Attributes.RollBaseAttributes(race.attributeMods);
+        affinities = Affinities.RollBaseAffinities(race.affinityMods);
+        combatSkills = CombatSkills.RollBaseSkills(playerClass.combatSkillMods);
+        nonCombatSkills = NonCombatSkills.RollBaseSkills(race.nonCombatSkillMods);
+
+        /// vvv PLACEHOLDER GARBAGE TO MAKE THIS WORK ON FRONT END vvv
+        /// This will be dynamically generated and stored in the future
+
+        if (classNum == (int)ClassEnum.Paladin)
+        {
+            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
+        }
+        if (classNum == (int)ClassEnum.Rogue)
+        {
+            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
+            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), this, "Ranged Attack"));
+        }
+        if (classNum == (int)ClassEnum.Wizard)
+        {
+            actionList.Add(new CharacterAction((caster, action) => Spells.FireBall(caster, action), this, "Fireball"));
         }
     }
 

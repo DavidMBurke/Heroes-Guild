@@ -89,6 +89,10 @@ public class ActionManager : MonoBehaviour
     private void StartFreeMode()
     {
         currentBeing = partyManager.partyMembers.First(p => p.isAlive);
+        if (currentBeing is PlayerCharacter player)
+        {
+            OnPlayerSelected?.Invoke(player);
+        }
         actionMode = ActionModes.Free;
     }
 
@@ -168,10 +172,6 @@ public class ActionManager : MonoBehaviour
     /// <param name="selectedPlayer"></param>
     public void SelectCharacter(PlayerCharacter selectedPlayer)
     {
-        if (selectedPlayer == currentBeing)
-        {
-            return;
-        }
         if (currentBeing is PlayerCharacter previousPlayer)
         {
             previousPlayer.endMove = true;

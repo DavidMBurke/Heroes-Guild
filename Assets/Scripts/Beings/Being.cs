@@ -104,7 +104,7 @@ public class Being : MonoBehaviour
             renderer.material.color = characterColor;
             turnIndicatorRenderer.material.color = turnIndicatorColor;
             rangeIndicatorRenderer.material.color = rangeIndicatorColor;
-        } else {
+        } else if (renderer != null && renderer.sharedMaterial != null) {
             renderer.sharedMaterial.color = characterColor;
             turnIndicatorRenderer.sharedMaterial.color = turnIndicatorColor;
             rangeIndicatorRenderer.sharedMaterial.color = rangeIndicatorColor;
@@ -136,6 +136,9 @@ public class Being : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
+    /// <summary>
+    /// Set position vertical
+    /// </summary>
     private void FixPosition()
     {
         transform.position = model.gameObject.transform.position;

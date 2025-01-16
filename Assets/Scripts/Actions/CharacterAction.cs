@@ -18,6 +18,11 @@ public class CharacterAction
     public Being character;
 
     /// <summary>
+    /// Name displayed on action bar / menus
+    /// </summary>
+    public string actionName;
+
+    /// <summary>
     /// flag to end coroutine from inside or outside the function
     /// </summary>
     public bool endSignal = false;
@@ -27,10 +32,11 @@ public class CharacterAction
     /// </summary>
     /// <param name="action"></param>
     /// <param name="character"></param>
-    public CharacterAction(Func<Being, CharacterAction, IEnumerator> action, Being character)
+    public CharacterAction(Func<Being, CharacterAction, IEnumerator> action, Being character, string actionName = "")
     {
         this.action = action;
         this.character = character;
+        this.actionName = actionName;
     }
 
     /// <summary>

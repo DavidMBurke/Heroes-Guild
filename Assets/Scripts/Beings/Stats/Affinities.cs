@@ -19,11 +19,11 @@ public class Affinities
     public static Affinities RollBaseAffinities(Affinities mods)
     {
         Affinities affinities = new Affinities();
-        Character.RollStat(ref affinities.nature, 2 + mods.nature, 0, 2);
-        Character.RollStat(ref affinities.arcana, 2 + mods.arcana, 0, 2);
-        Character.RollStat(ref affinities.celestial, 2 + mods.celestial, 0, 2);
-        Character.RollStat(ref affinities.spiritual, 2 + mods.spiritual, 0, 2);
-        Character.RollStat(ref affinities.qi, 2 + mods.qi, 0, 2);
+        PlayerCharacter.RollStat(ref affinities.nature, 2 + mods.nature, 0, 2);
+        PlayerCharacter.RollStat(ref affinities.arcana, 2 + mods.arcana, 0, 2);
+        PlayerCharacter.RollStat(ref affinities.celestial, 2 + mods.celestial, 0, 2);
+        PlayerCharacter.RollStat(ref affinities.spiritual, 2 + mods.spiritual, 0, 2);
+        PlayerCharacter.RollStat(ref affinities.qi, 2 + mods.qi, 0, 2);
         return affinities;
     }
 }

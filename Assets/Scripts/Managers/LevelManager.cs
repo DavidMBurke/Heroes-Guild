@@ -31,6 +31,9 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Placeholder logic, currently generates random characters, will load in characters in the future
+    /// </summary>
     private void SpawnPartyMembers()
     {
         for (int i = 0; i < partyCount; i++)
@@ -48,9 +51,14 @@ public class LevelManager : MonoBehaviour
                 Debug.LogError($"Prefab at index {i} does not contain a PlayerCharacter component.");
                 continue;
             }
-
+            playerCharacter.RollNewStats();
             partyManager.partyMembers[i] = playerCharacter;
         }
+        if (partyManager.partyMembers[0] == null)
+        {
+            Debug.LogError("SpawnPartyMembers failed to create characters");
+        }
+        ActionManager.instance.SelectCharacter(partyManager.partyMembers[0]);
     }
 
     private void GenerateLevel()

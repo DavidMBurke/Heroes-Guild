@@ -369,6 +369,7 @@ public class MapGenerator : MonoBehaviour
         {
             if (tile.group == -3)
             {
+                tile.gameObject.layer = LayerMask.NameToLayer("Ground");
                 continue;
             }
             tile.group = tile.group == -1 ? -1 : -2; // -1 = wall, -2 = unassigned
@@ -520,8 +521,8 @@ public class MapGenerator : MonoBehaviour
                 Debug.LogWarning("Timed out on generateRandomForestMap");
             }
         }
-        BakeNavMesh();
         PopulateMap();
+        BakeNavMesh();
         updateColor();
         raiseWalls();
         UpdateEditorViews();

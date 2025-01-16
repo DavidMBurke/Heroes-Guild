@@ -33,18 +33,23 @@ public class CombatSkills
         this.areaSpells = areaSpells;
     }
 
+    /// <summary>
+    /// Roll stat die for each combat skill
+    /// </summary>
+    /// <param name="mod"></param>
+    /// <returns></returns>
     public static CombatSkills RollBaseSkills(CombatSkills mod)
     {
         CombatSkills skills = new CombatSkills();
-        Character.RollStat(ref skills.dodge, 2 + mod.dodge, 0, 2);
-        Character.RollStat(ref skills.block, 2 + mod.block, 0, 2);
-        Character.RollStat(ref skills.stealth, 2 + mod.stealth, 0, 2);
-        Character.RollStat(ref skills.melee, 2 + mod.melee, 0, 2);
-        Character.RollStat(ref skills.ranged, 2 + mod.ranged, 0, 2);
-        Character.RollStat(ref skills.healing, 2 + mod.healing, 0, 2);
-        Character.RollStat(ref skills.auras, 2 + mod.auras, 0, 2);
-        Character.RollStat(ref skills.attackSpells, 2 + mod.attackSpells, 0, 2);
-        Character.RollStat(ref skills.areaSpells, 2 + mod.areaSpells, 0, 2);
+        PlayerCharacter.RollStat(ref skills.dodge, 2 + mod.dodge, 0, 2);
+        PlayerCharacter.RollStat(ref skills.block, 2 + mod.block, 0, 2);
+        PlayerCharacter.RollStat(ref skills.stealth, 2 + mod.stealth, 0, 2);
+        PlayerCharacter.RollStat(ref skills.melee, 2 + mod.melee, 0, 2);
+        PlayerCharacter.RollStat(ref skills.ranged, 2 + mod.ranged, 0, 2);
+        PlayerCharacter.RollStat(ref skills.healing, 2 + mod.healing, 0, 2);
+        PlayerCharacter.RollStat(ref skills.auras, 2 + mod.auras, 0, 2);
+        PlayerCharacter.RollStat(ref skills.attackSpells, 2 + mod.attackSpells, 0, 2);
+        PlayerCharacter.RollStat(ref skills.areaSpells, 2 + mod.areaSpells, 0, 2);
         return skills;
     }
 }

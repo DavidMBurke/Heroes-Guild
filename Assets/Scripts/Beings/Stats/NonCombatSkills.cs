@@ -63,24 +63,24 @@ public class NonCombatSkills
     public static NonCombatSkills RollBaseSkills(NonCombatSkills mod)
     {
         NonCombatSkills skills = new NonCombatSkills();
-        Character.RollStat(ref skills.cooking, 2 + mod.cooking, -1, 2);
-        Character.RollStat(ref skills.sentry, 2 + mod.sentry, -1, 2);
-        Character.RollStat(ref skills.fletching, 2 + mod.fletching, -1, 2);
-        Character.RollStat(ref skills.trapping, 2 + mod.trapping, -1, 2);
-        Character.RollStat(ref skills.herbalism, 2 + mod.herbalism, -1, 2);
-        Character.RollStat(ref skills.medicine, 2 + mod.medicine, -1, 2);
-        Character.RollStat(ref skills.leatherWorking, 2 + mod.leatherWorking, -1, 2);
-        Character.RollStat(ref skills.tailoring, 2 + mod.tailoring, -1, 2);
-        Character.RollStat(ref skills.alchemy, 2 + mod.alchemy, -1, 2);
-        Character.RollStat(ref skills.armorSmithing, 2 + mod.armorSmithing, -1, 2);
-        Character.RollStat(ref skills.weaponSmithing, 2 + mod.weaponSmithing, -1, 2);
-        Character.RollStat(ref skills.enchanting, 2 + mod.enchanting, -1, 2);
-        Character.RollStat(ref skills.mechanisms, 2 + mod.mechanisms, -1, 2);
-        Character.RollStat(ref skills.jewelryCrafting, 2 + mod.jewelryCrafting, -1, 2);
-        Character.RollStat(ref skills.mining, 2 + mod.mining, -1, 2);
-        Character.RollStat(ref skills.animalHandling, 2 + mod.animalHandling, -1, 2);
-        Character.RollStat(ref skills.cartography, 2 + mod.cartography, -1, 2);
-        Character.RollStat(ref skills.barter, 2 + mod.barter, -1, 2);
+        PlayerCharacter.RollStat(ref skills.cooking, 2 + mod.cooking, -1, 2);
+        PlayerCharacter.RollStat(ref skills.sentry, 2 + mod.sentry, -1, 2);
+        PlayerCharacter.RollStat(ref skills.fletching, 2 + mod.fletching, -1, 2);
+        PlayerCharacter.RollStat(ref skills.trapping, 2 + mod.trapping, -1, 2);
+        PlayerCharacter.RollStat(ref skills.herbalism, 2 + mod.herbalism, -1, 2);
+        PlayerCharacter.RollStat(ref skills.medicine, 2 + mod.medicine, -1, 2);
+        PlayerCharacter.RollStat(ref skills.leatherWorking, 2 + mod.leatherWorking, -1, 2);
+        PlayerCharacter.RollStat(ref skills.tailoring, 2 + mod.tailoring, -1, 2);
+        PlayerCharacter.RollStat(ref skills.alchemy, 2 + mod.alchemy, -1, 2);
+        PlayerCharacter.RollStat(ref skills.armorSmithing, 2 + mod.armorSmithing, -1, 2);
+        PlayerCharacter.RollStat(ref skills.weaponSmithing, 2 + mod.weaponSmithing, -1, 2);
+        PlayerCharacter.RollStat(ref skills.enchanting, 2 + mod.enchanting, -1, 2);
+        PlayerCharacter.RollStat(ref skills.mechanisms, 2 + mod.mechanisms, -1, 2);
+        PlayerCharacter.RollStat(ref skills.jewelryCrafting, 2 + mod.jewelryCrafting, -1, 2);
+        PlayerCharacter.RollStat(ref skills.mining, 2 + mod.mining, -1, 2);
+        PlayerCharacter.RollStat(ref skills.animalHandling, 2 + mod.animalHandling, -1, 2);
+        PlayerCharacter.RollStat(ref skills.cartography, 2 + mod.cartography, -1, 2);
+        PlayerCharacter.RollStat(ref skills.barter, 2 + mod.barter, -1, 2);
         return skills;
     }
 }
