@@ -26,10 +26,6 @@ public class DevTools : MonoBehaviour
 
     public void GenerateCharactersForHire(int amount)
     {
-        gm.charactersForHire.Clear();
-        for (int i = 0; i < amount; i++)
-        {
-            gm.charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
-        }
+        gm.GenerateCharactersForHire(amount);
     }
 }

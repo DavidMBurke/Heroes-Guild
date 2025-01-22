@@ -22,4 +22,13 @@ public class GuildManager : MonoBehaviour
     {
         coin -= amount;
     }
+
+    public void GenerateCharactersForHire(int amount)
+    {
+        charactersForHire.Clear();
+        for (int i = 0; i < amount; i++)
+        {
+            charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
+        }
+    }
 }

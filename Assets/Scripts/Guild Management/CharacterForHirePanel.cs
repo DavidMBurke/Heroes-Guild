@@ -25,7 +25,9 @@ public class CharacterForHirePanel : MonoBehaviour
     {
         if (character == null)
         {
-            character = PlayerCharacter.CreateNewCharacter();
+            column1.text = string.Empty;
+            column2.text = string.Empty;
+            return;
         }
         column1.text =
             $"{character.characterName} \n" +
@@ -78,5 +80,10 @@ public class CharacterForHirePanel : MonoBehaviour
             $"Animal Handling: {character.nonCombatSkills.animalHandling}\n" +
             $"Cartography: {character.nonCombatSkills.cartography}\n" +
             $"Barter: {character.nonCombatSkills.barter}";
+    }
+
+    public void AssignCharacter(PlayerCharacter playerCharacter)
+    {
+        character = playerCharacter;
     }
 }
