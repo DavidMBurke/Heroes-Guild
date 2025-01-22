@@ -22,6 +22,9 @@ public class PlayerCharacter : Being
     public delegate void InventoryUpdated();
     public event InventoryUpdated OnInventoryUpdated;
     private List<Interactable> _inventory = new List<Interactable>();
+
+    public int salary = 10; //coin per week
+
     public new List<Interactable> inventory
     {
         get => _inventory;

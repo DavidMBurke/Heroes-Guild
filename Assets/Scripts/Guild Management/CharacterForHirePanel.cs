@@ -12,7 +12,7 @@ public class CharacterForHirePanel : MonoBehaviour
     private List<TextMeshProUGUI> tmps;
     private TextMeshProUGUI column1;
     private TextMeshProUGUI column2;
-    private PlayerCharacter character;
+    public PlayerCharacter character;
 
     void Start()
     {
