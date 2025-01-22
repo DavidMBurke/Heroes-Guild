@@ -22,6 +22,7 @@ public class Being : MonoBehaviour
     public bool isInCharacterAction = false;
     public CharacterAction currentAction;
     public float initiative;
+    public bool isInScene = false;
 
     // Stats
     public int health = 100;
@@ -49,11 +50,19 @@ public class Being : MonoBehaviour
     {
         targetPosition = transform.position;
         rb = GetComponentInChildren<Rigidbody>();
+        if (!isInScene)
+        {
+            return;
+        }
         ApplyColors();
     }
 
     protected void Update()
     {
+        if (!isInScene)
+        {
+            return;
+        }
         turnIndicator.SetActive(isTurn);
         ApplyColors();
         checkStatus();
@@ -82,6 +91,10 @@ public class Being : MonoBehaviour
 
     protected void OnValidate()
     {
+        if (!isInScene)
+        {
+            return;
+        }
         ApplyColors();
     }
 
@@ -114,6 +127,10 @@ public class Being : MonoBehaviour
 
     protected void FixedUpdate()
     {
+        if (!isInScene)
+        {
+            return;
+        }
         FixVertical();
         FixPosition();
     }

@@ -144,8 +144,10 @@ public class MapGenerator : MonoBehaviour
                 renderer.SetPropertyBlock(propertyBlock);
             }
         }
+        #if UNITY_EDITOR
         SceneView.RepaintAll();
         EditorApplication.QueuePlayerLoopUpdate();
+        #endif
     }
 
     /// <summary>

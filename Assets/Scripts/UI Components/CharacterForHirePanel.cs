@@ -28,6 +28,7 @@ public class CharacterForHirePanel : MonoBehaviour
             character = PlayerCharacter.CreateNewCharacter();
         }
         column1.text =
+            $"{character.characterName} \n" +
             $"Race: {character.race.name} \n" +
             $"Class: {character.playerClass.name} \n\n" +
             $"Attributes: \n" +

@@ -117,8 +117,10 @@ public class PlayerCharacter : Being
     /// <returns></returns>
     public static PlayerCharacter CreateNewCharacter()
     {
-        PlayerCharacter character = new PlayerCharacter();
+        GameObject gameObject = new GameObject();
+        PlayerCharacter character = gameObject.AddComponent<PlayerCharacter>();
         character.RollNewStats();
+        character.name = character.characterName;
         return character;
     }
 
@@ -130,6 +132,7 @@ public class PlayerCharacter : Being
     {
         int raceRoll = Random.Range(1, Race.races.Count);
         race = Race.races[raceRoll];
+        characterName = AssignNewName(raceRoll);
         int classRoll = Random.Range(0, race.rollableClasses.Count);
         int classNum = race.rollableClasses[classRoll];
         playerClass = Class.classes[classNum];
@@ -156,4 +159,20 @@ public class PlayerCharacter : Being
         }
     }
 
+    private string AssignNewName(int raceRoll)
+    {
+        if (raceRoll == (int)RaceEnum.Felis)
+        {
+            return NameGenerator.GenerateFelisName();
+        }
+        if (raceRoll == (int)RaceEnum.Canid)
+        {
+            return NameGenerator.GenerateCanidName();
+        }
+        if (raceRoll == (int)RaceEnum.MouseFolk)
+        {
+            return NameGenerator.GenerateMouseFolkName();
+        }
+        return "";
+    }
 }

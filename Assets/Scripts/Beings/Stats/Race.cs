@@ -63,5 +63,5 @@ public enum RaceEnum
     Unassigned = 0,
     Canid = 1,
     Felis = 2,
-    Mousefolk = 3
+    MouseFolk = 3
 }
