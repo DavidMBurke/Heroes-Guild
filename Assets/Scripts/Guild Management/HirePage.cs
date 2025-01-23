@@ -7,7 +7,7 @@ public class HirePage : MonoBehaviour
 {
     public CharacterForHirePanel panel;
     public GameObject characterListItemPrefab;
-    public GameObject characterListObject;
+    public GameObject characterList;
     public GameObject hireButton;
     private PlayerCharacter selectedCharacter;
     private GuildManager gm;
@@ -23,13 +23,13 @@ public class HirePage : MonoBehaviour
     private void ResetList()
     {
         gm.charactersForHire.RemoveAll(character => character == null);
-        foreach (Transform child in characterListObject.transform)
+        foreach (Transform child in characterList.transform)
         {
             Destroy(child.gameObject);
         }
         foreach (PlayerCharacter character in gm.charactersForHire)
         {
-            GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterListObject.transform);
+            GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterList.transform);
             CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
             Button button = listItem.GetComponent<Button>();
             button.onClick.AddListener(() =>
@@ -60,7 +60,7 @@ public class HirePage : MonoBehaviour
             return;
         }
         gm.charactersForHire.Remove(selectedCharacter);
-        gm.staff.Add(selectedCharacter);
+        gm.employees.Add(selectedCharacter);
         ResetList();
     }
 }
