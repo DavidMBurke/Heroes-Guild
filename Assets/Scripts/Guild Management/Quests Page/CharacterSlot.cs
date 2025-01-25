@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterSlot : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class CharacterSlot : MonoBehaviour
     public TextMeshProUGUI playerLevel;
     public TextMeshProUGUI playerRace;
     public TextMeshProUGUI playerClass;
+    public Button removePlayerButton;
 
     private void Start()
     {
@@ -25,15 +27,18 @@ public class CharacterSlot : MonoBehaviour
     {
         if (player == null)
         {
+            removePlayerButton.gameObject.SetActive(false);
             playerName.text = "Empty slot";
             playerLevel.text = string.Empty;
             playerRace.text = string.Empty;
             playerClass.text = string.Empty;
             return;
         }
+        removePlayerButton.gameObject.SetActive(true);
         playerName.text = player.characterName;
         playerLevel.text = player.level.ToString();
         playerRace.text = player.race.name;
         playerClass.text = player.playerClass.name;
     }
+
 }
