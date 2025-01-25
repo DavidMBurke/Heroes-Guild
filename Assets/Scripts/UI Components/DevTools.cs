@@ -28,4 +28,9 @@ public class DevTools : MonoBehaviour
     {
         gm.GenerateCharactersForHire(amount);
     }
+
+    public void GenerateEmployees(int amount)
+    {
+        gm.GenerateEmployees(amount);
+    }
 }

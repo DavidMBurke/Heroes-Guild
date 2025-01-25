@@ -8,6 +8,7 @@ public class QuestsPage : MonoBehaviour
     public QuestPanel questPanel;
     public GameObject questList;
     public GameObject questListItemPrefab;
+    public GameObject startQuestPanel;
 
     private Quest selectedQuest;
     private GuildManager gm;
@@ -16,6 +17,7 @@ public class QuestsPage : MonoBehaviour
     {
         gm = GuildManager.instance;
         ResetList();
+        startQuestPanel.SetActive(false);
     }
 
     private void ResetList()
@@ -42,5 +44,17 @@ public class QuestsPage : MonoBehaviour
         selectedQuest = quest;
         questPanel.SelectQuest(quest);
         ResetList();
+        startQuestPanel.SetActive(true);
+    }
+
+    public void OpenStartQuestMenu()
+    {
+        startQuestPanel.SetActive(true);
+        startQuestPanel.GetComponent<StartQuestPanel>().ClearCharacterSelection();
+    }
+
+    public void HideStartQuestMenu()
+    {
+        startQuestPanel.SetActive(false);
     }
 }

@@ -42,4 +42,12 @@ public class GuildManager : MonoBehaviour
             charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
         }
     }
+
+    public void GenerateEmployees(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            employees.Add(PlayerCharacter.CreateNewCharacter());
+        }
+    }
 }
