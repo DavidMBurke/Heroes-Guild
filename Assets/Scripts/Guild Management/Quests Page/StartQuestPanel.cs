@@ -147,8 +147,7 @@ public class StartQuestPanel : MonoBehaviour
             $"Ranged: {selectedCharacter.combatSkills.ranged}\n" +
             $"Healing: {selectedCharacter.combatSkills.healing}\n" +
             $"Auras: {selectedCharacter.combatSkills.auras}\n" +
-            $"Attack Spells: {selectedCharacter.combatSkills.attackSpells}\n" +
-            $"Area Spells: {selectedCharacter.combatSkills.areaSpells}\n";
+            $"Evocation: {selectedCharacter.combatSkills.evocation}\n";
 
 
         column2.text =

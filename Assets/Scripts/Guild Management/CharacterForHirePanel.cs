@@ -56,8 +56,7 @@ public class CharacterForHirePanel : MonoBehaviour
             $"Ranged: {character.combatSkills.ranged}\n" +
             $"Healing: {character.combatSkills.healing}\n" +
             $"Auras: {character.combatSkills.auras}\n" +
-            $"Attack Spells: {character.combatSkills.attackSpells}\n" +
-            $"Area Spells: {character.combatSkills.areaSpells}\n";
+            $"Evocation: {character.combatSkills.evocation}\n";
 
 
         column2.text =

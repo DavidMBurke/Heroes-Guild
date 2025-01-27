@@ -7,8 +7,7 @@ public class CombatSkills
     public int ranged;
     public int healing;
     public int auras;
-    public int attackSpells;
-    public int areaSpells;
+    public int evocation;
 
     public CombatSkills(
         int dodge = 0,
@@ -18,8 +17,7 @@ public class CombatSkills
         int ranged = 0,
         int healing= 0,
         int auras = 0,
-        int attackSpells = 0,
-        int areaSpells = 0
+        int evocation = 0
         )
     {
         this.dodge = dodge;
@@ -29,8 +27,7 @@ public class CombatSkills
         this.ranged = ranged;
         this.healing = healing;
         this.auras = auras;
-        this.attackSpells = attackSpells;
-        this.areaSpells = areaSpells;
+        this.evocation = evocation;
     }
 
     /// <summary>
@@ -48,8 +45,7 @@ public class CombatSkills
         PlayerCharacter.RollStat(ref skills.ranged, 2 + mod.ranged, 0, 2);
         PlayerCharacter.RollStat(ref skills.healing, 2 + mod.healing, 0, 2);
         PlayerCharacter.RollStat(ref skills.auras, 2 + mod.auras, 0, 2);
-        PlayerCharacter.RollStat(ref skills.attackSpells, 2 + mod.attackSpells, 0, 2);
-        PlayerCharacter.RollStat(ref skills.areaSpells, 2 + mod.areaSpells, 0, 2);
+        PlayerCharacter.RollStat(ref skills.evocation, 2 + mod.evocation, 0, 2);
         return skills;
     }
 }

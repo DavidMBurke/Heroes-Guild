@@ -28,11 +28,11 @@ public class Class
         },
         new Class("Cleric", "")
         {
-            combatSkillMods = new CombatSkills(healing: 2, auras: 2, block: 1, attackSpells: 1)
+            combatSkillMods = new CombatSkills(healing: 2, auras: 2, block: 1, evocation: 1)
         },
         new Class("Sorcerer", "")
         {
-            combatSkillMods = new CombatSkills(attackSpells: 2, auras: 2, areaSpells: 1, dodge: 1)
+            combatSkillMods = new CombatSkills(evocation: 3, melee: 2, dodge: 1)
         },
         new Class("Rogue", "")
         {
@@ -44,11 +44,11 @@ public class Class
         },
         new Class("Wizard", "")
         {
-            combatSkillMods = new CombatSkills(areaSpells: 3, attackSpells: 2, auras: 1)
+            combatSkillMods = new CombatSkills(evocation: 3, auras: 3)
         },
         new Class("Druid", "")
         {
-            combatSkillMods = new CombatSkills(healing: 2, auras: 2, areaSpells: 2)
+            combatSkillMods = new CombatSkills(healing: 2, auras: 2, evocation: 2)
         },
         new Class("Barbarian", "")
         {
@@ -74,7 +74,7 @@ public class Class
         Rogue = 5,
         PackMule = 6,
         Wizard = 7,
-        Druin = 8,
+        Druid = 8,
         Barbarian = 9,
         Bard = 10,
         Monk = 11
