@@ -14,13 +14,15 @@ public class StockpilePage : MonoBehaviour
     public TMP_InputField inputField;
     public bool searchItemsByName = true;
     public bool searchItemsByTag = true;
+    public GameObject searchByNameToggle;
+    public GameObject searchByTagToggle;
 
     private void OnEnable()
     {
         ResetList();
     }
 
-    void ResetList(string searchText = "", bool searchByName = false, bool searchByTag = false)
+    void ResetList()
     {
         if (GuildManager.instance == null || GuildManager.instance.stockpile == null)
         {
@@ -32,13 +34,13 @@ public class StockpilePage : MonoBehaviour
             Destroy(child.gameObject);
         }
         List<Item> items = new List<Item>();
-        if (searchText == "")
+        if (inputField.text == "")
         {
             items = GuildManager.instance.stockpile;
         }
-        if (searchText != "")
+        if (inputField.text != "")
         {
-            items = GuildManager.instance.stockpile.Where(i => CheckNameFit(i, searchText, searchByName, searchByTag)).ToList();
+            items = GuildManager.instance.stockpile.Where(i => CheckNameFit(i, inputField.text, searchItemsByName, searchItemsByTag)).ToList();
         }
         foreach (Item item in items)
         {
@@ -73,15 +75,32 @@ public class StockpilePage : MonoBehaviour
 
     public void HandleTextFieldEntry()
     {
-        if (inputField.text == "")
-        {
-            ResetList();
-        }
-        ResetList(inputField.text, searchItemsByName, searchItemsByTag);
+        ResetList();
     }
 
     public void SelectItem(Item item)
     {
         selectedItem = item;
+    }
+
+    public void ToggleSearchByName()
+    {
+        searchItemsByName = !searchItemsByName;
+        ToggleHighlight(searchByNameToggle, searchItemsByName);
+        ResetList();
+    }
+
+    public void ToggleSearchByTag()
+    {
+        searchItemsByTag = !searchItemsByTag;
+        ToggleHighlight(searchByTagToggle, searchItemsByTag);
+        ResetList();
+    }
+
+    public void ToggleHighlight(GameObject gameObject, bool toggle)
+    {
+        Color c = gameObject.GetComponent<Image>().color;
+        Color newColor = new Color(c.r, c.g, c.b, toggle ? 1f : .5f);
+        gameObject.GetComponent<Image>().color = newColor;
     }
 }
