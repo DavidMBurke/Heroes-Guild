@@ -8,6 +8,7 @@ public class GuildManager : MonoBehaviour
     public List<PlayerCharacter> employees;
     public List<PlayerCharacter> charactersForHire;
     public List<Quest> availableQuests;
+    public List<Item> stockpile = new List<Item>();
 
     private void Awake()
     {

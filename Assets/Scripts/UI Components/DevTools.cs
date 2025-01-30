@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DevTools : MonoBehaviour
@@ -14,7 +16,8 @@ public class DevTools : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
             panel.gameObject.SetActive(!panel.gameObject.activeInHierarchy);
         }
     }
@@ -33,4 +36,17 @@ public class DevTools : MonoBehaviour
     {
         gm.GenerateEmployees(amount);
     }
+
+    public void GenerateCraftingItems()
+    {
+        foreach (List<Item> items in Item.itemLists)
+        {
+            foreach (Item item in items)
+            {
+                item.AddToInventory(gm.stockpile, 10);
+            }
+        }
+    }
 }
+
+
