@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class StockpilePage : MonoBehaviour
@@ -16,6 +17,7 @@ public class StockpilePage : MonoBehaviour
     public bool searchItemsByTag = true;
     public GameObject searchByNameToggle;
     public GameObject searchByTagToggle;
+    public ItemDisplayPanel itemDisplayPanel;
 
     private void OnEnable()
     {
@@ -45,12 +47,8 @@ public class StockpilePage : MonoBehaviour
         foreach (Item item in items)
         {
             ItemListItem itemListItem = Instantiate(itemListItemPrefab, itemList.transform).GetComponent<ItemListItem>();
-            Button button = itemListItem.gameObject.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            {
-                SelectItem(item);
-            });
             itemListItem.item = item;
+            itemListItem.selectButton.onClick.AddListener(() => SelectItem(itemListItem.item));
         }
     }
 
@@ -80,7 +78,9 @@ public class StockpilePage : MonoBehaviour
 
     public void SelectItem(Item item)
     {
+        Debug.Log("Select Item");
         selectedItem = item;
+        itemDisplayPanel.AssignItem(selectedItem);
     }
 
     public void ToggleSearchByName()

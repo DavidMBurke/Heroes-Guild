@@ -2,18 +2,26 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ItemListItem : MonoBehaviour
 {
     public Item item;
     public TextMeshProUGUI itemName;
-    public TextMeshProUGUI itemQuantity;
+    public TextMeshProUGUI quantity;
+    public Button selectButton;
 
+
+    private void Awake()
+    {
+        selectButton = GetComponent<Button>();
+    }
     private void Start()
     {
         List<TextMeshProUGUI> textItems = GetComponentsInChildren<TextMeshProUGUI>().ToList();
         itemName = textItems.First(tmp => tmp.gameObject.name == "Name");
-        itemQuantity = textItems.First(tmp => tmp.gameObject.name == "Quantity");
+        quantity = textItems.First(tmp => tmp.gameObject.name == "Quantity");
     }
 
     private void Update()
@@ -23,6 +31,7 @@ public class ItemListItem : MonoBehaviour
             Debug.LogError("No item assigned to ItemListItem");
         }
         itemName.text = item.itemName;
-        itemQuantity.text = item.quantity.ToString();
+        quantity.text = item.quantity.ToString();
     }
+
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class Item
 {
     public string itemName;
+    public string description;
     public int cost;
     public int quantity = 1;
     public Sprite sprite;
