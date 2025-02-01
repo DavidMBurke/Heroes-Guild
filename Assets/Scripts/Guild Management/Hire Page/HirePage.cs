@@ -36,7 +36,7 @@ public class HirePage : MonoBehaviour
             {
                 SelectCharacter(character);
             });
-            listItem.player = character;
+            listItem.SetCharacter(character);
         }
     }
 
@@ -60,7 +60,7 @@ public class HirePage : MonoBehaviour
             return;
         }
         gm.charactersForHire.Remove(selectedCharacter);
-        gm.employees.Add(selectedCharacter);
+        gm.unassignedEmployees.Add(selectedCharacter);
         ResetList();
     }
 }

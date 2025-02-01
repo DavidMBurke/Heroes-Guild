@@ -5,10 +5,11 @@ public class GuildManager : MonoBehaviour
 {
     public static GuildManager instance;
     public int coin; //base currency in copper, to be displayed in broken down denominations (100 copper -> 1 silver, 100 silver -> 1 gold)
-    public List<PlayerCharacter> employees;
+    public List<PlayerCharacter> unassignedEmployees;
     public List<PlayerCharacter> charactersForHire;
     public List<Quest> availableQuests;
     public List<Item> stockpile = new List<Item>();
+    public List<PlayerCharacter> jewelers;
 
     private void Awake()
     {
@@ -48,7 +49,7 @@ public class GuildManager : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            employees.Add(PlayerCharacter.CreateNewCharacter());
+            unassignedEmployees.Add(PlayerCharacter.CreateNewCharacter());
         }
     }
 }

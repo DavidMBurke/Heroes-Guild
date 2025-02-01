@@ -47,8 +47,8 @@ public class StockpilePage : MonoBehaviour
         foreach (Item item in items)
         {
             ItemListItem itemListItem = Instantiate(itemListItemPrefab, itemList.transform).GetComponent<ItemListItem>();
-            itemListItem.item = item;
-            itemListItem.selectButton.onClick.AddListener(() => SelectItem(itemListItem.item));
+            itemListItem.SetItem(item);
+            itemListItem.selectButton.onClick.AddListener(() => SelectItem(itemListItem.GetItem()));
         }
     }
 
@@ -78,7 +78,6 @@ public class StockpilePage : MonoBehaviour
 
     public void SelectItem(Item item)
     {
-        Debug.Log("Select Item");
         selectedItem = item;
         itemDisplayPanel.AssignItem(selectedItem);
     }

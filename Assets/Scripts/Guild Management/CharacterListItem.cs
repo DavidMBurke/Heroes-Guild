@@ -5,24 +5,40 @@ using UnityEngine;
 
 public class CharacterListItem : MonoBehaviour
 {
-    public PlayerCharacter player;
-    public TextMeshProUGUI playerName;
-    public TextMeshProUGUI playerLevel;
+    private PlayerCharacter player;
+    private TextMeshProUGUI displayName;
+    private TextMeshProUGUI level;
 
-    private void Start()
+    private void Awake()
     {
         List<TextMeshProUGUI> textItems = GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        playerName = textItems.First(tmp => tmp.gameObject.name == "Name");
-        playerLevel = textItems.First(tmp => tmp.gameObject.name == "Level");
+        displayName = textItems.First(tmp => tmp.gameObject.name == "Name");
+        level = textItems.First(tmp => tmp.gameObject.name == "Level");
     }
 
-    private void Update()
+    public void SetCharacter(PlayerCharacter newPlayer)
+    {
+        player = newPlayer;
+        UpdateDisplayInfo();
+    }
+
+    public void SetDisplayName(string name)
+    {
+        displayName.text = name;
+    }
+
+    private void UpdateDisplayInfo()
     {
         if (player == null)
         {
             Debug.LogError("No player assigned to CharacterListItem");
         }
-        playerName.text = player.characterName;
-        playerLevel.text = player.level.ToString();
+        displayName.text = player.characterName;
+        level.text = player.level.ToString();
+    }
+
+    public PlayerCharacter GetPlayer()
+    {
+        return player;
     }
 }

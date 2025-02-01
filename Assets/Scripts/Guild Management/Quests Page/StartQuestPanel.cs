@@ -62,13 +62,14 @@ public class StartQuestPanel : MonoBehaviour
         characterInfo.SetActive(false);
         characterSelection.SetActive(true);
         ClearCharacterSelection();
-        foreach (PlayerCharacter character in GuildManager.instance.employees) {
+        foreach (PlayerCharacter character in GuildManager.instance.unassignedEmployees) {
             if (character == null || characters.Contains(character)) 
                 continue;
             CharacterListItem characterListItem = Instantiate(characterListItemPrefab, characterSelectionPanel.transform).GetComponent<CharacterListItem>();
+            
             Button button = characterListItem.GetComponent<Button>();
             button.onClick.AddListener(() => SelectCharacter(index, character));
-            characterListItem.player = character;
+            characterListItem.SetCharacter(character);
         }
     }
 

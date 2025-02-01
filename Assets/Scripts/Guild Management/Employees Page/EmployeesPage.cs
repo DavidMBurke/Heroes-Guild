@@ -29,7 +29,7 @@ public class EmployeesPage : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (PlayerCharacter character in gm.employees)
+        foreach (PlayerCharacter character in gm.unassignedEmployees)
         {
             GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterListObject.transform);
             CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
@@ -38,7 +38,7 @@ public class EmployeesPage : MonoBehaviour
             {
                 SelectCharacter(character);
             });
-            listItem.player = character;
+            listItem.SetCharacter(character);
         }
     }
     public void SelectCharacter(PlayerCharacter character)

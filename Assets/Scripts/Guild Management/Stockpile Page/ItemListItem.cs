@@ -7,31 +7,38 @@ using UnityEngine.UI;
 
 public class ItemListItem : MonoBehaviour
 {
-    public Item item;
-    public TextMeshProUGUI itemName;
-    public TextMeshProUGUI quantity;
+    private Item item;
+    private TextMeshProUGUI itemName;
+    private TextMeshProUGUI quantity;
     public Button selectButton;
 
 
     private void Awake()
     {
         selectButton = GetComponent<Button>();
-    }
-    private void Start()
-    {
         List<TextMeshProUGUI> textItems = GetComponentsInChildren<TextMeshProUGUI>().ToList();
         itemName = textItems.First(tmp => tmp.gameObject.name == "Name");
         quantity = textItems.First(tmp => tmp.gameObject.name == "Quantity");
     }
 
-    private void Update()
+    public void SetItem(Item newItem)
+    {
+        item = newItem; 
+        UpdateDisplayInfo();
+    }
+
+    private void UpdateDisplayInfo()
     {
         if (item == null)
         {
-            Debug.LogError("No item assigned to ItemListItem");
+            Debug.LogError("No Item assigned to ItemListItem");
         }
         itemName.text = item.itemName;
         quantity.text = item.quantity.ToString();
     }
 
+    public Item GetItem()
+    {
+        return item;
+    }
 }
