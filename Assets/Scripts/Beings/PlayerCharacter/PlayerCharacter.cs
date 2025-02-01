@@ -1,11 +1,16 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// Playable character
 /// </summary>
 public class PlayerCharacter : Being
 {
+    const int skillLevelsPerCharacterLevel = 4;
     public Race race = Race.races[(int)RaceEnum.Unassigned];
     public Class playerClass = Class.classes[(int)ClassEnum.Unassigned];
     public Attributes attributes = new Attributes();
@@ -22,6 +27,8 @@ public class PlayerCharacter : Being
     public delegate void InventoryUpdated();
     public event InventoryUpdated OnInventoryUpdated;
     private List<Interactable> _inventory = new List<Interactable>();
+
+    public int levelAttained; // checked against being.level to prompt leveling up.
 
     public int salary = 10; //coin per week
 
@@ -177,5 +184,31 @@ public class PlayerCharacter : Being
             return NameGenerator.GenerateMouseFolkName();
         }
         return "";
+    }
+
+    private int CalculateLevel()
+    {
+        List<int> skillLevels = new List<int>();
+        foreach (FieldInfo field in typeof(CombatSkills).GetFields(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (field.FieldType == typeof(int)) // Ensure we're only iterating through integer fields
+            {
+                skillLevels.Add((int)field.GetValue(combatSkills));
+            }
+        }
+        foreach (FieldInfo field in typeof(NonCombatSkills).GetFields(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (field.FieldType == typeof(int)) // Ensure we're only iterating through integer fields
+            {
+                skillLevels.Add((int)field.GetValue(nonCombatSkills));
+            }
+        }
+        List<int> orderedLevels = skillLevels.OrderBy(x => x).ToList();
+        float level = 0;
+        for (int i = 1; i <= orderedLevels.Count; i++)
+        {
+            level += (float)orderedLevels[i] * 1f/i;
+        }
+        return (int)Math.Floor(level / skillLevelsPerCharacterLevel);
     }
 }

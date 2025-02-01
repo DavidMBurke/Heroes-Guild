@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Metals
 {
@@ -59,4 +60,5 @@ public class Metals
         OsmiumIngot = 9,
         MetorumIngot = 10
     }
+
 }

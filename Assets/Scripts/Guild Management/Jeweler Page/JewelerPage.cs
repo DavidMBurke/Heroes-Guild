@@ -1,6 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,12 +13,25 @@ public class JewelerPage : MonoBehaviour
     public GameObject unassignCharacterButton;
     public PlayerCharacter selectedCharacter;
     private GuildManager gm;
+    public List<Item> itemsQueue;
+    public GameObject itemListItemPrefab;
+    public GameObject itemList;
+
+    public ItemSlot itemSlot1;
+    public ItemSlot itemSlot2;
+
+    public GameObject materialList;
+    public GameObject craftPanel;
+    public List<ItemInQueue> jewelryQueue;
+    public Button addToQueueButton;
+    public TextMeshProUGUI craftingMenuHeader;
 
 
     private void Start()
     {
         gm = GuildManager.instance;
         characterListPanel.SetActive(false);
+        craftPanel.SetActive(false);
     }
 
     public void AssignJeweler()
@@ -120,5 +133,79 @@ public class JewelerPage : MonoBehaviour
         {
             ResetCharacterList();
         }
+    }
+
+    public void ToggleCraftPanel()
+    {
+        craftPanel.SetActive(!craftPanel.activeInHierarchy);
+    }
+
+    public void SelectItemSlot(List<string> tags, ItemSlot itemSlot)
+    {
+        List<Item> items = new List<Item>();
+
+        foreach (Item item in gm.stockpile)
+        {
+            if (item.tags.All((t) => tags.Contains(t)))
+            {
+                items.Add(item);
+            };
+        }
+
+        UpdateItemList(items, itemSlot);
+    }
+
+    public void UpdateItemList(List<Item> items, ItemSlot itemSlot)
+    {
+        foreach (Transform child in itemList.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Item item in items)
+        {
+            ItemListItem itemListItem = Instantiate(itemListItemPrefab, itemList.transform).GetComponent<ItemListItem>();
+            itemListItem.SetItem(item);
+            itemListItem.selectButton.onClick.AddListener(() => itemSlot.SetItem(item));
+        }
+    }
+
+    public void SelectIngotSlot()
+    {
+        List<string> tags = new List<string>()
+        {
+            "metal",
+            "jewelry"
+        };
+        SelectItemSlot(tags, itemSlot1);
+    }
+
+    public void SelectGemSlot()
+    {
+        List<string> tags = new List<string>()
+        {
+            "gem"
+        };
+        SelectItemSlot(tags, itemSlot2);
+    }
+
+    public void ToggleNecklaceCrafting()
+    {
+        ToggleCraftPanel();
+        if (!craftPanel.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+        addToQueueButton.onClick.RemoveAllListeners();
+        addToQueueButton.onClick.AddListener(() => AddNecklaceToQueue());
+    }
+
+    public void AddNecklaceToQueue()
+    {
+        if (itemSlot1.item == null || itemSlot2.item == null) {
+            return;
+        }
+        Item necklace = (Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item));
+        ItemInQueue necklaceInQueue = new ItemInQueue(necklace, () => { });
+        jewelryQueue.Add(necklaceInQueue);
     }
 }

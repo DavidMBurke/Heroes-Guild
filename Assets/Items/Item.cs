@@ -12,8 +12,9 @@ public class Item
     public int quantity = 1;
     public Sprite sprite;
 
-    // ingredient
+    // crafting
     public float multiplier; // For crafting ingredients with multipliers
+    public List<Item> craftingIngredients;
 
     // equipment
     public bool equippable = false;
