@@ -30,8 +30,15 @@ public class JewelerPage : MonoBehaviour
     private void Start()
     {
         gm = GuildManager.instance;
+        SetPopupsInactive();
+    }
+
+    public void SetPopupsInactive()
+    {
         characterListPanel.SetActive(false);
         craftPanel.SetActive(false);
+        assignCharacterButton.SetActive(false);
+        unassignCharacterButton.SetActive(false);
     }
 
     public void AssignJeweler()
@@ -77,25 +84,32 @@ public class JewelerPage : MonoBehaviour
         foreach (PlayerCharacter character in gm.jewelers)
         {
             GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterList.transform);
-            CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
+            JobAssignmentCharacterListItem listItem = characterListItemObject.GetComponent<JobAssignmentCharacterListItem>();
             Button button = listItem.GetComponent<Button>();
             button.onClick.AddListener(() =>
             {
                 SelectCharacter(character);
             });
             listItem.SetCharacter(character);
-            listItem.SetDisplayName(character.characterName + " (Assigned)");
+            string text1 = character.characterName + (" (Assigned)");
+            string text2 = "Lvl: " + character.level.ToString();
+            string text3 = "JewelryCrafting: " + character.nonCombatSkills.jewelryCrafting.ToString();
+            listItem.SetText(text1, text2, text3);
         }
         foreach (PlayerCharacter character in gm.unassignedEmployees)
         {
             GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterList.transform);
-            CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
+            JobAssignmentCharacterListItem listItem = characterListItemObject.GetComponent<JobAssignmentCharacterListItem>();
             Button button = listItem.GetComponent<Button>();
             button.onClick.AddListener(() =>
             {
                 SelectCharacter(character);
             });
             listItem.SetCharacter(character);
+            string text1 = character.characterName;
+            string text2 = "Lvl: " + character.level.ToString();
+            string text3 = "JewelryCrafting: " + character.nonCombatSkills.jewelryCrafting.ToString();
+            listItem.SetText(text1, text2, text3);
         }
     }
 
@@ -205,7 +219,9 @@ public class JewelerPage : MonoBehaviour
             return;
         }
         Item necklace = (Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item));
-        ItemInQueue necklaceInQueue = new ItemInQueue(necklace, () => { });
+        GameObject necklaceObject = new GameObject();
+        ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
+        necklaceInQueue.item = necklace;
         jewelryQueue.Add(necklaceInQueue);
     }
 }

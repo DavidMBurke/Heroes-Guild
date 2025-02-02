@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class ItemInQueue : MonoBehaviour
 {
-    Item item;
-    float percentComplete;
-    float craftingDifficulty;
-    PlayerCharacter? assignedCrafter;
-    Action actionOnComplete;
+    public Item item;
+    public float percentComplete;
+    public float craftingDifficulty;
+    public PlayerCharacter? assignedCrafter;
+    public Action actionOnComplete;
 
     public ItemInQueue(Item item, Action actionOnComplete, PlayerCharacter? assignedCrafter = null)
     {
@@ -29,4 +29,5 @@ public class ItemInQueue : MonoBehaviour
         }
         return difficulty;
     }
+
 }
