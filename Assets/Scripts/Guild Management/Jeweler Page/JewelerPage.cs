@@ -17,8 +17,8 @@ public class JewelerPage : MonoBehaviour
     public GameObject itemListItemPrefab;
     public GameObject itemList;
 
-    public ItemSlot itemSlot1;
-    public ItemSlot itemSlot2;
+    public CraftingMaterialSlot itemSlot1;
+    public CraftingMaterialSlot itemSlot2;
 
     public GameObject materialList;
     public GameObject craftPanel;
@@ -146,15 +146,21 @@ public class JewelerPage : MonoBehaviour
         if (characterListPanel.activeInHierarchy)
         {
             ResetCharacterList();
+            craftPanel.SetActive(false);
         }
+
     }
 
     public void ToggleCraftPanel()
     {
         craftPanel.SetActive(!craftPanel.activeInHierarchy);
+        if (craftPanel.activeInHierarchy)
+        {
+            characterListPanel.SetActive(false);
+        }
     }
 
-    public void SelectItemSlot(List<string> tags, ItemSlot itemSlot)
+    public void SelectItemSlot(List<string> tags, CraftingMaterialSlot itemSlot)
     {
         List<Item> items = new List<Item>();
 
@@ -169,7 +175,7 @@ public class JewelerPage : MonoBehaviour
         UpdateItemList(items, itemSlot);
     }
 
-    public void UpdateItemList(List<Item> items, ItemSlot itemSlot)
+    public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {
         foreach (Transform child in itemList.transform)
         {
@@ -218,10 +224,17 @@ public class JewelerPage : MonoBehaviour
         if (itemSlot1.item == null || itemSlot2.item == null) {
             return;
         }
+        List<string> tags1 = new List<string> { "metal", "jewelry" };
+        List<string> tags2 = new List<string> { "gem" };
+        if (itemSlot1.CheckCorrectItemInSlot(tags1) == false || itemSlot2.CheckCorrectItemInSlot(tags2) == false)
+        {
+            return;
+        }
         Item necklace = (Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item));
         GameObject necklaceObject = new GameObject();
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
         necklaceInQueue.item = necklace;
+        necklaceObject.name = necklace.itemName;
         jewelryQueue.Add(necklaceInQueue);
     }
 }
