@@ -14,6 +14,7 @@ public class GuildManager : MonoBehaviour
     public List<Quest> availableQuests;
     public List<Item> stockpile = new List<Item>();
     public List<PlayerCharacter> jewelers;
+    public JewelerPage jewelerPage;
 
     // Time
     public float elapsedTime = 0;
@@ -51,7 +52,6 @@ public class GuildManager : MonoBehaviour
             {
                 Tick();
                 elapsedTime -= timePerTick;
-                Debug.Log($"{elapsedTime} {Time.deltaTime} {timePerTick}");
             }
         }
     }
@@ -86,6 +86,7 @@ public class GuildManager : MonoBehaviour
     public void Tick()
     {
         IncrementTime();
+        jewelerPage.Tick();
     }
 
     private void IncrementTime()
@@ -122,4 +123,5 @@ public class GuildManager : MonoBehaviour
     {
         timeAdvancing = isAdvancing;
     }
+
 }

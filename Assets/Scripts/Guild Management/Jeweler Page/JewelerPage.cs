@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,12 +25,13 @@ public class JewelerPage : MonoBehaviour
     public Button addToQueueButton;
     public TextMeshProUGUI craftingMenuHeader;
 
-    public List<ItemInQueue> jewelryQueue;
+    public List<ItemInQueue> itemQueue;
+    public List<ItemInQueue> completedItems;
     public GameObject itemInQueueList;
     public GameObject itemInQueueListItemPrefab;
 
 
-    private void Start()
+    private void Awake()
     {
         gm = GuildManager.instance;
         SetPopupsInactive();
@@ -237,7 +239,7 @@ public class JewelerPage : MonoBehaviour
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
         necklaceInQueue.SetNewItem(necklace, gm.jewelers);
         necklaceObject.name = necklace.itemName;
-        jewelryQueue.Add(necklaceInQueue);
+        itemQueue.Add(necklaceInQueue);
         UpdateQueueList();
     }
 
@@ -247,10 +249,48 @@ public class JewelerPage : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (ItemInQueue item in jewelryQueue)
+        foreach (ItemInQueue item in completedItems)
         {
             ItemInQueueListItem itemInQueue = Instantiate(itemInQueueListItemPrefab, itemInQueueList.transform).GetComponent<ItemInQueueListItem>();
             itemInQueue.SetItem(item);
+            itemInQueue.crafterDropdown.gameObject.SetActive(false);
+        }
+        foreach (ItemInQueue item in itemQueue)
+        {
+            ItemInQueueListItem itemInQueue = Instantiate(itemInQueueListItemPrefab, itemInQueueList.transform).GetComponent<ItemInQueueListItem>();
+            itemInQueue.SetItem(item);
+
         }
     }
+
+    public void Tick()
+    {
+        Debug.Log("Tick");
+        foreach (PlayerCharacter jeweler in gm.jewelers)
+        {
+            ItemInQueue? queuedItem = itemQueue.FirstOrDefault(i => i.assignedCrafter == jeweler);
+            if (queuedItem == null)
+            {
+                queuedItem = itemQueue.FirstOrDefault(i => i.assignedCrafter == null);
+            }
+            if (queuedItem == null)
+            {
+                continue;
+            }
+            if (queuedItem.assignedCrafter == null)
+            {
+                queuedItem.assignedCrafter = jeweler;
+            }
+            Debug.Log(jeweler.name);
+            queuedItem.workDone += jeweler.nonCombatSkills.jewelryCrafting;
+            if (queuedItem.workDone >= queuedItem.workToComplete)
+            {
+                queuedItem.workDone = queuedItem.workToComplete;
+                itemQueue.Remove(queuedItem);
+                completedItems.Add(queuedItem);
+            }
+        }
+        UpdateQueueList();
+    }
+
 }

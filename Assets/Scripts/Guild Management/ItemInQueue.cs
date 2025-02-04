@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class ItemInQueue : MonoBehaviour
