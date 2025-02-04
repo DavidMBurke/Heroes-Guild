@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GuildManager : MonoBehaviour
@@ -10,6 +14,16 @@ public class GuildManager : MonoBehaviour
     public List<Quest> availableQuests;
     public List<Item> stockpile = new List<Item>();
     public List<PlayerCharacter> jewelers;
+
+    // Time
+    public float elapsedTime = 0;
+    public bool timeAdvancing;
+    public int year = 1;
+    public int season; //30 day per season
+    public int day = 1;
+    public int hour;
+    public int minute;
+    public float timePerTick;
 
     private void Awake()
     {
@@ -24,6 +38,22 @@ public class GuildManager : MonoBehaviour
         quest.coinReward = 1000;
         quest.xpReward = 1000;
         availableQuests.Add(quest);
+        timePerTick = 1;
+        timeAdvancing = false;
+    }
+
+    private void Update()
+    {
+        if (timeAdvancing)
+        {
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime > timePerTick)
+            {
+                Tick();
+                elapsedTime -= timePerTick;
+                Debug.Log($"{elapsedTime} {Time.deltaTime} {timePerTick}");
+            }
+        }
     }
 
     public void AddCoin(int amount)
@@ -51,5 +81,45 @@ public class GuildManager : MonoBehaviour
         {
             unassignedEmployees.Add(PlayerCharacter.CreateNewCharacter());
         }
+    }
+
+    public void Tick()
+    {
+        IncrementTime();
+    }
+
+    private void IncrementTime()
+    {
+        minute += 1;
+        if (minute >= 60)
+        {
+            minute -= 60;
+            hour += 1;
+        }
+        if (hour >= 24)
+        {
+            hour -= 24;
+            day += 1;
+        }
+        if (day >= 30)
+        {
+            day -= 30;
+            season += 1;
+        }
+        if (season >= 4)
+        {
+            season -= 4;
+            year += 1;
+        }
+    }
+
+    public void SetTimePerTick(float timePerTick)
+    {
+        this.timePerTick = timePerTick;
+    }
+
+    public void SetTimeAdvancing(bool isAdvancing)
+    {
+        timeAdvancing = isAdvancing;
     }
 }
