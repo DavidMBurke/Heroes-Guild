@@ -1479,7 +1479,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &107826313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7964,6 +7964,7 @@ MonoBehaviour:
   availableQuests: []
   stockpile: []
   jewelers: []
+  jewelerPage: {fileID: 778148161}
   elapsedTime: 0
   timeAdvancing: 1
   year: 0
@@ -8005,7 +8006,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &647561756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9600,7 +9601,8 @@ MonoBehaviour:
   craftPanel: {fileID: 1534341186}
   addToQueueButton: {fileID: 294641099}
   craftingMenuHeader: {fileID: 1463709650}
-  jewelryQueue: []
+  itemQueue: []
+  completedItems: []
   itemInQueueList: {fileID: 915460566}
   itemInQueueListItemPrefab: {fileID: 774734727073154929, guid: 0b04f78a11895b14796bb1c77ad139e1, type: 3}
 --- !u!114 &778148162
@@ -17953,7 +17955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1577238253
 MonoBehaviour:
   m_ObjectHideFlags: 0
