@@ -13,7 +13,6 @@ public class JewelerPage : MonoBehaviour
     public GameObject unassignCharacterButton;
     public PlayerCharacter selectedCharacter;
     private GuildManager gm;
-    public List<Item> itemsQueue;
     public GameObject itemListItemPrefab;
     public GameObject itemList;
 
@@ -22,9 +21,12 @@ public class JewelerPage : MonoBehaviour
 
     public GameObject materialList;
     public GameObject craftPanel;
-    public List<ItemInQueue> jewelryQueue;
     public Button addToQueueButton;
     public TextMeshProUGUI craftingMenuHeader;
+
+    public List<ItemInQueue> jewelryQueue;
+    public GameObject itemInQueueList;
+    public GameObject itemInQueueListItemPrefab;
 
 
     private void Start()
@@ -233,8 +235,22 @@ public class JewelerPage : MonoBehaviour
         Item necklace = (Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item));
         GameObject necklaceObject = new GameObject();
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
-        necklaceInQueue.item = necklace;
+        necklaceInQueue.SetNewItem(necklace, gm.jewelers);
         necklaceObject.name = necklace.itemName;
         jewelryQueue.Add(necklaceInQueue);
+        UpdateQueueList();
+    }
+
+    public void UpdateQueueList()
+    {
+        foreach (Transform child in itemInQueueList.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (ItemInQueue item in jewelryQueue)
+        {
+            ItemInQueueListItem itemInQueue = Instantiate(itemInQueueListItemPrefab, itemInQueueList.transform).GetComponent<ItemInQueueListItem>();
+            itemInQueue.SetItem(item);
+        }
     }
 }

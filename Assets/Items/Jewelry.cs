@@ -91,7 +91,6 @@ public class Jewelry
 
     public static Item CreateNecklace(Item metalIngot, Item gem)
     {
-        Debug.Log(metalIngot.itemName + " " + gem.itemName);
         string name = $"{metalIngot.itemName} {gem.itemName} Necklace".Replace(" Ingot", "");
         float multiplier = metalIngot.multiplier;
         int cost = metalIngot.cost;

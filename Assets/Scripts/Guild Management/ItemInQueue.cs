@@ -1,33 +1,41 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class ItemInQueue : MonoBehaviour
 {
     public Item item;
-    public float percentComplete;
-    public float craftingDifficulty;
+    public int workDone;
+    public int workToComplete;
     public PlayerCharacter? assignedCrafter;
-    public Action actionOnComplete;
+    public List<PlayerCharacter> crafterList;
 
-    public ItemInQueue(Item item, Action actionOnComplete, PlayerCharacter? assignedCrafter = null)
+    public void SetNewItem(Item item, List<PlayerCharacter> crafterList, PlayerCharacter? assignedCrafter = null)
     {
         this.item = item;
-        this.actionOnComplete = actionOnComplete;
         this.assignedCrafter = assignedCrafter;
-        percentComplete = 0f;
-        craftingDifficulty = SetCraftingDifficulty(item);
+        this.crafterList = crafterList;
+        workDone = 0;
+        workToComplete = SetCraftingDifficulty(item);
     }
 
-    private float SetCraftingDifficulty(Item item)
+    private int SetCraftingDifficulty(Item item)
     {
-        float difficulty = 1f;
+        float workToComplete = 100f;
         foreach (Item ingredient in item.craftingIngredients)
         {
-            difficulty *= ingredient.multiplier;
+            workToComplete *= ingredient.multiplier;
         }
-        return difficulty;
+        return (int)workToComplete;
+    }
+
+    public void SetCrafter(PlayerCharacter character)
+    {
+        assignedCrafter = character;
     }
 
 }
