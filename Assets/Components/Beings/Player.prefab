@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2861516032672779164}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.19, z: 0}
+  m_LocalPosition: {x: 0, y: 0.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -261,16 +261,17 @@ MonoBehaviour:
   characterName: Jimbo
   moveDistance: 5
   moveSpeed: 5
-  rotateSpeed: 360
   isMoving: 0
   isInMovementAction: 0
   startingPosition: {x: 0, y: 0, z: 0}
   isTurn: 0
   isInCharacterAction: 0
   initiative: 0
+  isInScene: 0
   health: 100
   maxHealth: 100
   isAlive: 1
+  level: 1
   model: {fileID: 2861516032672779164}
   characterColor: {r: 0.3392601, g: 0, b: 1, a: 0}
   turnIndicator: {fileID: 3087967353488094556}
@@ -285,6 +286,8 @@ MonoBehaviour:
   actionPoints: 2
   hasMovement: 0
   endMove: 0
+  levelAttained: 0
+  salary: 10
 --- !u!114 &108493003332084211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,7 +445,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5141428408838643964, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.005
+      objectReference: {fileID: 0}
+    - target: {fileID: -5141428408838643964, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -5141428408838643964, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
       propertyPath: m_LocalRotation.w

@@ -272,11 +272,7 @@ public class JewelerPage : MonoBehaviour
             {
                 item.UpdatePercentComplete();
                 string dropdownText = item.crafterDropdown.options[item.crafterDropdown.value].text;
-                //Debug.Log("dropdown text: " + dropdownText);
-                //if (item.itemInQueue.assignedCrafter != null)
-                //{
-                //    Debug.Log(item.itemInQueue.assignedCrafter.characterName);
-                //}
+
                 if (item.itemInQueue.assignedCrafter != null && dropdownText != item.itemInQueue.assignedCrafter.characterName)
                 {
                     item.UpdateDropdown();
