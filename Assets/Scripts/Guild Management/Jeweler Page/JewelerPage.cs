@@ -263,9 +263,34 @@ public class JewelerPage : MonoBehaviour
         }
     }
 
+    public void UpdateQueueItemValues()
+    {
+        foreach (Transform child in itemInQueueList.transform)
+        {
+            ItemInQueueListItem item = child.gameObject.GetComponent<ItemInQueueListItem>();
+            if (item != null)
+            {
+                item.UpdatePercentComplete();
+                string dropdownText = item.crafterDropdown.options[item.crafterDropdown.value].text;
+                //Debug.Log("dropdown text: " + dropdownText);
+                //if (item.itemInQueue.assignedCrafter != null)
+                //{
+                //    Debug.Log(item.itemInQueue.assignedCrafter.characterName);
+                //}
+                if (item.itemInQueue.assignedCrafter != null && dropdownText != item.itemInQueue.assignedCrafter.characterName)
+                {
+                    item.UpdateDropdown();
+                }
+                if (item.itemInQueue.assignedCrafter == null && dropdownText != ItemInQueueListItem.NEXT_AVAILABLE_TEXT)
+                {
+                    item.UpdateDropdown();
+                }
+            }
+        }
+    }
+
     public void Tick()
     {
-        Debug.Log("Tick");
         foreach (PlayerCharacter jeweler in gm.jewelers)
         {
             ItemInQueue? queuedItem = itemQueue.FirstOrDefault(i => i.assignedCrafter == jeweler);
@@ -281,7 +306,6 @@ public class JewelerPage : MonoBehaviour
             {
                 queuedItem.assignedCrafter = jeweler;
             }
-            Debug.Log(jeweler.name);
             queuedItem.workDone += jeweler.nonCombatSkills.jewelryCrafting;
             if (queuedItem.workDone >= queuedItem.workToComplete)
             {
@@ -290,7 +314,7 @@ public class JewelerPage : MonoBehaviour
                 completedItems.Add(queuedItem);
             }
         }
-        UpdateQueueList();
+        UpdateQueueItemValues();
     }
 
 }

@@ -11,9 +11,8 @@ public class ItemInQueueListItem : MonoBehaviour
     public ItemInQueue itemInQueue;
     public TMP_Dropdown crafterDropdown;
     public List<PlayerCharacter> crafterList;
-    public PlayerCharacter assignedCrafter;
 
-    const string NEXT_AVAILABLE_TEXT = "Next Available"; //just in case it changes later
+    public const string NEXT_AVAILABLE_TEXT = "Next Available"; 
 
     private void Update()
     {
@@ -25,7 +24,6 @@ public class ItemInQueueListItem : MonoBehaviour
         this.itemInQueue = itemInQueue;
         itemName.text = itemInQueue.item.itemName;
         crafterList = itemInQueue.crafterList;
-        assignedCrafter = itemInQueue.assignedCrafter;
         UpdatePercentComplete();
         UpdateDropdown();
     }
@@ -42,9 +40,9 @@ public class ItemInQueueListItem : MonoBehaviour
         List<string> characters = crafterList.Select(x => x.characterName).ToList();
         crafterDropdown.AddOptions(new List<string> {NEXT_AVAILABLE_TEXT});
         crafterDropdown.AddOptions(characters);
-        if (assignedCrafter != null)
+        if (itemInQueue.assignedCrafter != null)
         {
-            int index = characters.IndexOf(assignedCrafter.characterName);
+            int index = characters.IndexOf(itemInQueue.assignedCrafter.characterName);
             if (index != -1)
             {
                 crafterDropdown.value = index + 1;
@@ -57,7 +55,7 @@ public class ItemInQueueListItem : MonoBehaviour
         string name = crafterDropdown.options[crafterDropdown.value].text;
         if (name == NEXT_AVAILABLE_TEXT)
         {
-            assignedCrafter = null;
+            itemInQueue.assignedCrafter = null;
             return;
         }
         PlayerCharacter character = crafterList.FirstOrDefault(c => c.characterName == name);
@@ -66,6 +64,6 @@ public class ItemInQueueListItem : MonoBehaviour
             Debug.LogError("Selected character not found in crafter list");
             return;
         }
-        assignedCrafter = character;
+        itemInQueue.assignedCrafter = character;
     }
 }
