@@ -20,7 +20,7 @@ public class ItemInQueue : MonoBehaviour
 
     private int SetCraftingDifficulty(Item item)
     {
-        float workToComplete = 100f;
+        float workToComplete = 1000f;
         foreach (Item ingredient in item.craftingIngredients)
         {
             workToComplete *= ingredient.multiplier;

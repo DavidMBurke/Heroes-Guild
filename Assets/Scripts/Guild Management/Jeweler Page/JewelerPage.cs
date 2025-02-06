@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +18,7 @@ public class JewelerPage : MonoBehaviour
 
     public CraftingMaterialSlot itemSlot1;
     public CraftingMaterialSlot itemSlot2;
+    public CraftingMaterialSlot selectedSlot;
 
     public GameObject materialList;
     public GameObject craftPanel;
@@ -177,10 +177,12 @@ public class JewelerPage : MonoBehaviour
         }
 
         UpdateItemList(items, itemSlot);
+        selectedSlot = itemSlot;
     }
 
     public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {
+        items.RemoveAll(i => i.quantity == 0);
         foreach (Transform child in itemList.transform)
         {
             Destroy(child.gameObject);
@@ -232,15 +234,24 @@ public class JewelerPage : MonoBehaviour
         List<string> tags2 = new List<string> { "gem" };
         if (itemSlot1.CheckCorrectItemInSlot(tags1) == false || itemSlot2.CheckCorrectItemInSlot(tags2) == false)
         {
+            Debug.Log("Correct Items not in slots");
             return;
         }
-        Item necklace = (Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item));
+        if (itemSlot1.CheckCorrectItemQuantityInSlot(1) == false || itemSlot2.CheckCorrectItemQuantityInSlot(1) == false)
+        {
+            Debug.Log("Insufficient Quantities in slots");
+            return;
+        }
+        itemSlot1.item.quantity -= 1;
+        itemSlot2.item.quantity -= 1;
+        Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
         GameObject necklaceObject = new GameObject();
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
         necklaceInQueue.SetNewItem(necklace, gm.jewelers);
         necklaceObject.name = necklace.itemName;
         itemQueue.Add(necklaceInQueue);
         UpdateQueueList();
+        SelectItemSlot(selectedSlot.item.tags, selectedSlot);
     }
 
     public void UpdateQueueList()

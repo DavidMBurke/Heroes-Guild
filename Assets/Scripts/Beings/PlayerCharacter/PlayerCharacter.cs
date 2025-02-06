@@ -118,7 +118,7 @@ public class PlayerCharacter : Being
         {
             stat += Random.Range(diceMin, diceMax + 1);
         }
-        if (stat < 0) stat = 0;
+        if (stat < 1) stat = 1;
     }
 
     /// <summary>
