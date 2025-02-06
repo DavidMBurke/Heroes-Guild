@@ -1,51 +1,30 @@
+using System.Collections.Generic;
+
+[System.Serializable]
 public class CombatSkills
 {
-    public int dodge;
-    public int block;
-    public int stealth;
-    public int melee;
-    public int ranged;
-    public int healing;
-    public int auras;
-    public int evocation;
+    public Dictionary<string, Skill> skills = new();
 
-    public CombatSkills(
-        int dodge = 0,
-        int block = 0,
-        int stealth = 0,
-        int melee = 0,
-        int ranged = 0,
-        int healing= 0,
-        int auras = 0,
-        int evocation = 0
-        )
+    public CombatSkills()
     {
-        this.dodge = dodge;
-        this.block = block;
-        this.stealth = stealth;
-        this.melee = melee;
-        this.ranged = ranged;
-        this.healing = healing;
-        this.auras = auras;
-        this.evocation = evocation;
+        string[] skillNames = { "Dodge", "Block", "Stealth", "Melee", "Ranged", "Healing", "Auras", "Evocation" };
+
+        foreach (string skillName in skillNames)
+        {
+            skills[skillName] = new Skill(skillName);
+        }
     }
 
-    /// <summary>
-    /// Roll stat die for each combat skill
-    /// </summary>
-    /// <param name="mod"></param>
-    /// <returns></returns>
     public static CombatSkills RollBaseSkills(CombatSkills mod)
     {
-        CombatSkills skills = new CombatSkills();
-        PlayerCharacter.RollStat(ref skills.dodge, 2 + mod.dodge, 0, 2);
-        PlayerCharacter.RollStat(ref skills.block, 2 + mod.block, 0, 2);
-        PlayerCharacter.RollStat(ref skills.stealth, 2 + mod.stealth, 0, 2);
-        PlayerCharacter.RollStat(ref skills.melee, 2 + mod.melee, 0, 2);
-        PlayerCharacter.RollStat(ref skills.ranged, 2 + mod.ranged, 0, 2);
-        PlayerCharacter.RollStat(ref skills.healing, 2 + mod.healing, 0, 2);
-        PlayerCharacter.RollStat(ref skills.auras, 2 + mod.auras, 0, 2);
-        PlayerCharacter.RollStat(ref skills.evocation, 2 + mod.evocation, 0, 2);
-        return skills;
+        CombatSkills rolledSkills = new CombatSkills();
+
+        foreach (var skill in rolledSkills.skills)
+        {
+            int modValue = mod.skills.ContainsKey(skill.Key) ? mod.skills[skill.Key].level : 0;
+            PlayerCharacter.RollStat(ref skill.Value.level, 2 + modValue, 0, 2);
+        }
+
+        return rolledSkills;
     }
 }

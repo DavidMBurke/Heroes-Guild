@@ -186,29 +186,4 @@ public class PlayerCharacter : Being
         return "";
     }
 
-    private int CalculateLevel()
-    {
-        List<int> skillLevels = new List<int>();
-        foreach (FieldInfo field in typeof(CombatSkills).GetFields(BindingFlags.Public | BindingFlags.Instance))
-        {
-            if (field.FieldType == typeof(int)) // Ensure we're only iterating through integer fields
-            {
-                skillLevels.Add((int)field.GetValue(combatSkills));
-            }
-        }
-        foreach (FieldInfo field in typeof(NonCombatSkills).GetFields(BindingFlags.Public | BindingFlags.Instance))
-        {
-            if (field.FieldType == typeof(int)) // Ensure we're only iterating through integer fields
-            {
-                skillLevels.Add((int)field.GetValue(nonCombatSkills));
-            }
-        }
-        List<int> orderedLevels = skillLevels.OrderBy(x => x).ToList();
-        float level = 0;
-        for (int i = 1; i <= orderedLevels.Count; i++)
-        {
-            level += (float)orderedLevels[i] * 1f/i;
-        }
-        return (int)Math.Floor(level / skillLevelsPerCharacterLevel);
-    }
 }

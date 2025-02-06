@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -48,37 +48,16 @@ public class CharacterForHirePanel : MonoBehaviour
             $"Spiritual: {character.affinities.spiritual}\n" +
             $"Mundane: {character.affinities.qi}\n\n" +
 
-            $"Combat Skills:\n" +
-            $"Dodge: {character.combatSkills.dodge}\n" +
-            $"Block: {character.combatSkills.block}\n" +
-            $"Stealth: {character.combatSkills.stealth}\n" +
-            $"Melee: {character.combatSkills.melee}\n" +
-            $"Ranged: {character.combatSkills.ranged}\n" +
-            $"Healing: {character.combatSkills.healing}\n" +
-            $"Auras: {character.combatSkills.auras}\n" +
-            $"Evocation: {character.combatSkills.evocation}\n";
+            $"Combat Skills:\n" + FormatSkills(character.combatSkills.skills);
 
 
         column2.text =
-            $"Non-Combat Skills:\n" +
-            $"Cooking: {character.nonCombatSkills.cooking}\n" +
-            $"Sentry: {character.nonCombatSkills.sentry}\n" +
-            $"Fletching: {character.nonCombatSkills.fletching}\n" +
-            $"Trapping: {character.nonCombatSkills.trapping}\n" +
-            $"Herbalism: {character.nonCombatSkills.herbalism}\n" +
-            $"Medicine: {character.nonCombatSkills.medicine}\n" +
-            $"Leather Working: {character.nonCombatSkills.leatherWorking}\n" +
-            $"Tailoring: {character.nonCombatSkills.tailoring}\n" +
-            $"Alchemy: {character.nonCombatSkills.alchemy}\n" +
-            $"Armor Smithing: {character.nonCombatSkills.armorSmithing}\n" +
-            $"Weapon Smithing: {character.nonCombatSkills.weaponSmithing}\n" +
-            $"Enchanting: {character.nonCombatSkills.enchanting}\n" +
-            $"Mechanisms: {character.nonCombatSkills.mechanisms}\n" +
-            $"Jewelry Crafting: {character.nonCombatSkills.jewelryCrafting}\n" +
-            $"Mining: {character.nonCombatSkills.mining}\n" +
-            $"Animal Handling: {character.nonCombatSkills.animalHandling}\n" +
-            $"Cartography: {character.nonCombatSkills.cartography}\n" +
-            $"Barter: {character.nonCombatSkills.barter}";
+            $"Non-Combat Skills:\n" + FormatSkills(character.nonCombatSkills.skills);
+    }
+
+    private string FormatSkills(Dictionary<string, Skill> skillDict)
+    {
+        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}"));
     }
 
     public void AssignCharacter(PlayerCharacter playerCharacter)

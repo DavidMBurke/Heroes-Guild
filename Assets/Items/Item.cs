@@ -10,10 +10,14 @@ public class Item
     public string description;
     public int cost;
     public int quantity = 1;
+
+    [System.NonSerialized]
     public Sprite sprite;
 
     // crafting
     public float multiplier; // For crafting ingredients with multipliers
+
+    [System.NonSerialized]
     public List<Item> craftingIngredients;
 
     // equipment

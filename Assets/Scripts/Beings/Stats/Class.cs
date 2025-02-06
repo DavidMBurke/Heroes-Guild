@@ -6,62 +6,74 @@ public class Class
     public string description;
     public CombatSkills combatSkillMods;
 
-    Class(string name, string description)
+    Class(string name, string description, Dictionary<string, int> combatSkillModifiers = null)
     {
         this.name = name;
         this.description = description;
+        this.combatSkillMods = new CombatSkills();
+
+        if (combatSkillModifiers != null)
+        {
+            foreach (var mod in combatSkillModifiers)
+            {
+                if (combatSkillMods.skills.ContainsKey(mod.Key))
+                {
+                    combatSkillMods.skills[mod.Key].level += mod.Value;
+                } else
+                {
+                    combatSkillMods.skills[mod.Key] = new Skill(mod.Key, mod.Value);
+                }
+            }
+        }
     }
 
     public static List<Class> classes = new List<Class>
     {
-        new Class("Unassigned", "")
+        new Class("Unassigned", ""),
+        new Class("Fighter", "", new Dictionary<string, int>
         {
-
-        },
-        new Class("Fighter", "")
+            { "Melee", 2 }, { "Block", 2 }, { "Dodge", 1 }, { "Ranged", 1 }
+        }),
+        new Class("Paladin", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(melee: 2, block: 2, dodge: 1, ranged: 1)
-        },
-        new Class("Paladin", "")
+            { "Block", 2 }, { "Healing", 2 }, { "Melee", 1 }, { "Auras", 1 }
+        }),
+        new Class("Cleric", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(block: 2, healing: 2, melee: 1, auras: 1)
-        },
-        new Class("Cleric", "")
+            { "Healing", 2 }, { "Auras", 2 }, { "Block", 1 }, { "Evocation", 1 }
+        }),
+        new Class("Sorcerer", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(healing: 2, auras: 2, block: 1, evocation: 1)
-        },
-        new Class("Sorcerer", "")
+            { "Evocation", 3 }, { "Melee", 2 }, { "Dodge", 1 }
+        }),
+        new Class("Rogue", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(evocation: 3, melee: 2, dodge: 1)
-        },
-        new Class("Rogue", "")
+            { "Stealth", 2 }, { "Dodge", 2 }, { "Melee", 1 }, { "Ranged", 1 }
+        }),
+        new Class("Pack Mule", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(stealth: 2, dodge: 2, melee: 1, ranged: 1)
-        },
-        new Class("Pack Mule", "")
+            { "Block", 3 }, { "Stealth", 2 }
+        }),
+        new Class("Wizard", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(block: 3, stealth: 2)
-        },
-        new Class("Wizard", "")
+            { "Evocation", 3 }, { "Auras", 3 }
+        }),
+        new Class("Druid", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(evocation: 3, auras: 3)
-        },
-        new Class("Druid", "")
+            { "Healing", 2 }, { "Auras", 2 }, { "Evocation", 2 }
+        }),
+        new Class("Barbarian", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(healing: 2, auras: 2, evocation: 2)
-        },
-        new Class("Barbarian", "")
+            { "Melee", 3 }, { "Dodge", 2 }, { "Ranged", 1 }
+        }),
+        new Class("Bard", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(melee: 3, dodge: 2, ranged: 1)
-        },
-        new Class("Bard", "")
+            { "Auras", 3 }, { "Stealth", 1 }, { "Dodge", 1 }, { "Ranged", 1 }
+        }),
+        new Class("Monk", "", new Dictionary<string, int>
         {
-            combatSkillMods = new CombatSkills(auras: 3, stealth: 1, dodge: 1, ranged: 1)
-        },
-        new Class("Monk", "")
-        {
-            combatSkillMods = new CombatSkills(melee: 3, dodge: 3)
-        },
+            { "Melee", 3 }, { "Dodge", 3 }
+        })
     };
 }
     public enum ClassEnum

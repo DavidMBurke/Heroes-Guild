@@ -97,7 +97,7 @@ public class JewelerPage : MonoBehaviour
             listItem.SetCharacter(character);
             string text1 = character.characterName + (" (Assigned)");
             string text2 = "Lvl: " + character.level.ToString();
-            string text3 = "JewelryCrafting: " + character.nonCombatSkills.jewelryCrafting.ToString();
+            string text3 = "Jewelry Crafting: " + character.nonCombatSkills.skills["Jewelry Crafting"].level.ToString();
             listItem.SetText(text1, text2, text3);
         }
         foreach (PlayerCharacter character in gm.unassignedEmployees)
@@ -112,7 +112,7 @@ public class JewelerPage : MonoBehaviour
             listItem.SetCharacter(character);
             string text1 = character.characterName;
             string text2 = "Lvl: " + character.level.ToString();
-            string text3 = "JewelryCrafting: " + character.nonCombatSkills.jewelryCrafting.ToString();
+            string text3 = "JewelryCrafting: " + character.nonCombatSkills.skills["Jewelry Crafting"].level.ToString();
             listItem.SetText(text1, text2, text3);
         }
     }
@@ -313,7 +313,7 @@ public class JewelerPage : MonoBehaviour
             {
                 queuedItem.assignedCrafter = jeweler;
             }
-            queuedItem.workDone += jeweler.nonCombatSkills.jewelryCrafting;
+            queuedItem.workDone += jeweler.nonCombatSkills.skills["Jewelry Crafting"].level;
             if (queuedItem.workDone >= queuedItem.workToComplete)
             {
                 queuedItem.workDone = queuedItem.workToComplete;

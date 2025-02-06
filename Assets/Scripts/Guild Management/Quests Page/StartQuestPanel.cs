@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class StartQuestPanel : MonoBehaviour
@@ -127,6 +128,7 @@ public class StartQuestPanel : MonoBehaviour
             $"{selectedCharacter.characterName} \n" +
             $"Race: {selectedCharacter.race.name} \n" +
             $"Class: {selectedCharacter.playerClass.name} \n\n" +
+
         $"Attributes: \n" +
             $"Strength: {selectedCharacter.attributes.strength}\n" +
             $"Agility: {selectedCharacter.attributes.agility}\n" +
@@ -134,42 +136,21 @@ public class StartQuestPanel : MonoBehaviour
             $"Intelligence: {selectedCharacter.attributes.intelligence}\n" +
             $"Will: {selectedCharacter.attributes.will}\n" +
             $"Fortitude: {selectedCharacter.attributes.fortitude}\n\n" +
+
         $"Affinities:\n" +
             $"Nature: {selectedCharacter.affinities.nature}\n" +
             $"Arcana: {selectedCharacter.affinities.arcana}\n" +
             $"Celestial: {selectedCharacter.affinities.celestial}\n" +
             $"Spiritual: {selectedCharacter.affinities.spiritual}\n" +
             $"Mundane: {selectedCharacter.affinities.qi}\n\n" +
-        $"Combat Skills:\n" +
-            $"Dodge: {selectedCharacter.combatSkills.dodge}\n" +
-            $"Block: {selectedCharacter.combatSkills.block}\n" +
-            $"Stealth: {selectedCharacter.combatSkills.stealth}\n" +
-            $"Melee: {selectedCharacter.combatSkills.melee}\n" +
-            $"Ranged: {selectedCharacter.combatSkills.ranged}\n" +
-            $"Healing: {selectedCharacter.combatSkills.healing}\n" +
-            $"Auras: {selectedCharacter.combatSkills.auras}\n" +
-            $"Evocation: {selectedCharacter.combatSkills.evocation}\n";
 
-
+            $"Combat Skills:\n" + FormatSkills(selectedCharacter.combatSkills.skills);
         column2.text =
-            $"Non-Combat Skills:\n" +
-            $"Cooking: {selectedCharacter.nonCombatSkills.cooking}\n" +
-            $"Sentry: {selectedCharacter.nonCombatSkills.sentry}\n" +
-            $"Fletching: {selectedCharacter.nonCombatSkills.fletching}\n" +
-            $"Trapping: {selectedCharacter.nonCombatSkills.trapping}\n" +
-            $"Herbalism: {selectedCharacter.nonCombatSkills.herbalism}\n" +
-            $"Medicine: {selectedCharacter.nonCombatSkills.medicine}\n" +
-            $"Leather Working: {selectedCharacter.nonCombatSkills.leatherWorking}\n" +
-            $"Tailoring: {selectedCharacter.nonCombatSkills.tailoring}\n" +
-            $"Alchemy: {selectedCharacter.nonCombatSkills.alchemy}\n" +
-            $"Armor Smithing: {selectedCharacter.nonCombatSkills.armorSmithing}\n" +
-            $"Weapon Smithing: {selectedCharacter.nonCombatSkills.weaponSmithing}\n" +
-            $"Enchanting: {selectedCharacter.nonCombatSkills.enchanting}\n" +
-            $"Mechanisms: {selectedCharacter.nonCombatSkills.mechanisms}\n" +
-            $"Jewelry Crafting: {selectedCharacter.nonCombatSkills.jewelryCrafting}\n" +
-            $"Mining: {selectedCharacter.nonCombatSkills.mining}\n" +
-            $"Animal Handling: {selectedCharacter.nonCombatSkills.animalHandling}\n" +
-            $"Cartography: {selectedCharacter.nonCombatSkills.cartography}\n" +
-            $"Barter: {selectedCharacter.nonCombatSkills.barter}";
+            $"Non-Combat Skills:\n" + FormatSkills(selectedCharacter.nonCombatSkills.skills);
+    }
+
+    private string FormatSkills(Dictionary<string, Skill> skillDict)
+    {
+        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}"));
     }
 }
