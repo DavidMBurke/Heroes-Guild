@@ -4,13 +4,74 @@ public class Class
 {
     public string name;
     public string description;
+    public Attributes attributeMods;
+    public Affinities affinityMods;
     public CombatSkills combatSkillMods;
+    public NonCombatSkills nonCombatSkillMods;
 
-    Class(string name, string description, Dictionary<string, int> combatSkillModifiers = null)
+
+    private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
+    {
+        { Enum.Unassigned, "Unassigned" },
+        { Enum.Fighter, "Fighter" },
+        { Enum.Paladin, "Paladin" },
+        { Enum.Cleric, "Cleric" },
+        { Enum.Sorcerer, "Sorcerer" },
+        { Enum.Rogue, "Rogue" },
+        { Enum.PackMule, "Pack Mule" },
+        { Enum.Wizard, "Wizard" },
+        { Enum.Druid, "Druid" },
+        { Enum.Barbarian, "Barbarian" },
+        { Enum.Bard, "Bard" },
+        { Enum.Monk, "Monk" }
+    };
+
+    Class(
+        string name, 
+        string description, 
+        Dictionary<string, int> combatSkillModifiers = null,
+        Dictionary<string, int> nonCombatSkillModifiers = null,
+        Dictionary<string, int> attributeModifiers = null,
+        Dictionary<string, int> affinityModifiers = null)
     {
         this.name = name;
         this.description = description;
-        this.combatSkillMods = new CombatSkills();
+        combatSkillMods = new CombatSkills();
+        nonCombatSkillMods = new NonCombatSkills();
+        attributeMods = new Attributes();
+        affinityMods = new Affinities();
+
+
+
+        if (attributeModifiers != null)
+        {
+            foreach (var mod in attributeModifiers)
+            {
+                if (attributeMods.attributes.ContainsKey(mod.Key))
+                {
+                    attributeMods.attributes[mod.Key].level += mod.Value;
+                }
+                else
+                {
+                    attributeMods.attributes[mod.Key] = new Attribute(mod.Key, mod.Value);
+                }
+            }
+        }
+
+        if (affinityModifiers != null)
+        {
+            foreach (var mod in affinityModifiers)
+            {
+                if (affinityMods.affinities.ContainsKey(mod.Key))
+                {
+                    affinityMods.affinities[mod.Key].level += mod.Value;
+                }
+                else
+                {
+                    affinityMods.affinities[mod.Key] = new Affinity(mod.Key, mod.Value);
+                }
+            }
+        }
 
         if (combatSkillModifiers != null)
         {
@@ -19,64 +80,109 @@ public class Class
                 if (combatSkillMods.skills.ContainsKey(mod.Key))
                 {
                     combatSkillMods.skills[mod.Key].level += mod.Value;
-                } else
+                }
+                else
                 {
                     combatSkillMods.skills[mod.Key] = new Skill(mod.Key, mod.Value);
+                }
+            }
+        }
+
+        if (nonCombatSkillModifiers != null)
+        {
+            foreach (var mod in nonCombatSkillModifiers)
+            {
+                if (nonCombatSkillMods.skills.ContainsKey(mod.Key))
+                {
+                    nonCombatSkillMods.skills[mod.Key].level += mod.Value;
+                }
+                else
+                {
+                    nonCombatSkillMods.skills[mod.Key] = new Skill(mod.Key, mod.Value);
                 }
             }
         }
     }
 
     public static List<Class> classes = new List<Class>
+{
+    new Class(GetName(Enum.Unassigned), ""),
+    new Class(GetName(Enum.Fighter), "", new Dictionary<string, int>
     {
-        new Class("Unassigned", ""),
-        new Class("Fighter", "", new Dictionary<string, int>
-        {
-            { "Melee", 2 }, { "Block", 2 }, { "Dodge", 1 }, { "Ranged", 1 }
-        }),
-        new Class("Paladin", "", new Dictionary<string, int>
-        {
-            { "Block", 2 }, { "Healing", 2 }, { "Melee", 1 }, { "Auras", 1 }
-        }),
-        new Class("Cleric", "", new Dictionary<string, int>
-        {
-            { "Healing", 2 }, { "Auras", 2 }, { "Block", 1 }, { "Evocation", 1 }
-        }),
-        new Class("Sorcerer", "", new Dictionary<string, int>
-        {
-            { "Evocation", 3 }, { "Melee", 2 }, { "Dodge", 1 }
-        }),
-        new Class("Rogue", "", new Dictionary<string, int>
-        {
-            { "Stealth", 2 }, { "Dodge", 2 }, { "Melee", 1 }, { "Ranged", 1 }
-        }),
-        new Class("Pack Mule", "", new Dictionary<string, int>
-        {
-            { "Block", 3 }, { "Stealth", 2 }
-        }),
-        new Class("Wizard", "", new Dictionary<string, int>
-        {
-            { "Evocation", 3 }, { "Auras", 3 }
-        }),
-        new Class("Druid", "", new Dictionary<string, int>
-        {
-            { "Healing", 2 }, { "Auras", 2 }, { "Evocation", 2 }
-        }),
-        new Class("Barbarian", "", new Dictionary<string, int>
-        {
-            { "Melee", 3 }, { "Dodge", 2 }, { "Ranged", 1 }
-        }),
-        new Class("Bard", "", new Dictionary<string, int>
-        {
-            { "Auras", 3 }, { "Stealth", 1 }, { "Dodge", 1 }, { "Ranged", 1 }
-        }),
-        new Class("Monk", "", new Dictionary<string, int>
-        {
-            { "Melee", 3 }, { "Dodge", 3 }
-        })
-    };
-}
-    public enum ClassEnum
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Block), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Ranged), 1 }
+    }),
+    new Class(GetName(Enum.Paladin), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Block), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Healing), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Auras), 1 }
+    }),
+    new Class(GetName(Enum.Cleric), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Healing), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Auras), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Block), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Evocation), 1 }
+    }),
+    new Class(GetName(Enum.Sorcerer), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Evocation), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 1 }
+    }),
+    new Class(GetName(Enum.Rogue), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Stealth), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Ranged), 1 }
+    }),
+    new Class(GetName(Enum.PackMule), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Block), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Stealth), 2 }
+    }),
+    new Class(GetName(Enum.Wizard), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Evocation), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Auras), 3 }
+    }),
+    new Class(GetName(Enum.Druid), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Healing), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Auras), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Evocation), 2 }
+    }),
+    new Class(GetName(Enum.Barbarian), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 2 },
+        { CombatSkills.GetName(CombatSkills.Enum.Ranged), 1 }
+    }),
+    new Class(GetName(Enum.Bard), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Auras), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Stealth), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 1 },
+        { CombatSkills.GetName(CombatSkills.Enum.Ranged), 1 }
+    }),
+    new Class(GetName(Enum.Monk), "", new Dictionary<string, int>
+    {
+        { CombatSkills.GetName(CombatSkills.Enum.Melee), 3 },
+        { CombatSkills.GetName(CombatSkills.Enum.Dodge), 3 }
+    })
+};
+
+    public static string GetName(Enum classEnum)
+    {
+        return Names.TryGetValue(classEnum, out var name) ? name : "Unknown";
+    }
+
+    public enum Enum
     {
         Unassigned = 0,
         Fighter = 1,
@@ -91,3 +197,7 @@ public class Class
         Bard = 10,
         Monk = 11
     }
+
+}
+
+        

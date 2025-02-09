@@ -129,28 +129,29 @@ public class StartQuestPanel : MonoBehaviour
             $"Race: {selectedCharacter.race.name} \n" +
             $"Class: {selectedCharacter.playerClass.name} \n\n" +
 
-        $"Attributes: \n" +
-            $"Strength: {selectedCharacter.attributes.strength}\n" +
-            $"Agility: {selectedCharacter.attributes.agility}\n" +
-            $"Charisma: {selectedCharacter.attributes.charisma}\n" +
-            $"Intelligence: {selectedCharacter.attributes.intelligence}\n" +
-            $"Will: {selectedCharacter.attributes.will}\n" +
-            $"Fortitude: {selectedCharacter.attributes.fortitude}\n\n" +
+            $"Attributes: \n" +
+            FormatAttributes(selectedCharacter.attributes.attributes) +
 
-        $"Affinities:\n" +
-            $"Nature: {selectedCharacter.affinities.nature}\n" +
-            $"Arcana: {selectedCharacter.affinities.arcana}\n" +
-            $"Celestial: {selectedCharacter.affinities.celestial}\n" +
-            $"Spiritual: {selectedCharacter.affinities.spiritual}\n" +
-            $"Mundane: {selectedCharacter.affinities.qi}\n\n" +
+            $"Affinities:\n" +
+            FormatAffinities(selectedCharacter.affinities.affinities) +
 
             $"Combat Skills:\n" + FormatSkills(selectedCharacter.combatSkills.skills);
         column2.text =
             $"Non-Combat Skills:\n" + FormatSkills(selectedCharacter.nonCombatSkills.skills);
     }
 
+    private string FormatAttributes(Dictionary<string, Attribute> attributeDict)
+    {
+        return string.Join("\n", attributeDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+    }
+
+    private string FormatAffinities(Dictionary<string, Affinity> affinityDict)
+    {
+        return string.Join("\n", affinityDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+    }
+
     private string FormatSkills(Dictionary<string, Skill> skillDict)
     {
-        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}"));
+        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}")) + "\n\n";
     }
 }

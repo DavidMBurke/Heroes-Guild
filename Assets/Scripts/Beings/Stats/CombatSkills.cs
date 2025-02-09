@@ -7,7 +7,16 @@ public class CombatSkills
 
     public CombatSkills()
     {
-        string[] skillNames = { "Dodge", "Block", "Stealth", "Melee", "Ranged", "Healing", "Auras", "Evocation" };
+        string[] skillNames = { 
+            GetName(Enum.Dodge),
+            GetName(Enum.Block),
+            GetName(Enum.Stealth),
+            GetName(Enum.Melee),
+            GetName(Enum.Ranged),
+            GetName(Enum.Healing),
+            GetName(Enum.Auras),
+            GetName(Enum.Evocation)
+        };
 
         foreach (string skillName in skillNames)
         {
@@ -15,16 +24,46 @@ public class CombatSkills
         }
     }
 
-    public static CombatSkills RollBaseSkills(CombatSkills mod)
+    public static CombatSkills RollBaseSkills(CombatSkills mods)
     {
         CombatSkills rolledSkills = new CombatSkills();
 
         foreach (var skill in rolledSkills.skills)
         {
-            int modValue = mod.skills.ContainsKey(skill.Key) ? mod.skills[skill.Key].level : 0;
+            int modValue = mods.skills.ContainsKey(skill.Key) ? mods.skills[skill.Key].level : 1;
             PlayerCharacter.RollStat(ref skill.Value.level, 2 + modValue, 0, 2);
         }
 
         return rolledSkills;
     }
+
+    public static string GetName(Enum skillEnum)
+    {
+        return Names.TryGetValue(skillEnum, out var name) ? name : "Unknown";
+    }
+
+    public enum Enum
+    {
+        Dodge = 1,
+        Block = 2,
+        Stealth = 3,
+        Melee = 4,
+        Ranged = 5,
+        Healing = 6,
+        Auras = 7,
+        Evocation = 8
+    }
+
+
+    private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
+    {
+        { Enum.Dodge, "Dodge" },
+        { Enum.Block, "Block" },
+        { Enum.Stealth, "Stealth" },
+        { Enum.Melee, "Melee" },
+        { Enum.Ranged, "Ranged" },
+        { Enum.Healing, "Healing" },
+        { Enum.Auras, "Auras" },
+        { Enum.Evocation, "Evocation" }
+    };
 }

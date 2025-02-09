@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,8 +8,8 @@ using Random = UnityEngine.Random;
 public class PlayerCharacter : Being
 {
     const int skillLevelsPerCharacterLevel = 4;
-    public Race race = Race.races[(int)RaceEnum.Unassigned];
-    public Class playerClass = Class.classes[(int)ClassEnum.Unassigned];
+    public Race race = Race.races[(int)Race.Enum.Unassigned];
+    public Class playerClass = Class.classes[(int)Class.Enum.Unassigned];
     public Attributes attributes = new Attributes();
     public Affinities affinities = new Affinities();
     public CombatSkills combatSkills = new CombatSkills();
@@ -154,16 +151,16 @@ public class PlayerCharacter : Being
         /// vvv PLACEHOLDER GARBAGE TO MAKE THIS WORK ON FRONT END vvv
         /// This will be dynamically generated and stored in the future
 
-        if (classNum == (int)ClassEnum.Paladin)
+        if (classNum == (int)Class.Enum.Paladin)
         {
             actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
         }
-        if (classNum == (int)ClassEnum.Rogue)
+        if (classNum == (int)Class.Enum.Rogue)
         {
             actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
             actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), this, "Ranged Attack"));
         }
-        if (classNum == (int)ClassEnum.Wizard)
+        if (classNum == (int)Class.Enum.Wizard)
         {
             actionList.Add(new CharacterAction((caster, action) => Spells.FireBall(caster, action), this, "Fireball"));
         }
@@ -171,15 +168,15 @@ public class PlayerCharacter : Being
 
     private string AssignNewName(int raceRoll)
     {
-        if (raceRoll == (int)RaceEnum.Felis)
+        if (raceRoll == (int)Race.Enum.Felis)
         {
             return NameGenerator.GenerateFelisName();
         }
-        if (raceRoll == (int)RaceEnum.Canid)
+        if (raceRoll == (int)Race.Enum.Canid)
         {
             return NameGenerator.GenerateCanidName();
         }
-        if (raceRoll == (int)RaceEnum.MouseFolk)
+        if (raceRoll == (int)Race.Enum.MouseFolk)
         {
             return NameGenerator.GenerateMouseFolkName();
         }

@@ -34,19 +34,10 @@ public class CharacterForHirePanel : MonoBehaviour
             $"Race: {character.race.name} \n" +
             $"Class: {character.playerClass.name} \n\n" +
             $"Attributes: \n" +
-            $"Strength: {character.attributes.strength}\n" +
-            $"Agility: {character.attributes.agility}\n" +
-            $"Charisma: {character.attributes.charisma}\n" +
-            $"Intelligence: {character.attributes.intelligence}\n" +
-            $"Will: {character.attributes.will}\n" +
-            $"Fortitude: {character.attributes.fortitude}\n\n" +
+            FormatAttributes(character.attributes.attributes) +
 
             $"Affinities:\n" +
-            $"Nature: {character.affinities.nature}\n" +
-            $"Arcana: {character.affinities.arcana}\n" +
-            $"Celestial: {character.affinities.celestial}\n" +
-            $"Spiritual: {character.affinities.spiritual}\n" +
-            $"Mundane: {character.affinities.qi}\n\n" +
+            FormatAffinities(character.affinities.affinities) +
 
             $"Combat Skills:\n" + FormatSkills(character.combatSkills.skills);
 
@@ -55,9 +46,18 @@ public class CharacterForHirePanel : MonoBehaviour
             $"Non-Combat Skills:\n" + FormatSkills(character.nonCombatSkills.skills);
     }
 
+    private string FormatAttributes(Dictionary<string, Attribute> attributeDict)
+    {
+        return string.Join("\n", attributeDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+    }
+    private string FormatAffinities(Dictionary<string, Affinity> affinityDict)
+    {
+        return string.Join("\n", affinityDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+    }
+
     private string FormatSkills(Dictionary<string, Skill> skillDict)
     {
-        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}"));
+        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}")) + "\n\n";
     }
 
     public void AssignCharacter(PlayerCharacter playerCharacter)

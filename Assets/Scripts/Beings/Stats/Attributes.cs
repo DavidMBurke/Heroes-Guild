@@ -1,38 +1,63 @@
-/// <summary>
-/// Most overarching stats of the player, affect almost everything a character does
-/// </summary>
+using System.Collections.Generic;
+
 public class Attributes
 {
-    public int strength;
-    public int agility;
-    public int charisma;
-    public int intelligence;
-    public int will;
-    public int fortitude;
+    public Dictionary<string, Attribute> attributes = new();
 
-    public Attributes(int strength = 0, int agility = 0, int charisma = 0, int intelligence = 0, int will = 0, int fortitude = 0)
+    public Attributes()
     {
-        this.strength = strength;
-        this.agility = agility;
-        this.charisma = charisma;
-        this.intelligence = intelligence;
-        this.will = will;
-        this.fortitude = fortitude;
-    }
+        string[] attributeNames = { 
+            GetName(Enum.Strength), 
+            GetName(Enum.Agility), 
+            GetName(Enum.Charisma), 
+            GetName(Enum.Intelligence), 
+            GetName(Enum.Will), 
+            GetName(Enum.Fortitude) 
+        };
+        
+        foreach(string attributeName in attributeNames)
+        {
+            attributes[attributeName] = new Attribute(attributeName);
+        }
 
-    /// <summary>
-    /// Roll 6d2 for each stat. Mods add or subtract dice.
-    /// </summary>
+    }
 
     public static Attributes RollBaseAttributes(Attributes mods)
     {
-        Attributes attributes = new Attributes();
-        PlayerCharacter.RollStat(ref attributes.strength, 3 + mods.strength, 1, 2);
-        PlayerCharacter.RollStat(ref attributes.agility, 3 + mods.agility, 1, 2);
-        PlayerCharacter.RollStat(ref attributes.charisma, 3 + mods.charisma, 1, 2);
-        PlayerCharacter.RollStat(ref attributes.intelligence, 3 + mods.intelligence, 1, 2);
-        PlayerCharacter.RollStat(ref attributes.will, 3 + mods.will, 1, 2);
-        PlayerCharacter.RollStat(ref attributes.fortitude, 3 + mods.fortitude, 1, 2);
-        return attributes;
+        Attributes rolledAttributes = new Attributes();
+
+        foreach (var attribute in rolledAttributes.attributes)
+        {
+            int modValue = mods.attributes.ContainsKey(attribute.Key) ? mods.attributes[attribute.Key].level : 0;
+            PlayerCharacter.RollStat(ref attribute.Value.level, 3 + modValue, 1, 2);
+        }
+
+        return rolledAttributes;
     }
+
+    public static string GetName(Enum attributeEnum)
+    {
+        return Names.TryGetValue(attributeEnum, out var name) ? name : "Unknown";
+    }
+
+    public enum Enum
+    {
+        Strength = 1,
+        Agility = 2,
+        Charisma = 3,
+        Intelligence = 4,
+        Will = 5,
+        Fortitude = 6
+    }
+
+
+    private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
+    {
+        { Enum.Strength, "Strength" },
+        { Enum.Agility, "Agility" },
+        { Enum.Charisma, "Charisma" },
+        { Enum.Intelligence, "Intelligence" },
+        { Enum.Will, "Will" },
+        { Enum.Fortitude, "Fortitude" }
+    };
 }

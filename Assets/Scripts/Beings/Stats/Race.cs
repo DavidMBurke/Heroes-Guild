@@ -12,20 +12,61 @@ public class Race
 
     public List<int> rollableClasses;
 
-    public Race(string name, string description,
+    private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
+    {
+        { Enum.Unassigned, "Unassigned" },
+        { Enum.Canid, "Canid" },
+        { Enum.Felis, "Felis" },
+        { Enum.MouseFolk, "MouseFolk" }
+    };
+
+
+    public Race(
+        string name,
+        string description,
         Dictionary<string, int> combatSkillModifiers = null,
         Dictionary<string, int> nonCombatSkillModifiers = null,
-        Attributes attributeMods = null,
-        Affinities affinityMods = null,
+        Dictionary<string, int> attributeModifiers = null,
+        Dictionary<string, int> affinityModifiers = null,
         List<int> rollableClasses = null)
     {
         this.name = name;
         this.description = description;
-        this.attributeMods = attributeMods ?? new Attributes();
-        this.affinityMods = affinityMods ?? new Affinities();
         combatSkillMods = new CombatSkills();
         nonCombatSkillMods = new NonCombatSkills();
+        attributeMods = new Attributes();
+        affinityMods = new Affinities();
         this.rollableClasses = rollableClasses ?? new List<int>();
+
+        if (attributeModifiers != null)
+        {
+            foreach (var mod in attributeModifiers)
+            {
+                if (attributeMods.attributes.ContainsKey(mod.Key))
+                {
+                    attributeMods.attributes[mod.Key].level += mod.Value;
+                }
+                else
+                {
+                    attributeMods.attributes[mod.Key] = new Attribute(mod.Key, mod.Value);
+                }
+            }
+        }
+
+        if (affinityModifiers != null)
+        {
+            foreach (var mod in affinityModifiers)
+            {
+                if (affinityMods.affinities.ContainsKey(mod.Key))
+                {
+                    affinityMods.affinities[mod.Key].level += mod.Value;
+                }
+                else
+                {
+                    affinityMods.affinities[mod.Key] = new Affinity(mod.Key, mod.Value);
+                }
+            }
+        }
 
         if (combatSkillModifiers != null)
         {
@@ -56,51 +97,97 @@ public class Race
                 }
             }
         }
+
     }
 
     public static List<Race> races = new List<Race>
     {
-        new Race("Unassigned", ""),
+        new Race(GetName(Enum.Unassigned), ""),
 
-        new Race("Canid", "Dog-folk known for strength, resilience and loyalty.",
+        new Race(GetName(Enum.Canid), "Dog-folk known for strength, resilience and loyalty.",
             nonCombatSkillModifiers: new Dictionary<string, int>
             {
-                { "Sentry", 2 }, { "Medicine", 2 }, { "ArmorSmithing", 2 },
-                { "WeaponSmithing", 2 }, { "Mining", 2 }, { "Cartography", 2 }
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Sentry), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Medicine), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.ArmorSmithing), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.WeaponSmithing), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Mining), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Cartography), 2 }
             },
-            attributeMods: new Attributes(fortitude: 3, strength: 2, charisma: 1),
-            affinityMods: new Affinities(celestial: 3),
-            rollableClasses: new List<int> { (int)ClassEnum.Paladin }
+            attributeModifiers: new Dictionary<string, int>
+            {
+                { Attributes.GetName(Attributes.Enum.Fortitude), 3 },
+                { Attributes.GetName(Attributes.Enum.Strength), 2 },
+                { Attributes.GetName(Attributes.Enum.Charisma), 1 }
+            },
+            affinityModifiers: new Dictionary<string, int>
+            {
+                { Affinities.GetName(Affinities.Enum.Celestial), 3 }
+            },
+            rollableClasses: new List<int> { (int)Class.Enum.Paladin }
         ),
 
-        new Race("Felis", "Cat people known for intelligence and magical abilities",
+        new Race(GetName(Enum.Felis), "Cat people known for intelligence and magical abilities",
             nonCombatSkillModifiers: new Dictionary<string, int>
             {
-                { "Trapping", 2 }, { "Tailoring", 2 }, { "Alchemy", 2 },
-                { "Enchanting", 2 }, { "JewelryCrafting", 2 }, { "MonsterWrangling", 2 }
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Trapping), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Tailoring), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Alchemy), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Enchanting), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.MonsterWrangling), 2 }
             },
-            attributeMods: new Attributes(intelligence: 3, will: 2, fortitude: 1),
-            affinityMods: new Affinities(arcana: 3),
-            rollableClasses: new List<int> { (int)ClassEnum.Wizard }
+            attributeModifiers: new Dictionary<string, int>
+            {
+                { Attributes.GetName(Attributes.Enum.Intelligence), 3 },
+                { Attributes.GetName(Attributes.Enum.Will), 2 },
+                { Attributes.GetName(Attributes.Enum.Fortitude), 1 }
+            },
+            affinityModifiers: new Dictionary<string, int>
+            {
+                { Affinities.GetName(Affinities.Enum.Arcana), 3 }
+            },
+            rollableClasses: new List<int> { (int)Class.Enum.Wizard }
         ),
 
-        new Race("Mousefolk", "Mouse people known for stealth, agility and perseverance",
+        new Race(GetName(Enum.MouseFolk), "Mouse people known for stealth, agility and perseverance",
             nonCombatSkillModifiers: new Dictionary<string, int>
             {
-                { "Cooking", 2 }, { "Fletching", 2 }, { "Herbalism", 2 },
-                { "LeatherWorking", 2 }, { "Mechanisms", 2 }, { "Barter", 2 }
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Cooking), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Fletching), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Herbalism), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.LeatherWorking), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Mechanisms), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Barter), 2 }
             },
-            attributeMods: new Attributes(agility: 3, charisma: 2, fortitude: 2),
-            affinityMods: new Affinities(nature: 1, spiritual: 1, qi: 1),
-            rollableClasses: new List<int> { (int)ClassEnum.Rogue }
+            attributeModifiers: new Dictionary<string, int>
+            {
+                { Attributes.GetName(Attributes.Enum.Agility), 3 },
+                { Attributes.GetName(Attributes.Enum.Charisma), 2 },
+                { Attributes.GetName(Attributes.Enum.Fortitude), 2 }
+            },
+            affinityModifiers: new Dictionary<string, int>
+            {
+                { Affinities.GetName(Affinities.Enum.Nature), 1 },
+                { Affinities.GetName(Affinities.Enum.Spiritual), 1 },
+                { Affinities.GetName(Affinities.Enum.Qi), 1 }
+            },
+            rollableClasses: new List<int> { (int)Class.Enum.Rogue }
         )
     };
+
+    public static string GetName(Enum raceEnum)
+    {
+        return Names.TryGetValue(raceEnum, out var name) ? name : "Unknown";
+    }
+
+    public enum Enum
+    {
+        Unassigned = 0,
+        Canid = 1,
+        Felis = 2,
+        MouseFolk = 3
+    }
+
 }
 
-public enum RaceEnum
-{
-    Unassigned = 0,
-    Canid = 1,
-    Felis = 2,
-    MouseFolk = 3
-}
