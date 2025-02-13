@@ -6,17 +6,10 @@ public class Affinities
 
     public Affinities()
     {
-        string[] affinityNames = { 
-            GetName(Enum.Nature), 
-            GetName(Enum.Arcana), 
-            GetName(Enum.Celestial), 
-            GetName(Enum.Spiritual), 
-            GetName(Enum.Qi) 
-        };
-
-        foreach (string affinityName in affinityNames)
+        foreach (var affinityEnum in Names)
         {
-            affinities[affinityName] = new Affinity(affinityName);
+            string name = affinityEnum.Value;
+            affinities[name] = new Affinity(name);
         }
     }
 

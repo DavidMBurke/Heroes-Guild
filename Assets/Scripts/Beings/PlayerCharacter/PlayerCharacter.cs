@@ -12,9 +12,12 @@ public class PlayerCharacter : Being
     public Class playerClass = Class.classes[(int)Class.Enum.Unassigned];
     public Attributes attributes = new Attributes();
     public Affinities affinities = new Affinities();
+    [SerializeField]
     public CombatSkills combatSkills = new CombatSkills();
+    [SerializeField]
     public NonCombatSkills nonCombatSkills = new NonCombatSkills();
     public List<CharacterAction> actionList = new List<CharacterAction>();
+    public EquipmentSlots equipmentSlots = new EquipmentSlots();
 
     public int maxActionPoints = 1;
     public int actionPoints = 0;

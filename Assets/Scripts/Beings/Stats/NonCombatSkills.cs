@@ -6,30 +6,10 @@ public class NonCombatSkills
     public Dictionary<string, Skill> skills = new();
 
     public NonCombatSkills() {
-        string[] skillNames = {
-            GetName(Enum.Cooking),
-            GetName(Enum.Sentry),
-            GetName(Enum.Fletching),
-            GetName(Enum.Trapping),
-            GetName(Enum.Herbalism),
-            GetName(Enum.Medicine),
-            GetName(Enum.LeatherWorking),
-            GetName(Enum.Tailoring),
-            GetName(Enum.Alchemy),
-            GetName(Enum.ArmorSmithing),
-            GetName(Enum.WeaponSmithing),
-            GetName(Enum.Enchanting),
-            GetName(Enum.Mechanisms),
-            GetName(Enum.JewelryCrafting),
-            GetName(Enum.Mining),
-            GetName(Enum.MonsterWrangling),
-            GetName(Enum.Cartography),
-            GetName(Enum.Barter)
-        };
-
-        foreach (string skillName in skillNames)
+        foreach (var skillEnum in Names)
         {
-            skills[skillName] = new Skill(skillName);
+            string name = skillEnum.Value;
+            skills[name] = new Skill(name);
         }
     }
 
@@ -82,15 +62,15 @@ public class NonCombatSkills
         { Enum.Trapping, "Trapping" },
         { Enum.Herbalism, "Herbalism" },
         { Enum.Medicine, "Medicine" },
-        { Enum.LeatherWorking, "Leather Working" },
+        { Enum.LeatherWorking, "Leather-Working" },
         { Enum.Tailoring, "Tailoring" },
         { Enum.Alchemy, "Alchemy" },
-        { Enum.ArmorSmithing, "Armor Smithing" },
+        { Enum.ArmorSmithing, "Armor-Smithing" },
         { Enum.Enchanting, "Enchanting" },
         { Enum.Mechanisms, "Mechanisms" },
-        { Enum.JewelryCrafting, "JewelryCrafting" },
+        { Enum.JewelryCrafting, "Jewelry-Crafting" },
         { Enum.Mining, "Mining" },
-        { Enum.MonsterWrangling, "MonsterWrangling" },
+        { Enum.MonsterWrangling, "Monster-Wrangling" },
         { Enum.Cartography, "Cartography" },
         { Enum.Barter, "Barter" }
     };

@@ -13,11 +13,17 @@ public class Skill
         this.experience = experience;
     }
 
-    public void IncreaseExperience(int addedXP)
+    public void AddXP(int addedXP)
     {
         experience += addedXP;
-        while (experience > LevelExperienceRequirement[level].Item2) {
-            level ++;
+        CheckForLevelUp();
+    }
+
+    private void CheckForLevelUp()
+    {
+        while (experience > LevelExperienceRequirement[level].Item2)
+        {
+            level++;
         }
     }
 

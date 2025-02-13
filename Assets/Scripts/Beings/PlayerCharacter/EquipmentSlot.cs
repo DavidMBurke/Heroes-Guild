@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EquipmentSlot : MonoBehaviour
+public class EquipmentSlot
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string name = string.Empty;
+    
+    #nullable enable
+    public Item? item = null;
+    #nullable disable
 
-    // Update is called once per frame
-    void Update()
+    public EquipmentSlot(string name)
     {
-        
+        this.name = name;
     }
 }

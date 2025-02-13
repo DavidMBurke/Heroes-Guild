@@ -5,21 +5,12 @@ public class Attributes
     public Dictionary<string, Attribute> attributes = new();
 
     public Attributes()
-    {
-        string[] attributeNames = { 
-            GetName(Enum.Strength), 
-            GetName(Enum.Agility), 
-            GetName(Enum.Charisma), 
-            GetName(Enum.Intelligence), 
-            GetName(Enum.Will), 
-            GetName(Enum.Fortitude) 
-        };
-        
-        foreach(string attributeName in attributeNames)
+    {        
+        foreach(var attributeEnum in Names)
         {
-            attributes[attributeName] = new Attribute(attributeName);
+            string name = attributeEnum.Value;
+            attributes[name] = new Attribute(name);
         }
-
     }
 
     public static Attributes RollBaseAttributes(Attributes mods)

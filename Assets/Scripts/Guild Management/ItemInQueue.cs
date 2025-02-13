@@ -6,9 +6,12 @@ public class ItemInQueue : MonoBehaviour
     public Item item;
     public int workDone;
     public int workToComplete;
+    #nullable enable
     public PlayerCharacter? assignedCrafter;
+    #nullable disable
     public List<PlayerCharacter> crafterList;
 
+    #nullable enable
     public void SetNewItem(Item item, List<PlayerCharacter> crafterList, PlayerCharacter? assignedCrafter = null)
     {
         this.item = item;
@@ -17,6 +20,7 @@ public class ItemInQueue : MonoBehaviour
         workDone = 0;
         workToComplete = SetCraftingDifficulty(item);
     }
+    #nullable disable
 
     private int SetCraftingDifficulty(Item item)
     {

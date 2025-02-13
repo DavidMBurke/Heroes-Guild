@@ -7,20 +7,10 @@ public class CombatSkills
 
     public CombatSkills()
     {
-        string[] skillNames = { 
-            GetName(Enum.Dodge),
-            GetName(Enum.Block),
-            GetName(Enum.Stealth),
-            GetName(Enum.Melee),
-            GetName(Enum.Ranged),
-            GetName(Enum.Healing),
-            GetName(Enum.Auras),
-            GetName(Enum.Evocation)
-        };
-
-        foreach (string skillName in skillNames)
+        foreach (var skillEnum in Names)
         {
-            skills[skillName] = new Skill(skillName);
+            string name = skillEnum.Value;
+            skills[name] = new Skill(name);
         }
     }
 
@@ -55,7 +45,7 @@ public class CombatSkills
     }
 
 
-    private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
+    private static readonly Dictionary<Enum, string> Names = new()
     {
         { Enum.Dodge, "Dodge" },
         { Enum.Block, "Block" },

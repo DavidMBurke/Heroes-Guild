@@ -97,7 +97,8 @@ public class JewelerPage : MonoBehaviour
             listItem.SetCharacter(character);
             string text1 = character.characterName + (" (Assigned)");
             string text2 = "Lvl: " + character.level.ToString();
-            string text3 = "Jewelry Crafting: " + character.nonCombatSkills.skills["Jewelry Crafting"].level.ToString();
+            string skillName = NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting);
+            string text3 = skillName + ": " + character.nonCombatSkills.skills[skillName].level.ToString();
             listItem.SetText(text1, text2, text3);
         }
         foreach (PlayerCharacter character in gm.unassignedEmployees)
@@ -112,7 +113,8 @@ public class JewelerPage : MonoBehaviour
             listItem.SetCharacter(character);
             string text1 = character.characterName;
             string text2 = "Lvl: " + character.level.ToString();
-            string text3 = "JewelryCrafting: " + character.nonCombatSkills.skills["Jewelry Crafting"].level.ToString();
+            string skillName = NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting);
+            string text3 = skillName + ": " + character.nonCombatSkills.skills[skillName].level.ToString();
             listItem.SetText(text1, text2, text3);
         }
     }
@@ -300,7 +302,9 @@ public class JewelerPage : MonoBehaviour
     {
         foreach (PlayerCharacter jeweler in gm.jewelers)
         {
+            #nullable enable
             ItemInQueue? queuedItem = itemQueue.FirstOrDefault(i => i.assignedCrafter == jeweler);
+            #nullable disable
             if (queuedItem == null)
             {
                 queuedItem = itemQueue.FirstOrDefault(i => i.assignedCrafter == null);
@@ -313,10 +317,13 @@ public class JewelerPage : MonoBehaviour
             {
                 queuedItem.assignedCrafter = jeweler;
             }
-            queuedItem.workDone += jeweler.nonCombatSkills.skills["Jewelry Crafting"].level;
+            Skill crafterSkill = jeweler.nonCombatSkills.skills[NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting)];
+            int remainingWork = queuedItem.workToComplete - queuedItem.workDone;
+            int workAdded = (crafterSkill.level > remainingWork) ? remainingWork : crafterSkill.level;
+            queuedItem.workDone += workAdded;
+            crafterSkill.AddXP(workAdded);
             if (queuedItem.workDone >= queuedItem.workToComplete)
             {
-                queuedItem.workDone = queuedItem.workToComplete;
                 itemQueue.Remove(queuedItem);
                 completedItems.Add(queuedItem);
             }
