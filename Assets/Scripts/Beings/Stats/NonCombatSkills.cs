@@ -20,7 +20,7 @@ public class NonCombatSkills
         foreach (var skill in rolledSkills.skills)
         {
             int modValue = mod.skills.ContainsKey(skill.Key) ? mod.skills[skill.Key].level : 0;
-            PlayerCharacter.RollStat(ref skill.Value.level, 2 + modValue, -1, 2);
+            PlayerCharacter.RollStat(ref skill.Value.level, 1, 1 + modValue, -2, 3);
         }
 
         return rolledSkills;
@@ -66,6 +66,7 @@ public class NonCombatSkills
         { Enum.Tailoring, "Tailoring" },
         { Enum.Alchemy, "Alchemy" },
         { Enum.ArmorSmithing, "Armor-Smithing" },
+        { Enum.WeaponSmithing, "Weapon-Smithing" },
         { Enum.Enchanting, "Enchanting" },
         { Enum.Mechanisms, "Mechanisms" },
         { Enum.JewelryCrafting, "Jewelry-Crafting" },

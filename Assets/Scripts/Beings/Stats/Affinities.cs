@@ -20,7 +20,7 @@ public class Affinities
         foreach (var affinity in rolledAffinities.affinities)
         {
             int modValue = mods.affinities.ContainsKey(affinity.Key) ? mods.affinities[affinity.Key].level : 0;
-            PlayerCharacter.RollStat(ref affinity.Value.level, 2 + modValue, 0, 2);
+            PlayerCharacter.RollStat(ref affinity.Value.level, 0, 1 + modValue, 0, 2);
         }
         return rolledAffinities;
     }

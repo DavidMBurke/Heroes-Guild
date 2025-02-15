@@ -21,7 +21,7 @@ public class CombatSkills
         foreach (var skill in rolledSkills.skills)
         {
             int modValue = mods.skills.ContainsKey(skill.Key) ? mods.skills[skill.Key].level : 1;
-            PlayerCharacter.RollStat(ref skill.Value.level, 2 + modValue, 0, 2);
+            PlayerCharacter.RollStat(ref skill.Value.level, 1, 1 + modValue, -2, 3);
         }
 
         return rolledSkills;

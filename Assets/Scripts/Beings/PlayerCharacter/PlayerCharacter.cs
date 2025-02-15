@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -111,14 +112,14 @@ public class PlayerCharacter : Being
         }
     }
 
-    public static void RollStat(ref int stat, int diceCount, int diceMin, int diceMax)
+    public static void RollStat(ref int stat, int minVal, int diceCount, int diceMin, int diceMax)
     {
         stat = 0;
         for (int i = 0; i < diceCount; i++)
         {
             stat += Random.Range(diceMin, diceMax + 1);
         }
-        if (stat < 1) stat = 1;
+        if (stat < minVal) stat = minVal;
     }
 
     /// <summary>
@@ -150,6 +151,7 @@ public class PlayerCharacter : Being
         affinities = Affinities.RollBaseAffinities(race.affinityMods);
         combatSkills = CombatSkills.RollBaseSkills(playerClass.combatSkillMods);
         nonCombatSkills = NonCombatSkills.RollBaseSkills(race.nonCombatSkillMods);
+        level = CalculateCharacterLevel();
 
         /// vvv PLACEHOLDER GARBAGE TO MAKE THIS WORK ON FRONT END vvv
         /// This will be dynamically generated and stored in the future
@@ -184,6 +186,44 @@ public class PlayerCharacter : Being
             return NameGenerator.GenerateMouseFolkName();
         }
         return "";
+    }
+
+    public int CalculateCharacterLevel()
+    {
+        float totalLevelPoints = 0;
+        int pointsPerLevelUp = 4;
+        List<int> nonCombatSkillLevels = new();
+        List<int> combatSkillLevels = new();
+        foreach (var skill in nonCombatSkills.skills)
+        {
+            nonCombatSkillLevels.Add(skill.Value.level);
+        }
+        foreach (var skill in combatSkills.skills)
+        {
+            combatSkillLevels.Add(skill.Value.level);
+        }
+        nonCombatSkillLevels.Sort((a,b) => b.CompareTo(a));
+        combatSkillLevels.Sort((a,b) => b.CompareTo(a));
+        string logText = "Noncombat Skills: ";
+        for(int i = 0; i < nonCombatSkillLevels.Count; i++)
+        {
+            totalLevelPoints += ((float)nonCombatSkillLevels[i] - 1) / (i + 1);
+            logText += " ";
+            logText += nonCombatSkillLevels[i].ToString();
+        }
+        logText += "Combat Skills: ";
+        for(int i = 0; i < combatSkillLevels.Count; i++)
+        {
+            totalLevelPoints += ((float)combatSkillLevels[i] - 1) / (i + 1);
+            logText += " ";
+            logText += combatSkillLevels[i];
+        }
+
+        logText += $" totalLevelPoints: {totalLevelPoints}";
+        int level = (int)(totalLevelPoints / pointsPerLevelUp);
+        logText += $" level: {level}";
+        //Debug.Log(logText);
+        return level;
     }
 
 }

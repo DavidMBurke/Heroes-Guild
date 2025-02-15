@@ -20,7 +20,7 @@ public class Attributes
         foreach (var attribute in rolledAttributes.attributes)
         {
             int modValue = mods.attributes.ContainsKey(attribute.Key) ? mods.attributes[attribute.Key].level : 0;
-            PlayerCharacter.RollStat(ref attribute.Value.level, 3 + modValue, 1, 2);
+            PlayerCharacter.RollStat(ref attribute.Value.level, 1, 3 + modValue, 1, 2);
         }
 
         return rolledAttributes;
