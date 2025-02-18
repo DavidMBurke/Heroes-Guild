@@ -45,7 +45,7 @@ public class Being : MonoBehaviour
     public float interactDistance = 1.5f;
 
     // Inventory
-    public List<Interactable> inventory;
+    public List<Item> inventory;
 
     protected void Start()
     {

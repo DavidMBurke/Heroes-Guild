@@ -103,11 +103,11 @@ public class Interaction
     {
         if (being is PlayerCharacter player)
         {
-            player.AddToInventory(interactable);
+            //player.AddToInventory(interactable);
             interactable.gameObject.SetActive(false);
             return;
         }
-        being.inventory.Add(interactable);
+        //being.inventory.Add(interactable);
         interactable.gameObject.SetActive(false);
     }
     
@@ -120,11 +120,11 @@ public class Interaction
     {
         if (being is PlayerCharacter player)
         {
-            player.RemoveFromInventory(interactable);
+            //player.RemoveFromInventory(interactable);
         }
         if (being is Enemy enemy)
         {
-            enemy.inventory.Remove(interactable);
+            //enemy.inventory.Remove(interactable);
         }
         interactable.gameObject.SetActive(true);
         Vector3 p = being.gameObject.transform.position;

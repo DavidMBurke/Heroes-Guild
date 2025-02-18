@@ -56,7 +56,7 @@ public class InventoryDisplay : MonoBehaviour
         {
             if (i < currentPlayer.inventory.Count)
             {
-                inventorySlot.UpdateItem(currentPlayer.inventory[i]);
+                //inventorySlot.UpdateItem(currentPlayer.inventory[i]);
                 continue;
             }
             inventorySlot.UpdateItem(null);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Character panels on the For Hire screen
@@ -13,6 +14,9 @@ public class CharacterForHirePanel : MonoBehaviour
     private TextMeshProUGUI column1;
     private TextMeshProUGUI column2;
     public PlayerCharacter character;
+    public Button characterMenuButton;
+    public CharacterInfoPanel characterInfoPanel;
+
 
     void Start()
     {
@@ -27,8 +31,12 @@ public class CharacterForHirePanel : MonoBehaviour
         {
             column1.text = string.Empty;
             column2.text = string.Empty;
+            characterMenuButton.gameObject.SetActive(false);
+            characterMenuButton.onClick.RemoveAllListeners();
+            characterMenuButton.onClick.AddListener(() => CharacterMenuButtonOnClickHandler());
             return;
         }
+        characterMenuButton.gameObject.SetActive(true);
         column1.text =
             $"{character.characterName} \n" +
             $"Race: {character.race.name} \n" +
@@ -44,6 +52,12 @@ public class CharacterForHirePanel : MonoBehaviour
 
         column2.text =
             $"Non-Combat Skills:\n" + FormatSkills(character.nonCombatSkills.skills);
+    }
+
+    private void CharacterMenuButtonOnClickHandler()
+    {
+        characterInfoPanel.Open();
+        characterInfoPanel.SetCharacter(character);
     }
 
     private string FormatAttributes(Dictionary<string, Attribute> attributeDict)
@@ -63,5 +77,6 @@ public class CharacterForHirePanel : MonoBehaviour
     public void AssignCharacter(PlayerCharacter playerCharacter)
     {
         character = playerCharacter;
+
     }
 }

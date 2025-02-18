@@ -10,6 +10,8 @@ public class Item
     public string description;
     public int cost;
     public int quantity = 1;
+    public bool canBePickedUp;
+    public float weight = 0;
 
     [System.NonSerialized]
     public Sprite sprite;

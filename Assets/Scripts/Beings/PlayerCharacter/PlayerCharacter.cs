@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class PlayerCharacter : Being
 {
-    const int skillLevelsPerCharacterLevel = 4;
     public Race race = Race.races[(int)Race.Enum.Unassigned];
     public Class playerClass = Class.classes[(int)Class.Enum.Unassigned];
     public Attributes attributes = new Attributes();
@@ -27,13 +26,13 @@ public class PlayerCharacter : Being
 
     public delegate void InventoryUpdated();
     public event InventoryUpdated OnInventoryUpdated;
-    private List<Interactable> _inventory = new List<Interactable>();
+    private List<Item> _inventory = new List<Item>();
 
     public int levelAttained; // checked against being.level to prompt leveling up.
 
     public int salary = 10; //coin per week
 
-    public new List<Interactable> inventory
+    public new List<Item> inventory
     {
         get => _inventory;
         set
@@ -93,7 +92,7 @@ public class PlayerCharacter : Being
         base.FixedUpdate();
     }
 
-    public void AddToInventory(Interactable item)
+    public void AddToInventory(Item item)
     {
         if (item == null)
         {
@@ -103,7 +102,7 @@ public class PlayerCharacter : Being
         OnInventoryUpdated?.Invoke();
     }
 
-    public void RemoveFromInventory(Interactable item)
+    public void RemoveFromInventory(Item item)
     {
         if (inventory.Remove(item))
         {
