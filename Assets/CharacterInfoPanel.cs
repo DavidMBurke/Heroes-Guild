@@ -16,6 +16,8 @@ public class CharacterInfoPanel : MonoBehaviour
 
     private void Start()
     {
+        playerInventoryButton.onClick.AddListener(() => playerInventoryButtonClickHandler());
+        guildInventoryButton.onClick.AddListener(() => guildInventoryButtonClickHandler());
         Close();
 
     }
@@ -38,12 +40,14 @@ public class CharacterInfoPanel : MonoBehaviour
 
     public void playerInventoryButtonClickHandler()
     {
+        Debug.Log("playerInventoryButtonClickHandler()");
         ResetListItems();
         SetNewListItems(character.inventory);
     }
 
     public void guildInventoryButtonClickHandler()
     {
+        Debug.Log("guildInventoryButtonClickHandler()");
         ResetListItems();
         SetNewListItems(GuildManager.instance.stockpile);
     }
@@ -55,16 +59,12 @@ public class CharacterInfoPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
         inventoryGridItems.Clear();
-        for (int i = 0; i < 18; i++)
-        {
-            inventoryGridItems.Add(Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItem>());
-        }
     }
 
     void SetNewListItems(List<Item> itemList)
     {
         ResetListItems();
-        while (character.inventory.Count > inventoryGridItems.Count)
+        while (itemList.Count > inventoryGridItems.Count || 18 > inventoryGridItems.Count)
         {
             for (int i = 0; i < 6; i++)
             {
@@ -73,7 +73,14 @@ public class CharacterInfoPanel : MonoBehaviour
         }
         for (int i = 0; i < itemList.Count; i++)
         {
-            inventoryGridItems[i].SetItem(itemList[i]);
+            if (i < itemList.Count)
+            {
+                inventoryGridItems[i].SetItem(itemList[i]);
+            }
+            else
+            {
+                inventoryGridItems[i].SetItem(null);
+            }
         }
     }
 }

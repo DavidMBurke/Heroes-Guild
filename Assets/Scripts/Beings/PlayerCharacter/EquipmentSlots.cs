@@ -22,16 +22,23 @@ public class EquipmentSlots
     public enum Enum
     {
         Head = 0,
-        Body = 1,
-        Legs = 2,
-        Gloves = 3,
-        Feet = 4,
-        Neck = 5,
-        Wrist = 6,
-        Finger1 = 7,
-        Finger2 = 8,
-        Trinket1 = 9,
-        Trinket2 = 10
+        Body,
+        Legs,
+        Hands,
+        Feet,
+        Ammo,
+        Neck,
+        Wrist,
+        Finger1,
+        Finger2,
+        Trinket1,
+        Trinket2,
+        LeftHand,
+        RightHand,
+        Pouch1,
+        Pouch2,
+        Pouch3,
+        Pouch4
     }
 
     public static readonly Dictionary<Enum, string> Names = new() 
@@ -39,14 +46,21 @@ public class EquipmentSlots
         { Enum.Head, "Head" },
         { Enum.Body, "Body" },
         { Enum.Legs, "Legs" },
-        { Enum.Gloves, "Gloves" },
+        { Enum.Hands, "Hands" },
         { Enum.Feet, "Feet" },
+        { Enum.Ammo, "Ammo" },
         { Enum.Neck, "Neck" },
         { Enum.Wrist, "Wrist" },
         { Enum.Finger1, "Finger 1" },
         { Enum.Finger2, "Finger 2" },
         { Enum.Trinket1, "Trinket 1" },
-        { Enum.Trinket2, "Trinket 2" }
+        { Enum.Trinket2, "Trinket 2" },
+        { Enum.LeftHand, "Left Hand" },
+        { Enum.RightHand, "Right Hand" },
+        { Enum.Pouch1, "Pouch 1" },
+        { Enum.Pouch2, "Pouch 2" },
+        { Enum.Pouch3, "Pouch 3" },
+        { Enum.Pouch4, "Pouch 4" }
     };
 }
 
