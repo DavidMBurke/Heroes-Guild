@@ -1,4 +1,4 @@
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +21,7 @@ public class CharacterInfoPanel : MonoBehaviour
 
     private void Start()
     {
+        equipmentSlotUIElements = GetComponentsInChildren<EquipmentSlotUIElement>().ToList();
         playerInventoryButton.onClick.AddListener(() => playerInventoryButtonClickHandler());
         guildInventoryButton.onClick.AddListener(() => guildInventoryButtonClickHandler());
         Close();

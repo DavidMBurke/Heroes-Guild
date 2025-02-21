@@ -46,8 +46,8 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
     {
         this.item = item;
         source = sourceInventory;
-        itemName.text = item == null ? "" : item.itemName;
-        itemQuantity.text = item == null ? "" : item.quantity.ToString();
+        itemName.text = item?.itemName ?? "";
+        itemQuantity.text = item?.quantity.ToString() ?? "";
     }
 
     public Item GetItem() => item;
