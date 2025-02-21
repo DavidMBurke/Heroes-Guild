@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     CanvasGroup canvasGroup;
     RectTransform rectTransform;
@@ -11,6 +11,8 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public TextMeshProUGUI itemQuantity;
 #nullable enable
     Item? item;
+    public InventorySource? source;
+    public GameObject? copy;
 #nullable disable
 
 
@@ -22,9 +24,10 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        canvasGroup.alpha = .6f;
+        canvasGroup.blocksRaycasts = false;
         originalParent = transform.parent;
         transform.SetParent(transform.root);
-        canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -34,15 +37,34 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        canvasGroup.alpha = 1f;
         transform.SetParent(originalParent);
         canvasGroup.blocksRaycasts = true;
     }
 
-    public void SetItem(Item item)
+    public void SetItem(Item? item, InventorySource? sourceInventory = null)
     {
         this.item = item;
+        source = sourceInventory;
         itemName.text = item == null ? "" : item.itemName;
         itemQuantity.text = item == null ? "" : item.quantity.ToString();
     }
 
+    public Item GetItem() => item;
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (eventData.pointerDrag.TryGetComponent(out InventoryGridItem draggedItem))
+        {
+            int targetIndex = transform.GetSiblingIndex();
+            draggedItem.transform.SetParent(transform.parent);
+            draggedItem.transform.SetSiblingIndex(targetIndex);
+        }
+    }
+}
+
+public enum InventorySource
+{
+    Player,
+    Guild
 }

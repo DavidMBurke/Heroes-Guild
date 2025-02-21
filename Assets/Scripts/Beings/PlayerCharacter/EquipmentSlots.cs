@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class EquipmentSlots
 {
     public Dictionary<Enum, EquipmentSlot> equipmentSlots = new();

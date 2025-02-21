@@ -66,6 +66,11 @@ public class GuildManager : MonoBehaviour
         coin -= amount;
     }
 
+    public void RemoveFromStockpile(Item item)
+    {
+
+    }
+
     public void GenerateCharactersForHire(int amount)
     {
         charactersForHire.Clear();

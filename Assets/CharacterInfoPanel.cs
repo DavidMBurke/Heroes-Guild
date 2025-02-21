@@ -5,26 +5,31 @@ using UnityEngine.UI;
 
 public class CharacterInfoPanel : MonoBehaviour
 {
-    PlayerCharacter character;
     List<InventoryGridItem> inventoryGridItems = new();
+    public PlayerCharacter character;
     public Button playerInventoryButton;
     public Button guildInventoryButton;
     public GameObject inventoryGridItemPrefab;
     public Transform inventoryGrid;
+    public List<EquipmentSlotUIElement> equipmentSlotUIElements;
+    public static CharacterInfoPanel instance;
 
-
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
         playerInventoryButton.onClick.AddListener(() => playerInventoryButtonClickHandler());
         guildInventoryButton.onClick.AddListener(() => guildInventoryButtonClickHandler());
         Close();
-
     }
 
     public void SetCharacter(PlayerCharacter character)
     {
         this.character = character;
+        MapEquipmentSlots();
         playerInventoryButtonClickHandler();
     }
 
@@ -40,16 +45,14 @@ public class CharacterInfoPanel : MonoBehaviour
 
     public void playerInventoryButtonClickHandler()
     {
-        Debug.Log("playerInventoryButtonClickHandler()");
         ResetListItems();
-        SetNewListItems(character.inventory);
+        SetNewListItems(character.inventory, InventorySource.Player);
     }
 
     public void guildInventoryButtonClickHandler()
     {
-        Debug.Log("guildInventoryButtonClickHandler()");
         ResetListItems();
-        SetNewListItems(GuildManager.instance.stockpile);
+        SetNewListItems(GuildManager.instance.stockpile, InventorySource.Guild);
     }
 
     void ResetListItems()
@@ -61,26 +64,23 @@ public class CharacterInfoPanel : MonoBehaviour
         inventoryGridItems.Clear();
     }
 
-    void SetNewListItems(List<Item> itemList)
+    void SetNewListItems(List<Item> itemList, InventorySource source)
     {
         ResetListItems();
-        while (itemList.Count > inventoryGridItems.Count || 18 > inventoryGridItems.Count)
+        foreach (Item item in itemList)
         {
-            for (int i = 0; i < 6; i++)
-            {
-                inventoryGridItems.Add(Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItem>());
-            }
+            InventoryGridItem gridItem = Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItem>();
+            inventoryGridItems.Add(gridItem);
+            gridItem.SetItem(item);
         }
-        for (int i = 0; i < itemList.Count; i++)
+    }
+
+    void MapEquipmentSlots()
+    {
+        foreach (EquipmentSlotUIElement slotUI in equipmentSlotUIElements)
         {
-            if (i < itemList.Count)
-            {
-                inventoryGridItems[i].SetItem(itemList[i]);
-            }
-            else
-            {
-                inventoryGridItems[i].SetItem(null);
-            }
+            var slot = character.equipmentSlots.equipmentSlots[slotUI.equipmentSlotEnum];
+            slotUI.UpdateSlotItem(slot.item);
         }
     }
 }

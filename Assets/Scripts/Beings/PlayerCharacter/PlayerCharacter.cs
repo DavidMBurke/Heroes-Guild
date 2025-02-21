@@ -17,6 +17,7 @@ public class PlayerCharacter : Being
     [SerializeField]
     public NonCombatSkills nonCombatSkills = new NonCombatSkills();
     public List<CharacterAction> actionList = new List<CharacterAction>();
+    [SerializeField]
     public EquipmentSlots equipmentSlots = new EquipmentSlots();
 
     public int maxActionPoints = 1;
@@ -223,6 +224,16 @@ public class PlayerCharacter : Being
         logText += $" level: {level}";
         //Debug.Log(logText);
         return level;
+    }
+    
+    public void LogEquipment()
+    {
+        Debug.Log($"Equipment - {name}:");
+        foreach (var slot in equipmentSlots.equipmentSlots)
+        {
+            string itemName = slot.Value.item != null ? slot.Value.item.itemName : "Empty";
+            Debug.Log($"Slot: {slot.Key} - Item: {itemName}");
+        }
     }
 
 }

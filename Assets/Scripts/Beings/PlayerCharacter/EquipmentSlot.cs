@@ -1,3 +1,4 @@
+[System.Serializable]
 public class EquipmentSlot
 {
     public string name = string.Empty;
