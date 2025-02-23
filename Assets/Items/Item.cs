@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -24,7 +23,7 @@ public class Item
 
     // equipment
     public bool equippable = false;
-    public List<int> equipSlots = new List<int>();
+    public List<EquipmentSlots.Enum> equipSlots = new List<EquipmentSlots.Enum>();
     public ItemBaseStats baseStats = new ItemBaseStats();
     public List<Effect> effects; // List of effects that are applied in sequence
 
@@ -32,13 +31,13 @@ public class Item
     public List<string> tags;
 
 
-    public Item(string itemName, int cost, float multiplier = 1f, bool equippable = false, List<int> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null)
+    public Item(string itemName, int cost, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null)
     {
         this.itemName = itemName;
         this.cost = cost;
         this.multiplier = multiplier;
         this.equippable = equippable;
-        this.equipSlots = equipSlots ?? new List<int>();
+        this.equipSlots = equipSlots ?? new List<EquipmentSlots.Enum>();
         this.baseStats = baseStats ?? new ItemBaseStats();
         this.effects = effects ?? new List<Effect>();
         this.tags = tags ?? new List<string>();
@@ -51,7 +50,7 @@ public class Item
             cost,
             multiplier,
             equippable,
-            new List<int>(equipSlots),
+            new List<EquipmentSlots.Enum>(equipSlots),
             baseStats.Clone(),
             new List<Effect>(effects),
             new List<string>(tags)

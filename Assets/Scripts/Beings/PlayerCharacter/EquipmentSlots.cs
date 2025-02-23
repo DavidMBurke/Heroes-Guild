@@ -13,6 +13,10 @@ public class EquipmentSlots
             equipmentSlots[equipmentEnum.Key] = new EquipmentSlot(Names[equipmentEnum.Key]);
         }
     }
+    public static string GetName(Enum slotEnum)
+    {
+        return Names.TryGetValue(slotEnum, out var name) ? name : "Unknown";
+    }
 
     public void EquipItem(Enum equipmentSlotEnum, Item item)
     {

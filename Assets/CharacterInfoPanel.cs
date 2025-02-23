@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CharacterInfoPanel : MonoBehaviour
 {
-    List<InventoryGridItem> inventoryGridItems = new();
+    List<InventoryGridItemUIElement> inventoryGridItems = new();
     public PlayerCharacter character;
     public Button playerInventoryButton;
     public Button guildInventoryButton;
@@ -70,9 +70,9 @@ public class CharacterInfoPanel : MonoBehaviour
         ResetListItems();
         foreach (Item item in itemList)
         {
-            InventoryGridItem gridItem = Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItem>();
+            InventoryGridItemUIElement gridItem = Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItemUIElement>();
             inventoryGridItems.Add(gridItem);
-            gridItem.SetItem(item);
+            gridItem.SetItem(item, source);
         }
     }
 

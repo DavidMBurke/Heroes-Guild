@@ -2,19 +2,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     CanvasGroup canvasGroup;
     RectTransform rectTransform;
     Transform originalParent;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemQuantity;
+    int originalSiblingIndex;
 #nullable enable
     Item? item;
     public InventorySource? source;
     public GameObject? copy;
 #nullable disable
-
 
     private void Awake()
     {
@@ -27,6 +27,7 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
         canvasGroup.alpha = .6f;
         canvasGroup.blocksRaycasts = false;
         originalParent = transform.parent;
+        originalSiblingIndex = transform.GetSiblingIndex();
         transform.SetParent(transform.root);
     }
 
@@ -38,11 +39,17 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
     public void OnEndDrag(PointerEventData eventData)
     {
         canvasGroup.alpha = 1f;
-        transform.SetParent(originalParent);
         canvasGroup.blocksRaycasts = true;
+        if (transform.parent == transform.root)
+        {
+            transform.SetParent(originalParent);
+            transform.SetSiblingIndex(originalSiblingIndex);
+        }
     }
 
+#nullable enable
     public void SetItem(Item? item, InventorySource? sourceInventory = null)
+#nullable disable
     {
         this.item = item;
         source = sourceInventory;
@@ -54,7 +61,7 @@ public class InventoryGridItem : MonoBehaviour, IBeginDragHandler, IDragHandler,
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (eventData.pointerDrag.TryGetComponent(out InventoryGridItem draggedItem))
+        if (eventData.pointerDrag.TryGetComponent(out InventoryGridItemUIElement draggedItem))
         {
             int targetIndex = transform.GetSiblingIndex();
             draggedItem.transform.SetParent(transform.parent);

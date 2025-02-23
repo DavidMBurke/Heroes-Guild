@@ -47,6 +47,23 @@ public class DevTools : MonoBehaviour
             }
         }
     }
+
+    public void GenerateRandomEquipment()
+    {
+        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
+        {
+            foreach (Item gem in Jewelry.Gems)
+            {
+                float f = Random.Range(0, 10);
+                if (f == 0)
+                {
+                    Item necklace = Jewelry.CreateNecklace(ingot, gem);
+                    necklace.AddToInventory(gm.stockpile, 1);
+                }
+            }
+        }
+
+    }
 }
 
 
