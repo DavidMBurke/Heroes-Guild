@@ -176,8 +176,6 @@ public class WorkshopPage : MonoBehaviour
         }
     }
 
-
-
     public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {
         items.RemoveAll(i => i.quantity == 0);
@@ -192,12 +190,6 @@ public class WorkshopPage : MonoBehaviour
             itemListItem.selectButton.onClick.AddListener(() => itemSlot.SetItem(item));
         }
     }
-
-
-
-
-
-
 
     public void UpdateQueueList()
     {
