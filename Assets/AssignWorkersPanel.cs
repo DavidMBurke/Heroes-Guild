@@ -29,11 +29,6 @@ public class AssignWorkersPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnEnable()
-    {
-        ResetCharacterList();
-    }
-
     public void ResetCharacterList()
     {
         if (gm == null)

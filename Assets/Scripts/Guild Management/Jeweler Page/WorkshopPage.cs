@@ -49,6 +49,7 @@ public class WorkshopPage : MonoBehaviour
     public void ToggleCharacterSelectionPanel()
     {
         assignWorkersPanel.gameObject.SetActive(!assignWorkersPanel.gameObject.activeInHierarchy);
+        assignWorkersPanel.ResetCharacterList();
         if (assignWorkersPanel.gameObject.activeInHierarchy)
         {
             craftingPanel.gameObject.SetActive(false);
