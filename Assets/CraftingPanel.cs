@@ -11,6 +11,7 @@ public class CraftingPanel : MonoBehaviour
     public CraftingMaterialSlot itemSlot2;
     CraftingMaterialSlot selectedSlot;
 
+    public GameObject itemListItemPrefab;
     public GameObject materialList;
     public Button addToQueueButton;
     public TextMeshProUGUI craftingMenuHeader;
@@ -55,7 +56,7 @@ public class CraftingPanel : MonoBehaviour
             };
         }
 
-        workshopPage.UpdateItemList(items, itemSlot);
+        UpdateItemList(items, itemSlot);
         selectedSlot = itemSlot;
     }
 
@@ -82,10 +83,25 @@ public class CraftingPanel : MonoBehaviour
         Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
         GameObject necklaceObject = new GameObject();
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
-        necklaceInQueue.SetNewItem(necklace, gm.jewelers, workshopPage.itemQueue);
+        necklaceInQueue.SetNewItem(necklace, gm.jewelers, workshopPage.craftingQueue.itemQueue);
         necklaceObject.name = necklace.itemName;
-        workshopPage.itemQueue.Add(necklaceInQueue);
-        workshopPage.UpdateQueueList();
+        workshopPage.craftingQueue.itemQueue.Add(necklaceInQueue);
+        workshopPage.craftingQueue.UpdateQueueList();
         SelectItemSlot(selectedSlot.item.tags, selectedSlot);
+    }
+
+    public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
+    {
+        items.RemoveAll(i => i.quantity == 0);
+        foreach (Transform child in materialList.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Item item in items)
+        {
+            ItemListItem itemListItem = Instantiate(itemListItemPrefab, materialList.transform).GetComponent<ItemListItem>();
+            itemListItem.SetItem(item);
+            itemListItem.selectButton.onClick.AddListener(() => itemSlot.SetItem(item));
+        }
     }
 }
