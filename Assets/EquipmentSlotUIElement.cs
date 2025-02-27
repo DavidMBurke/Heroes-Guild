@@ -25,7 +25,9 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
             }
             PlayerCharacter character = CharacterInfoPanel.instance.character;
             EquipmentSlot slot = character.equipmentSlots.equipmentSlots[equipmentSlotEnum];
+#nullable enable
             Item? replacedItem = slot.item;
+#nullable disable
             if (draggedItem.source == InventorySource.Player)
             {
                 character.RemoveFromInventory(newItem);

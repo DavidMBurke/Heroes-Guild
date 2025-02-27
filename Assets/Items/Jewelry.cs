@@ -99,6 +99,7 @@ public class Jewelry
         {
             metalIngot, gem
         };
+        necklace.tags = new List<string> { "necklace" };
         necklace.equipSlots.Add(EquipmentSlots.Enum.Neck);
 
         return necklace;
