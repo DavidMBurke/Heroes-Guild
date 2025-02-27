@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JewelerPage : MonoBehaviour
+public class WorkshopPage : MonoBehaviour
 {
     public GameObject characterListPanel;
     public GameObject characterList;
@@ -29,6 +29,8 @@ public class JewelerPage : MonoBehaviour
     public List<ItemInQueue> completedItems;
     public GameObject itemInQueueList;
     public GameObject itemInQueueListItemPrefab;
+    public int workstationsCount = 3;
+    public TextMeshProUGUI workstationsAssignedText;
 
 
     private void Awake()
@@ -45,7 +47,7 @@ public class JewelerPage : MonoBehaviour
         unassignCharacterButton.SetActive(false);
     }
 
-    public void AssignJeweler()
+    public void AssignCrafter()
     {
         if (selectedCharacter == null)
         {
@@ -56,12 +58,18 @@ public class JewelerPage : MonoBehaviour
             Debug.LogWarning("Character not in unassignedEmployees");
             return;
         }
+        if (gm.jewelers.Count >= workstationsCount)
+        {
+            Debug.Log("More workstations needed to assign more crafters.");
+            return;
+        }
         gm.jewelers.Add(selectedCharacter);
         gm.unassignedEmployees.Remove(selectedCharacter);
         UpdateButtons();
         ResetCharacterList();
+        UpdateWorkStationsAvailabilityText();
     }
-    public void UnassignJeweler()
+    public void UnassignCrafter()
     {
         if (selectedCharacter == null)
         {
@@ -69,13 +77,19 @@ public class JewelerPage : MonoBehaviour
         }
         if (!gm.jewelers.Contains(selectedCharacter))
         {
-            Debug.LogWarning("Character not in Jewelers");
+            Debug.LogWarning("Character not currently assigned as crafter.");
             return;
         }
         gm.unassignedEmployees.Add(selectedCharacter);
         gm.jewelers.Remove(selectedCharacter);
         UpdateButtons();
         ResetCharacterList();
+        UpdateWorkStationsAvailabilityText();
+    }
+
+    private void UpdateWorkStationsAvailabilityText()
+    {
+        workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
     }
 
     private void ResetCharacterList()
@@ -249,7 +263,7 @@ public class JewelerPage : MonoBehaviour
         Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
         GameObject necklaceObject = new GameObject();
         ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
-        necklaceInQueue.SetNewItem(necklace, gm.jewelers);
+        necklaceInQueue.SetNewItem(necklace, gm.jewelers, itemQueue);
         necklaceObject.name = necklace.itemName;
         itemQueue.Add(necklaceInQueue);
         UpdateQueueList();

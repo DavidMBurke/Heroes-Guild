@@ -14,7 +14,7 @@ public class GuildManager : MonoBehaviour
     public List<Quest> availableQuests;
     public List<Item> stockpile = new List<Item>();
     public List<PlayerCharacter> jewelers;
-    public JewelerPage jewelerPage;
+    public WorkshopPage jewelerPage;
 
     // Time
     public float elapsedTime = 0;

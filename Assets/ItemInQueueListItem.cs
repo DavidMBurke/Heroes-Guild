@@ -3,6 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ItemInQueueListItem : MonoBehaviour
 {
@@ -11,8 +12,15 @@ public class ItemInQueueListItem : MonoBehaviour
     public ItemInQueue itemInQueue;
     public TMP_Dropdown crafterDropdown;
     public List<PlayerCharacter> crafterList;
+    public Button collectButton;
+    public float percentComplete = 0f;
 
-    public const string NEXT_AVAILABLE_TEXT = "Next Available"; 
+    public const string NEXT_AVAILABLE_TEXT = "Next Available";
+
+    private void Awake()
+    {
+        collectButton.gameObject.SetActive(false);
+    }
 
     private void Update()
     {
@@ -30,12 +38,16 @@ public class ItemInQueueListItem : MonoBehaviour
 
     public void UpdatePercentComplete()
     {
-        float percentComplete = 100f * itemInQueue.workDone / itemInQueue.workToComplete;
+        percentComplete = 100f * itemInQueue.workDone / itemInQueue.workToComplete;
         itemPercentComplete.text = $"{(int)percentComplete} ({itemInQueue.workDone}/{itemInQueue.workToComplete})";
     }
 
     public void UpdateDropdown()
     {
+        if (!crafterDropdown.gameObject.activeInHierarchy)
+        {
+            return;
+        }
         crafterDropdown.ClearOptions();
         List<string> characters = crafterList.Select(x => x.characterName).ToList();
         crafterDropdown.AddOptions(new List<string> {NEXT_AVAILABLE_TEXT});
@@ -47,6 +59,11 @@ public class ItemInQueueListItem : MonoBehaviour
             {
                 crafterDropdown.value = index + 1;
             }
+        }
+        if (percentComplete >= 100)
+        {
+            crafterDropdown.gameObject.SetActive(false);
+            collectButton.gameObject.SetActive(true);
         }
     }
 
@@ -65,5 +82,12 @@ public class ItemInQueueListItem : MonoBehaviour
             return;
         }
         itemInQueue.assignedCrafter = character;
+    }
+
+    public void CollectItem()
+    {
+        GuildManager.instance.stockpile.Add(itemInQueue.item);
+        itemInQueue.queue.Remove(itemInQueue);
+        Destroy(gameObject);
     }
 }

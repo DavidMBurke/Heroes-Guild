@@ -10,13 +10,15 @@ public class ItemInQueue : MonoBehaviour
     public PlayerCharacter? assignedCrafter;
     #nullable disable
     public List<PlayerCharacter> crafterList;
+    public List<ItemInQueue> queue;
 
     #nullable enable
-    public void SetNewItem(Item item, List<PlayerCharacter> crafterList, PlayerCharacter? assignedCrafter = null)
+    public void SetNewItem(Item item, List<PlayerCharacter> crafterList, List<ItemInQueue> queue, PlayerCharacter? assignedCrafter = null)
     {
         this.item = item;
         this.assignedCrafter = assignedCrafter;
         this.crafterList = crafterList;
+        this.queue = queue;
         workDone = 0;
         workToComplete = SetCraftingDifficulty(item);
     }
