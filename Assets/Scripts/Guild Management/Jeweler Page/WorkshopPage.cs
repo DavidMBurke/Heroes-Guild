@@ -6,17 +6,14 @@ using UnityEngine.UI;
 
 public class WorkshopPage : MonoBehaviour
 {
-    public GameObject characterListPanel;
-    public GameObject characterList;
-    public GameObject characterListItemPrefab;
-    public GameObject assignCharacterButton;
-    public GameObject unassignCharacterButton;
+
     public PlayerCharacter selectedCharacter;
     private GuildManager gm;
     public GameObject itemListItemPrefab;
     public GameObject itemList;
 
-    public CraftingPanel craftingPanel;
+    AssignWorkersPanel assignWorkersPanel;
+    CraftingPanel craftingPanel;
 
     public List<ItemInQueue> itemQueue;
     public List<ItemInQueue> completedItems;
@@ -29,6 +26,8 @@ public class WorkshopPage : MonoBehaviour
     private void Awake()
     {
         gm = GuildManager.instance;
+        assignWorkersPanel = GetComponentInChildren<AssignWorkersPanel>();
+        assignWorkersPanel.workshopPage = this;
         craftingPanel = GetComponentInChildren<CraftingPanel>();
         craftingPanel.workshopPage = this;
         SetPopupsInactive();
@@ -37,131 +36,21 @@ public class WorkshopPage : MonoBehaviour
 
     public void SetPopupsInactive()
     {
-        characterListPanel.SetActive(false);
+        assignWorkersPanel.gameObject.SetActive(false);
         craftingPanel.gameObject.SetActive(false);
-        assignCharacterButton.SetActive(false);
-        unassignCharacterButton.SetActive(false);
     }
 
-    public void AssignCrafter()
-    {
-        if (selectedCharacter == null)
-        {
-            return;
-        }
-        if (!gm.unassignedEmployees.Contains(selectedCharacter))
-        {
-            Debug.LogWarning("Character not in unassignedEmployees");
-            return;
-        }
-        if (gm.jewelers.Count >= workstationsCount)
-        {
-            Debug.Log("More workstations needed to assign more crafters.");
-            return;
-        }
-        gm.jewelers.Add(selectedCharacter);
-        gm.unassignedEmployees.Remove(selectedCharacter);
-        UpdateButtons();
-        ResetCharacterList();
-        UpdateWorkStationsAvailabilityText();
-    }
-    public void UnassignCrafter()
-    {
-        if (selectedCharacter == null)
-        {
-            return;
-        }
-        if (!gm.jewelers.Contains(selectedCharacter))
-        {
-            Debug.LogWarning("Character not currently assigned as crafter.");
-            return;
-        }
-        gm.unassignedEmployees.Add(selectedCharacter);
-        gm.jewelers.Remove(selectedCharacter);
-        UpdateButtons();
-        ResetCharacterList();
-        UpdateWorkStationsAvailabilityText();
-    }
 
-    private void UpdateWorkStationsAvailabilityText()
+    public void UpdateWorkStationsAvailabilityText()
     {
         workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
     }
 
-    private void ResetCharacterList()
-    {
-        gm.unassignedEmployees.RemoveAll(character => character == null);
-        foreach (Transform child in characterList.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        foreach (PlayerCharacter character in gm.jewelers)
-        {
-            GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterList.transform);
-            JobAssignmentCharacterListItem listItem = characterListItemObject.GetComponent<JobAssignmentCharacterListItem>();
-            Button button = listItem.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            {
-                SelectCharacter(character);
-            });
-            listItem.SetCharacter(character);
-            string text1 = character.characterName + (" (Assigned)");
-            string text2 = "Lvl: " + character.level.ToString();
-            string skillName = NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting);
-            string text3 = skillName + ": " + character.nonCombatSkills.skills[skillName].level.ToString();
-            listItem.SetText(text1, text2, text3);
-        }
-        foreach (PlayerCharacter character in gm.unassignedEmployees)
-        {
-            GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterList.transform);
-            JobAssignmentCharacterListItem listItem = characterListItemObject.GetComponent<JobAssignmentCharacterListItem>();
-            Button button = listItem.GetComponent<Button>();
-            button.onClick.AddListener(() =>
-            {
-                SelectCharacter(character);
-            });
-            listItem.SetCharacter(character);
-            string text1 = character.characterName;
-            string text2 = "Lvl: " + character.level.ToString();
-            string skillName = NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting);
-            string text3 = skillName + ": " + character.nonCombatSkills.skills[skillName].level.ToString();
-            listItem.SetText(text1, text2, text3);
-        }
-    }
-
-    public void SelectCharacter(PlayerCharacter character)
-    {
-        selectedCharacter = character;
-        assignCharacterButton.SetActive(true);
-        UpdateButtons();
-        ResetCharacterList();
-    }
-
-    private void UpdateButtons()
-    {
-        if (gm.unassignedEmployees.Contains(selectedCharacter))
-        {
-            assignCharacterButton.SetActive(true);
-            unassignCharacterButton.SetActive(false);
-        }
-        if (gm.jewelers.Contains(selectedCharacter))
-        {
-            assignCharacterButton.SetActive(false);
-            unassignCharacterButton.SetActive(true);
-        }
-        if (selectedCharacter == null)
-        {
-            assignCharacterButton.SetActive(false);
-            unassignCharacterButton.SetActive(false);
-        }
-    }
-
     public void ToggleCharacterSelectionPanel()
     {
-        characterListPanel.SetActive(!characterListPanel.activeInHierarchy);
-        if (characterListPanel.activeInHierarchy)
+        assignWorkersPanel.gameObject.SetActive(!assignWorkersPanel.gameObject.activeInHierarchy);
+        if (assignWorkersPanel.gameObject.activeInHierarchy)
         {
-            ResetCharacterList();
             craftingPanel.gameObject.SetActive(false);
         }
 
@@ -172,7 +61,7 @@ public class WorkshopPage : MonoBehaviour
         craftingPanel.gameObject.SetActive(!craftingPanel.gameObject.activeInHierarchy);
         if (craftingPanel.gameObject.activeInHierarchy)
         {
-            characterListPanel.SetActive(false);
+            assignWorkersPanel.gameObject.SetActive(false);
         }
     }
 
