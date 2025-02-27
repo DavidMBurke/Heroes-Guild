@@ -37,7 +37,6 @@ public class WorkshopPage : MonoBehaviour
         craftingPanel.gameObject.SetActive(false);
     }
 
-
     public void UpdateWorkStationsAvailabilityText()
     {
         workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
@@ -51,7 +50,6 @@ public class WorkshopPage : MonoBehaviour
         {
             craftingPanel.gameObject.SetActive(false);
         }
-
     }
 
     public void ToggleCraftPanel()
