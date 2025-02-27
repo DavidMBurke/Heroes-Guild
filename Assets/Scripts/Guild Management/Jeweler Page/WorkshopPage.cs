@@ -37,6 +37,7 @@ public class WorkshopPage : MonoBehaviour
     {
         gm = GuildManager.instance;
         SetPopupsInactive();
+        workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
     }
 
     public void SetPopupsInactive()
