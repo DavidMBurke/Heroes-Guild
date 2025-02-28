@@ -25,7 +25,6 @@ public class CraftingQueue : MonoBehaviour
         {
             ItemInQueueListItem itemInQueue = Instantiate(itemInQueueListItemPrefab, itemInQueueList.transform).GetComponent<ItemInQueueListItem>();
             itemInQueue.SetItem(item);
-
         }
     }
 

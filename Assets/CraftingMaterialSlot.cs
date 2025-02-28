@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class CraftingMaterialSlot : MonoBehaviour
 {
-    public Item item;
+    public Item? item;
     public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemType;
     public Sprite image;
     
-    public void SetItem(Item item)
+    public void SetItem(Item? item = null)
     {
         this.item = item;
-        itemName.text = item.itemName;
+        itemName.text = item?.itemName?? "";
     }
 
     public bool CheckCorrectItemInSlot(List<string> tags)

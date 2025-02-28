@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorkshopPage : MonoBehaviour
+public abstract class WorkshopPage : MonoBehaviour
 {
 
     public PlayerCharacter selectedCharacter;
@@ -13,6 +13,9 @@ public class WorkshopPage : MonoBehaviour
     public CraftingQueue craftingQueue;
     AssignWorkersPanel assignWorkersPanel;
     CraftingPanel craftingPanel;
+
+    public GameObject craftingButtonsParent;
+    List<Button> craftingButtons;
 
 
     public int workstationsCount = 3;
@@ -27,8 +30,14 @@ public class WorkshopPage : MonoBehaviour
         assignWorkersPanel.workshopPage = this;
         craftingPanel = GetComponentInChildren<CraftingPanel>();
         craftingPanel.workshopPage = this;
+        InitializeCraftingButtons();
         SetPopupsInactive();
-        workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
+    }
+
+    private void Start()
+    {
+        craftingPanel.InitializeCraftingOptions(GetCraftingOptions(), GetCrafters());
+        workstationsAssignedText.text = $"{GetCrafters().Count}/{workstationsCount} Assigned";
     }
 
     public void SetPopupsInactive()
@@ -49,15 +58,6 @@ public class WorkshopPage : MonoBehaviour
         if (assignWorkersPanel.gameObject.activeInHierarchy)
         {
             craftingPanel.gameObject.SetActive(false);
-        }
-    }
-
-    public void ToggleCraftPanel()
-    {
-        craftingPanel.gameObject.SetActive(!craftingPanel.gameObject.activeInHierarchy);
-        if (craftingPanel.gameObject.activeInHierarchy)
-        {
-            assignWorkersPanel.gameObject.SetActive(false);
         }
     }
 
@@ -94,15 +94,41 @@ public class WorkshopPage : MonoBehaviour
         craftingQueue.UpdateItemValues();
     }
 
-    public void ToggleNecklaceCrafting()
+    private void InitializeCraftingButtons()
     {
-        ToggleCraftPanel();
-        if (!craftingPanel.gameObject.activeInHierarchy)
+        craftingButtons = new List<Button>(craftingButtonsParent.GetComponentsInChildren<Button>());
+        List<CraftingOption> options = GetCraftingOptions();
+
+        for (int i = 0; i < craftingButtons.Count; i++)
         {
+            if (i < options.Count)
+            {
+                craftingButtons[i].gameObject.SetActive(true);
+                craftingButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = options[i].itemName;
+
+                int index = i;
+                craftingButtons[i].onClick.RemoveAllListeners();
+                craftingButtons[i].onClick.AddListener(() => ToggleCraftingPanel(options[index]));
+            } else
+            {
+                craftingButtons[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void ToggleCraftingPanel(CraftingOption option)
+    {
+        if (craftingPanel.gameObject.activeInHierarchy && craftingPanel.selectedCraftingOption == option)
+        {
+            craftingPanel.gameObject.SetActive(false);
             return;
         }
-        craftingPanel.addToQueueButton.onClick.RemoveAllListeners();
-        craftingPanel.addToQueueButton.onClick.AddListener(() => craftingPanel.AddNecklaceToQueue());
+        craftingPanel.gameObject.SetActive(true);
+        craftingPanel.SelectCraftingOption(option);
+        assignWorkersPanel.gameObject.SetActive(false);
     }
+
+    public abstract List<CraftingOption> GetCraftingOptions();
+    public abstract List<PlayerCharacter> GetCrafters();
 
 }

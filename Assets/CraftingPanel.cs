@@ -7,9 +7,8 @@ using UnityEngine.UI;
 
 public class CraftingPanel : MonoBehaviour
 {
-    public CraftingMaterialSlot itemSlot1;
-    public CraftingMaterialSlot itemSlot2;
-    CraftingMaterialSlot selectedSlot;
+    public GameObject materialSlotsParent;
+    List<CraftingMaterialSlot> materialSlots;
 
     public GameObject itemListItemPrefab;
     public GameObject materialList;
@@ -17,31 +16,54 @@ public class CraftingPanel : MonoBehaviour
     public TextMeshProUGUI craftingMenuHeader;
 
     public WorkshopPage workshopPage;
+    public CraftingOption selectedCraftingOption;
+    private List<PlayerCharacter> crafters;
 
     GuildManager gm;
 
     private void Start()
     {
         gm = GuildManager.instance;
+        materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
     }
 
-    public void SelectIngotSlot()
+    public void InitializeCraftingOptions(List<CraftingOption> craftingOptions, List<PlayerCharacter> crafterList)
     {
-        List<string> tags = new List<string>()
-        {
-            "metal",
-            "jewelry"
-        };
-        SelectItemSlot(tags, itemSlot1);
+        crafters = crafterList;
+
     }
 
-    public void SelectGemSlot()
+    public void SelectCraftingOption(CraftingOption option)
     {
-        List<string> tags = new List<string>()
+        selectedCraftingOption = option;
+        craftingMenuHeader.text = $"Craft {option.itemName}";
+        SetupMaterialSlots(option);
+    }
+
+    public void SetupMaterialSlots(CraftingOption option)
+    {
+        if (materialSlots == null || materialSlots.Count == 0)
         {
-            "gem"
-        };
-        SelectItemSlot(tags, itemSlot2);
+            materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
+        }
+
+        for (int i = 0; i < materialSlots.Count(); i++)
+        {
+            if (i < option.requiredMaterialCount)
+            {
+                materialSlots[i].gameObject.SetActive(true);
+                materialSlots[i].itemType.text = option.requiredMaterialTags[i].tagName;
+                materialSlots[i].SetItem(null);
+                int index = i;
+                Button slotButton = materialSlots[i].GetComponentInChildren<Button>();
+                slotButton.onClick.RemoveAllListeners();
+                slotButton.onClick.AddListener(() => SelectItemSlot(option.requiredMaterialTags[index].tags, materialSlots[index]));
+            } 
+            else
+            {
+                materialSlots[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     public void SelectItemSlot(List<string> tags, CraftingMaterialSlot itemSlot)
@@ -57,38 +79,67 @@ public class CraftingPanel : MonoBehaviour
         }
 
         UpdateItemList(items, itemSlot);
-        selectedSlot = itemSlot;
     }
 
-    public void AddNecklaceToQueue()
+    public void AddItemToQueue()
     {
-        if (itemSlot1.item == null || itemSlot2.item == null)
+        if (selectedCraftingOption == null) return;
+
+        List<Item> materials = new List<Item>();
+        for (int i = 0; i < selectedCraftingOption.requiredMaterialCount; i++)
         {
-            return;
+            if (materialSlots[i].item == null || materialSlots[i].item.quantity < 1)
+            {
+                Debug.Log("Insufficient Materials");
+                return;
+            }
+            materials.Add(materialSlots[i].item);
         }
-        List<string> tags1 = new List<string> { "metal", "jewelry" };
-        List<string> tags2 = new List<string> { "gem" };
-        if (itemSlot1.CheckCorrectItemInSlot(tags1) == false || itemSlot2.CheckCorrectItemInSlot(tags2) == false)
+
+        foreach (Item material in materials)
         {
-            Debug.Log("Correct Items not in slots");
-            return;
+            material.quantity -= 1;
         }
-        if (itemSlot1.CheckCorrectItemQuantityInSlot(1) == false || itemSlot2.CheckCorrectItemQuantityInSlot(1) == false)
-        {
-            Debug.Log("Insufficient Quantities in slots");
-            return;
-        }
-        itemSlot1.item.quantity -= 1;
-        itemSlot2.item.quantity -= 1;
-        Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
-        GameObject necklaceObject = new GameObject();
-        ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
-        necklaceInQueue.SetNewItem(necklace, gm.jewelers, workshopPage.craftingQueue.itemQueue);
-        necklaceObject.name = necklace.itemName;
-        workshopPage.craftingQueue.itemQueue.Add(necklaceInQueue);
+
+        Item craftedItem = selectedCraftingOption.craftingFunction(materials);
+
+        GameObject craftedObject = new GameObject();
+        ItemInQueue itemInQueue = craftedObject.AddComponent<ItemInQueue>();
+        itemInQueue.SetNewItem(craftedItem, crafters, workshopPage.craftingQueue.itemQueue);
+        craftedObject.name = craftedItem.itemName;
+        workshopPage.craftingQueue.itemQueue.Add(itemInQueue);
         workshopPage.craftingQueue.UpdateQueueList();
-        SelectItemSlot(selectedSlot.item.tags, selectedSlot);
     }
+
+    //public void AddNecklaceToQueue()
+    //{
+    //    if (itemSlot1.item == null || itemSlot2.item == null)
+    //    {
+    //        return;
+    //    }
+    //    List<string> tags1 = new List<string> { "metal", "jewelry" };
+    //    List<string> tags2 = new List<string> { "gem" };
+    //    if (itemSlot1.CheckCorrectItemInSlot(tags1) == false || itemSlot2.CheckCorrectItemInSlot(tags2) == false)
+    //    {
+    //        Debug.Log("Correct Items not in slots");
+    //        return;
+    //    }
+    //    if (itemSlot1.CheckCorrectItemQuantityInSlot(1) == false || itemSlot2.CheckCorrectItemQuantityInSlot(1) == false)
+    //    {
+    //        Debug.Log("Insufficient Quantities in slots");
+    //        return;
+    //    }
+    //    itemSlot1.item.quantity -= 1;
+    //    itemSlot2.item.quantity -= 1;
+    //    Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
+    //    GameObject necklaceObject = new GameObject();
+    //    ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
+    //    necklaceInQueue.SetNewItem(necklace, gm.jewelers, workshopPage.craftingQueue.itemQueue);
+    //    necklaceObject.name = necklace.itemName;
+    //    workshopPage.craftingQueue.itemQueue.Add(necklaceInQueue);
+    //    workshopPage.craftingQueue.UpdateQueueList();
+    //    SelectItemSlot(selectedSlot.item.tags, selectedSlot);
+    //}
 
     public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {
