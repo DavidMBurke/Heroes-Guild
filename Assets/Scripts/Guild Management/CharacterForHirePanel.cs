@@ -41,17 +41,14 @@ public class CharacterForHirePanel : MonoBehaviour
             $"{character.characterName} \n" +
             $"Race: {character.race.name} \n" +
             $"Class: {character.playerClass.name} \n\n" +
-            $"Attributes: \n" +
+            
             FormatAttributes(character.attributes.attributes) +
-
-            $"Affinities:\n" +
             FormatAffinities(character.affinities.affinities) +
-
-            $"Combat Skills:\n" + FormatSkills(character.combatSkills.skills);
+            FormatCombatSkills(character.combatSkills.skills);
 
 
         column2.text =
-            $"Non-Combat Skills:\n" + FormatSkills(character.nonCombatSkills.skills);
+            FormatNonCombatSkills(character.nonCombatSkills.skills);
     }
 
     private void CharacterMenuButtonOnClickHandler()
@@ -62,16 +59,28 @@ public class CharacterForHirePanel : MonoBehaviour
 
     private string FormatAttributes(Dictionary<string, Attribute> attributeDict)
     {
-        return string.Join("\n", attributeDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
-    }
-    private string FormatAffinities(Dictionary<string, Affinity> affinityDict)
-    {
-        return string.Join("\n", affinityDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+        return $"Attributes: \n" + string.Join("\n", attributeDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
     }
 
-    private string FormatSkills(Dictionary<string, Skill> skillDict)
+    private string FormatAffinities(Dictionary<string, Affinity> affinityDict)
     {
-        return string.Join("\n", skillDict.Select(s => $"{s.Key}: {s.Value.level}")) + "\n\n";
+        return $"Affinities: \n" + string.Join("\n", affinityDict.Select(a => $"{a.Key}: {a.Value.level}")) + "\n\n";
+    }
+
+    private string FormatCombatSkills(Dictionary<string, Skill> skillDict)
+    {
+        return $"Combat Skills: \n" +
+            string.Join("\n", skillDict.Select(s =>
+                $"{s.Key}: {s.Value.modifiedLevel} {(s.Value.level == s.Value.modifiedLevel ? "" : $"(base: {s.Value.level})")}"
+            )) + "\n\n";
+    }
+
+    private string FormatNonCombatSkills(Dictionary<string, Skill> skillDict)
+    {
+        return $"Non-Combat Skills: \n" +
+            string.Join("\n", skillDict.Select(s =>
+                $"{s.Key}: {s.Value.modifiedLevel} {(s.Value.level == s.Value.modifiedLevel ? "" : $"(base: {s.Value.level})")}"
+            )) + "\n\n";
     }
 
     public void AssignCharacter(PlayerCharacter playerCharacter)

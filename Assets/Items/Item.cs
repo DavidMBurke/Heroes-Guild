@@ -27,11 +27,14 @@ public class Item
     public ItemBaseStats baseStats = new ItemBaseStats();
     public List<Effect> effects; // List of effects that are applied in sequence
 
+    // skill modifiers
+    public Dictionary<string, float> skillBonuses = new(); // flat added bonus
+    public Dictionary<string, float> skillMultipliers = new(); 
     // tags
     public List<string> tags;
 
 
-    public Item(string itemName, int cost, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null)
+    public Item(string itemName, int cost, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null, Dictionary<string, float> skillBonuses = null, Dictionary<string, float> skillMultipliers = null)
     {
         this.itemName = itemName;
         this.cost = cost;
@@ -41,6 +44,8 @@ public class Item
         this.baseStats = baseStats ?? new ItemBaseStats();
         this.effects = effects ?? new List<Effect>();
         this.tags = tags ?? new List<string>();
+        this.skillBonuses = skillBonuses ?? new();
+        this.skillMultipliers = skillMultipliers ?? new();
     }
 
     public Item Clone()
@@ -53,7 +58,9 @@ public class Item
             new List<EquipmentSlots.Enum>(equipSlots),
             baseStats.Clone(),
             new List<Effect>(effects),
-            new List<string>(tags)
+            new List<string>(tags),
+            new Dictionary<string, float>(skillBonuses),
+            new Dictionary<string, float>(skillMultipliers)
             );
     }
 
@@ -65,12 +72,37 @@ public class Item
             inventoryItem.quantity += amount;
             return;
         }
-        Item newItem = Clone();
-        newItem.quantity = amount;
-        inventory.Add(newItem);
+
+        Item existingItem = inventory.FirstOrDefault(i => i.itemName == itemName);
+        if (existingItem != null)
+        {
+            existingItem.quantity += amount;
+        }
+        else
+        {
+            Item newItem = Clone();
+            newItem.quantity = amount;
+            inventory.Add(newItem);
+        }
     }
 
-    public static List<List<Item>> itemLists = new()
+    public void SetModifiers()
+    {
+        var skillBonusKeys = skillBonuses.Keys.ToList();
+        foreach (string key in skillBonusKeys)
+        {
+            skillBonuses[key] *= multiplier;
+        }
+
+        var skillMultiplierKeys = skillMultipliers.Keys.ToList();
+        foreach (string key in skillMultiplierKeys)
+        {
+            skillMultipliers[key] *= multiplier;
+        }
+    }
+
+    // For generation of every item for debugging
+    public static List<List<Item>> allItemLists = new()
     {
         Jewelry.Gems,
         Metals.MetalIngots,

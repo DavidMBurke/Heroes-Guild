@@ -39,7 +39,7 @@ public class DevTools : MonoBehaviour
 
     public void GenerateCraftingItems()
     {
-        foreach (List<Item> items in Item.itemLists)
+        foreach (List<Item> items in Item.allItemLists)
         {
             foreach (Item item in items)
             {
@@ -62,7 +62,30 @@ public class DevTools : MonoBehaviour
                 }
             }
         }
-
+        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
+        {
+            foreach (Item gem in Jewelry.Gems)
+            {
+                float f = Random.Range(0, 10);
+                if (f == 0)
+                {
+                    Item necklace = Jewelry.CreateBracelet(ingot, gem);
+                    necklace.AddToInventory(gm.stockpile, 1);
+                }
+            }
+        }
+        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
+        {
+            foreach (Item gem in Jewelry.Gems)
+            {
+                float f = Random.Range(0, 10);
+                if (f == 0)
+                {
+                    Item necklace = Jewelry.CreateRing(ingot, gem);
+                    necklace.AddToInventory(gm.stockpile, 1);
+                }
+            }
+        }
     }
 }
 

@@ -15,8 +15,19 @@ public class JewelerPage : WorkshopPage
                 new List<(List<string>, string)> {ingot, gem},
                 2,
                 (materials) => Jewelry.CreateNecklace(materials[0], materials[1])
-            )
-        };
+            ),
+            new CraftingOption(
+                "Ring",
+                new List<(List<string>, string)> {ingot, gem},
+                2,
+                (materials) => Jewelry.CreateRing(materials[0], materials[1])
+            ),
+            new CraftingOption(
+                "Bracelet",
+                new List<(List<string>, string)> {ingot, gem},
+                2,
+                (materials) => Jewelry.CreateBracelet(materials[0], materials[1])
+            )};
     }
 
     public override List<PlayerCharacter> GetCrafters()

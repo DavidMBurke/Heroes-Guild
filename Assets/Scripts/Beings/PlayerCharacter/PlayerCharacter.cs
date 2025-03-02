@@ -99,7 +99,7 @@ public class PlayerCharacter : Being
         {
             return;
         }
-        inventory.Add(item);
+        item.AddToInventory(inventory, item.quantity);
         OnInventoryUpdated?.Invoke();
     }
 
@@ -169,6 +169,7 @@ public class PlayerCharacter : Being
         {
             actionList.Add(new CharacterAction((caster, action) => Spells.FireBall(caster, action), this, "Fireball"));
         }
+        ApplyEquipmentSkillModifiers();
     }
 
     private string AssignNewName(int raceRoll)
@@ -224,6 +225,39 @@ public class PlayerCharacter : Being
         logText += $" level: {level}";
         //Debug.Log(logText);
         return level;
+    }
+
+    public void ApplyEquipmentSkillModifiers()
+    {
+        Dictionary<string, float> totalFlatBonuses = new();
+        Dictionary<string, float> totalMultipliers = new();
+
+        foreach (var slot in equipmentSlots.equipmentSlots)
+        {
+            Item equippedItem = slot.Value.item;
+            if (equippedItem != null)
+            {
+                foreach (var bonus in equippedItem.skillBonuses)
+                {
+                    if (!totalFlatBonuses.ContainsKey(bonus.Key))
+                    {
+                        totalFlatBonuses[bonus.Key] = 0;
+                    }
+                    totalFlatBonuses[bonus.Key] += bonus.Value;
+                }
+
+                foreach (var multiplier in equippedItem.skillMultipliers)
+                {
+                    if (!totalMultipliers.ContainsKey(multiplier.Key))
+                    {
+                        totalMultipliers[multiplier.Key] = 0;
+                    }
+                    totalMultipliers[multiplier.Key] += multiplier.Value;
+                }
+            }
+        }
+        combatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
+        nonCombatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
     }
     
     public void LogEquipment()

@@ -86,7 +86,7 @@ public class ItemInQueueListItem : MonoBehaviour
 
     public void CollectItem()
     {
-        GuildManager.instance.stockpile.Add(itemInQueue.item);
+        itemInQueue.item.AddToInventory(GuildManager.instance.stockpile, itemInQueue.item.quantity);
         itemInQueue.queue.Remove(itemInQueue);
         Destroy(gameObject);
     }

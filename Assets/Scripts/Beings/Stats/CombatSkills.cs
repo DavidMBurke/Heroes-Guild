@@ -16,7 +16,7 @@ public class CombatSkills
 
     public static CombatSkills RollBaseSkills(CombatSkills mods)
     {
-        CombatSkills rolledSkills = new CombatSkills();
+        CombatSkills rolledSkills = new();
 
         foreach (var skill in rolledSkills.skills)
         {
@@ -25,6 +25,17 @@ public class CombatSkills
         }
 
         return rolledSkills;
+    }
+
+    public void ApplyEquipmentBonuses(Dictionary<string, float> flatBonuses, Dictionary<string, float> multipliers)
+    {
+        foreach (var skill in skills)
+        {
+            float flatBonus = flatBonuses.ContainsKey(skill.Key) ? flatBonuses[skill.Key] : 0f;
+            float multiplier = multipliers.ContainsKey(skill.Key) ? multipliers[skill.Key] + 1f : 1f;
+
+            skill.Value.ApplyModifiers(flatBonus, multiplier);
+        }
     }
 
     public static string GetName(Enum skillEnum)

@@ -57,6 +57,7 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
             Destroy(draggedItem.gameObject);
             character.equipmentSlots.EquipItem(equipmentSlotEnum, newItem);
             UpdateSlotItem(newItem);
+            character.ApplyEquipmentSkillModifiers();
 
             if (draggedItem.source == InventorySource.Player)
             {

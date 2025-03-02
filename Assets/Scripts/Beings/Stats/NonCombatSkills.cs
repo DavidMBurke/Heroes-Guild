@@ -26,6 +26,17 @@ public class NonCombatSkills
         return rolledSkills;
     }
 
+    public void ApplyEquipmentBonuses(Dictionary<string, float> flatBonuses, Dictionary<string, float> multipliers)
+    {
+        foreach (var skill in skills)
+        {
+            float flatBonus = flatBonuses.ContainsKey(skill.Key) ? flatBonuses[skill.Key] : 0f;
+            float multiplier = multipliers.ContainsKey(skill.Key) ? multipliers[skill.Key] + 1f : 1f;
+
+            skill.Value.ApplyModifiers(flatBonus, multiplier);
+        }
+    }
+
     public static string GetName(Enum skillEnum)
     {
         return Names.TryGetValue(skillEnum, out var name) ? name : "Unknown";

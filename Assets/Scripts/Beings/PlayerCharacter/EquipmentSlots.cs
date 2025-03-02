@@ -8,7 +8,7 @@ public class EquipmentSlots
 
     public EquipmentSlots()
     {
-        foreach(var equipmentEnum in Names)
+        foreach (var equipmentEnum in Names)
         {
             equipmentSlots[equipmentEnum.Key] = new EquipmentSlot(Names[equipmentEnum.Key]);
         }

@@ -6,12 +6,14 @@ public class Skill
     public string name;
     public int level;
     int experience;
+    public float modifiedLevel;
 
     public Skill(string name, int level = 1, int experience = 0)
     {
         this.name = name;
         this.level = level;
         this.experience = experience;
+        this.modifiedLevel = level;
     }
 
     public void AddXP(int addedXP)
@@ -26,6 +28,12 @@ public class Skill
         {
             level++;
         }
+        modifiedLevel = level;
+    }
+
+    public void ApplyModifiers(float additiveBonus, float multiplier)
+    {
+        modifiedLevel = (level + additiveBonus) * multiplier;
     }
 
     public static List<(int, int)> LevelExperienceRequirement = new List<(int, int)>

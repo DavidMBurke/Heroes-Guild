@@ -13,6 +13,7 @@ public class CharacterInfoPanel : MonoBehaviour
     public Transform inventoryGrid;
     public List<EquipmentSlotUIElement> equipmentSlotUIElements;
     public static CharacterInfoPanel instance;
+    InventorySource currentSource;
 
     private void Awake()
     {
@@ -47,13 +48,28 @@ public class CharacterInfoPanel : MonoBehaviour
     public void playerInventoryButtonClickHandler()
     {
         ResetListItems();
+        currentSource = InventorySource.Player;
         SetNewListItems(character.inventory, InventorySource.Player);
     }
 
     public void guildInventoryButtonClickHandler()
     {
         ResetListItems();
+        currentSource = InventorySource.Guild;
         SetNewListItems(GuildManager.instance.stockpile, InventorySource.Guild);
+    }
+
+    public void equipmentSlotClickHandler(EquipmentSlots.Enum slotEnum)
+    {
+        List<Item> items = new List<Item>();
+        if (currentSource == InventorySource.Player)
+        {
+            items = character.inventory;
+        }
+        if (currentSource == InventorySource.Guild) {
+            items = GuildManager.instance.stockpile;
+        }
+        SetNewListItems(items.Where(i => i.equipSlots.Any(s => s == slotEnum)).ToList(), currentSource);
     }
 
     void ResetListItems()
@@ -82,6 +98,9 @@ public class CharacterInfoPanel : MonoBehaviour
         {
             var slot = character.equipmentSlots.equipmentSlots[slotUI.equipmentSlotEnum];
             slotUI.UpdateSlotItem(slot.item);
+            Button slotButton = slotUI.gameObject.GetComponent<Button>();
+            slotButton.onClick.RemoveAllListeners();
+            slotButton.onClick.AddListener(() => { equipmentSlotClickHandler(slotUI.equipmentSlotEnum); });
         }
     }
 }

@@ -111,36 +111,6 @@ public class CraftingPanel : MonoBehaviour
         workshopPage.craftingQueue.UpdateQueueList();
     }
 
-    //public void AddNecklaceToQueue()
-    //{
-    //    if (itemSlot1.item == null || itemSlot2.item == null)
-    //    {
-    //        return;
-    //    }
-    //    List<string> tags1 = new List<string> { "metal", "jewelry" };
-    //    List<string> tags2 = new List<string> { "gem" };
-    //    if (itemSlot1.CheckCorrectItemInSlot(tags1) == false || itemSlot2.CheckCorrectItemInSlot(tags2) == false)
-    //    {
-    //        Debug.Log("Correct Items not in slots");
-    //        return;
-    //    }
-    //    if (itemSlot1.CheckCorrectItemQuantityInSlot(1) == false || itemSlot2.CheckCorrectItemQuantityInSlot(1) == false)
-    //    {
-    //        Debug.Log("Insufficient Quantities in slots");
-    //        return;
-    //    }
-    //    itemSlot1.item.quantity -= 1;
-    //    itemSlot2.item.quantity -= 1;
-    //    Item necklace = Jewelry.CreateNecklace(itemSlot1.item, itemSlot2.item);
-    //    GameObject necklaceObject = new GameObject();
-    //    ItemInQueue necklaceInQueue = necklaceObject.AddComponent<ItemInQueue>();
-    //    necklaceInQueue.SetNewItem(necklace, gm.jewelers, workshopPage.craftingQueue.itemQueue);
-    //    necklaceObject.name = necklace.itemName;
-    //    workshopPage.craftingQueue.itemQueue.Add(necklaceInQueue);
-    //    workshopPage.craftingQueue.UpdateQueueList();
-    //    SelectItemSlot(selectedSlot.item.tags, selectedSlot);
-    //}
-
     public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {
         items.RemoveAll(i => i.quantity == 0);
