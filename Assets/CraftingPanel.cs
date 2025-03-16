@@ -49,16 +49,16 @@ public class CraftingPanel : MonoBehaviour
 
         for (int i = 0; i < materialSlots.Count(); i++)
         {
-            if (i < option.requiredMaterialCount)
+            if (i < option.requiredMaterials.Count)
             {
                 materialSlots[i].gameObject.SetActive(true);
-                materialSlots[i].itemType.text = option.requiredMaterialTags[i].tagName;
+                materialSlots[i].itemType.text = $"{option.requiredMaterials[i].itemTypeName} (x{option.requiredMaterials[i].quantity})";
                 materialSlots[i].SetItem(null);
                 int index = i;
                 Button slotButton = materialSlots[i].GetComponentInChildren<Button>();
                 slotButton.onClick.RemoveAllListeners();
-                slotButton.onClick.AddListener(() => SelectItemSlot(option.requiredMaterialTags[index].tags, materialSlots[index]));
-            } 
+                slotButton.onClick.AddListener(() => SelectItemSlot(option.requiredMaterials[index].tags, materialSlots[index]));
+            }
             else
             {
                 materialSlots[i].gameObject.SetActive(false);
@@ -86,23 +86,37 @@ public class CraftingPanel : MonoBehaviour
         if (selectedCraftingOption == null) return;
 
         List<Item> materials = new List<Item>();
-        for (int i = 0; i < selectedCraftingOption.requiredMaterialCount; i++)
+
+        // Ensure all required materials are available in sufficient quantity
+        for (int i = 0; i < selectedCraftingOption.requiredMaterials.Count; i++)
         {
-            if (materialSlots[i].item == null || materialSlots[i].item.quantity < 1)
+            var requiredMaterial = selectedCraftingOption.requiredMaterials[i];
+            var slot = materialSlots[i];
+
+            if (slot.item == null || slot.item.quantity < requiredMaterial.quantity)
             {
-                Debug.Log("Insufficient Materials");
+                Debug.Log($"Insufficient {requiredMaterial.itemTypeName}. Required: {requiredMaterial.quantity}, Available: {slot.item?.quantity ?? 0}");
                 return;
             }
-            materials.Add(materialSlots[i].item);
+            materials.Add(slot.item);
         }
 
-        foreach (Item material in materials)
+        // Deduct the correct amount from each material
+        foreach (var requiredMaterial in selectedCraftingOption.requiredMaterials)
         {
-            material.quantity -= 1;
+            // Find the corresponding item in the materials list
+            var materialItem = materials.FirstOrDefault(item => item.tags.Any(tag => requiredMaterial.tags.Contains(tag)));
+
+            if (materialItem != null)
+            {
+                materialItem.quantity -= requiredMaterial.quantity;
+            }
         }
 
+        // Create the crafted item
         Item craftedItem = selectedCraftingOption.craftingFunction(materials);
 
+        // Add to crafting queue
         GameObject craftedObject = new GameObject();
         ItemInQueue itemInQueue = craftedObject.AddComponent<ItemInQueue>();
         itemInQueue.SetNewItem(craftedItem, crafters, workshopPage.craftingQueue.itemQueue);
@@ -110,6 +124,7 @@ public class CraftingPanel : MonoBehaviour
         workshopPage.craftingQueue.itemQueue.Add(itemInQueue);
         workshopPage.craftingQueue.UpdateQueueList();
     }
+
 
     public void UpdateItemList(List<Item> items, CraftingMaterialSlot itemSlot)
     {

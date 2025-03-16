@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public abstract class WorkshopPage : MonoBehaviour
 {
-
     public PlayerCharacter selectedCharacter;
     private GuildManager gm;
 
@@ -17,10 +16,8 @@ public abstract class WorkshopPage : MonoBehaviour
     public GameObject craftingButtonsParent;
     List<Button> craftingButtons;
 
-
     public int workstationsCount = 3;
     public TextMeshProUGUI workstationsAssignedText;
-
 
     private void Awake()
     {
@@ -37,7 +34,7 @@ public abstract class WorkshopPage : MonoBehaviour
     private void Start()
     {
         craftingPanel.InitializeCraftingOptions(GetCraftingOptions(), GetCrafters());
-        workstationsAssignedText.text = $"{GetCrafters().Count}/{workstationsCount} Assigned";
+        UpdateWorkStationsAvailabilityText();
     }
 
     public void SetPopupsInactive()
@@ -48,7 +45,7 @@ public abstract class WorkshopPage : MonoBehaviour
 
     public void UpdateWorkStationsAvailabilityText()
     {
-        workstationsAssignedText.text = $"{gm.jewelers.Count}/{workstationsCount} Assigned";
+        workstationsAssignedText.text = $"{GetCrafters().Count}/{workstationsCount} Assigned";
     }
 
     public void ToggleCharacterSelectionPanel()
@@ -63,11 +60,11 @@ public abstract class WorkshopPage : MonoBehaviour
 
     public void Tick()
     {
-        foreach (PlayerCharacter jeweler in gm.jewelers)
+        foreach (PlayerCharacter crafter in GetCrafters())
         {
-            #nullable enable
-            ItemInQueue? queuedItem = craftingQueue.itemQueue.FirstOrDefault(i => i.assignedCrafter == jeweler);
-            #nullable disable
+#nullable enable
+            ItemInQueue? queuedItem = craftingQueue.itemQueue.FirstOrDefault(i => i.assignedCrafter == crafter);
+#nullable disable
             if (queuedItem == null)
             {
                 queuedItem = craftingQueue.itemQueue.FirstOrDefault(i => i.assignedCrafter == null);
@@ -78,9 +75,9 @@ public abstract class WorkshopPage : MonoBehaviour
             }
             if (queuedItem.assignedCrafter == null)
             {
-                queuedItem.assignedCrafter = jeweler;
+                queuedItem.assignedCrafter = crafter;
             }
-            Skill crafterSkill = jeweler.nonCombatSkills.skills[NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting)];
+            Skill crafterSkill = crafter.nonCombatSkills.skills[GetCraftingSkillName()];
             int remainingWork = queuedItem.workToComplete - queuedItem.workDone;
             int workAdded = (crafterSkill.level > remainingWork) ? remainingWork : crafterSkill.level;
             queuedItem.workDone += workAdded;
@@ -109,7 +106,8 @@ public abstract class WorkshopPage : MonoBehaviour
                 int index = i;
                 craftingButtons[i].onClick.RemoveAllListeners();
                 craftingButtons[i].onClick.AddListener(() => ToggleCraftingPanel(options[index]));
-            } else
+            }
+            else
             {
                 craftingButtons[i].gameObject.SetActive(false);
             }
@@ -130,5 +128,5 @@ public abstract class WorkshopPage : MonoBehaviour
 
     public abstract List<CraftingOption> GetCraftingOptions();
     public abstract List<PlayerCharacter> GetCrafters();
-
+    public abstract string GetCraftingSkillName();
 }

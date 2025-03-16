@@ -18,8 +18,8 @@ public class MonsterParts
 
     public static List<Item> Leathers = new List<Item>
     {
-        new Item("Brindlegrazer Leather", 10, tags: new List<string> {"leatherworking", "leather"}),
-        new Item("Bloodfang Leather", 100, tags: new List<string> {"leatherworking", "leather"})
+        new Item("Brindlegrazer Leather", 10, multiplier: 1f, tags: new List<string> {"leatherworking", "leather"}),
+        new Item("Bloodfang Leather", 100, multiplier: 1.25f, tags: new List<string> {"leatherworking", "leather"})
     };
 
     public enum LeathersEnum

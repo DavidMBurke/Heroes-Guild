@@ -13,8 +13,12 @@ public class GuildManager : MonoBehaviour
     public List<PlayerCharacter> charactersForHire;
     public List<Quest> availableQuests;
     public List<Item> stockpile = new List<Item>();
+
+    // Workshops
     public List<PlayerCharacter> jewelers;
+    public List<PlayerCharacter> armorSmiths;
     public WorkshopPage jewelerPage;
+    public WorkshopPage armorSmithPage;
 
     // Time
     public float elapsedTime = 0;
@@ -92,6 +96,7 @@ public class GuildManager : MonoBehaviour
     {
         IncrementTime();
         jewelerPage.Tick();
+        armorSmithPage.Tick();
     }
 
     private void IncrementTime()

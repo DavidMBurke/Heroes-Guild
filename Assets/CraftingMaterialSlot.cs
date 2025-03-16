@@ -28,10 +28,7 @@ public class CraftingMaterialSlot : MonoBehaviour
 
     public bool CheckCorrectItemQuantityInSlot(int requiredQuantity)
     {
-        if (item.quantity >= requiredQuantity)
-        {
-            return true;
-        }
-        return false;
+        return item != null && item.quantity >= requiredQuantity;
     }
+
 }
