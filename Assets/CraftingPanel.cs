@@ -9,6 +9,8 @@ public class CraftingPanel : MonoBehaviour
 {
     public GameObject materialSlotsParent;
     List<CraftingMaterialSlot> materialSlots;
+    public CraftingMaterialSlot selectedSlot;
+    public List<string> selectedTags;
 
     public GameObject itemListItemPrefab;
     public GameObject materialList;
@@ -68,6 +70,8 @@ public class CraftingPanel : MonoBehaviour
 
     public void SelectItemSlot(List<string> tags, CraftingMaterialSlot itemSlot)
     {
+        selectedTags = tags;
+        selectedSlot = itemSlot;
         List<Item> items = new List<Item>();
 
         foreach (Item item in gm.stockpile)
@@ -123,6 +127,7 @@ public class CraftingPanel : MonoBehaviour
         craftedObject.name = craftedItem.itemName;
         workshopPage.craftingQueue.itemQueue.Add(itemInQueue);
         workshopPage.craftingQueue.UpdateQueueList();
+        SelectItemSlot(selectedTags, selectedSlot);
     }
 
 
