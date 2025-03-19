@@ -6,8 +6,8 @@ public class MonsterParts
 {
     public static List<Item> Hides = new List<Item>
     {
-        new Item("Brindlegrazer Hide", 5, tags: new List<string> { "leatherworking", "hide" }),
-        new Item("Bloodfang Hide", 50, tags: new List<string> { "leatherworking", "hide" })
+        new Item("Brindlegrazer Hide", 5, tags: new List<string> { "hide" }),
+        new Item("Bloodfang Hide", 50, tags: new List<string> { "hide" })
     };
 
     public enum HidesEnum
@@ -16,10 +16,22 @@ public class MonsterParts
         BloodfangHide = 1
     }
 
+    public static List<Item> Bones = new List<Item>
+    {
+        new Item("Brindlegrazer Bone", 5, tags: new List<string> { "bone" }),
+        new Item("Bloodfang Bone", 50, tags: new List<string> { "bone" })
+    };
+
+    public enum BonesEnum
+    {
+        BrindlegrazerBone = 0,
+        BloodfangBone = 1
+    }
+
     public static List<Item> Leathers = new List<Item>
     {
-        new Item("Brindlegrazer Leather", 10, multiplier: 1f, tags: new List<string> {"leatherworking", "leather"}),
-        new Item("Bloodfang Leather", 100, multiplier: 1.25f, tags: new List<string> {"leatherworking", "leather"})
+        new Item("Brindlegrazer Leather", 10, multiplier: 1f, tags: new List<string> { "leather" }),
+        new Item("Bloodfang Leather", 100, multiplier: 1.25f, tags: new List<string> { "leather"})
     };
 
     public enum LeathersEnum
@@ -40,17 +52,14 @@ public class MonsterParts
 
     public static List<Item> MiscellaneousParts = new List<Item>
     {
-        new Item("Monster Meat Chunk", 2, tags: new List<string> {"component"}),
-        new Item("Monster Bone", 2, tags: new List<string> {"component"}),
-        new Item("Monster Blood", 2, tags: new List<string> {"component"}),
         new Item("Plant Fiber", 2, tags: new List<string> {"component"}),
         new Item("Mycellium Clump", 2, tags: new List<string> {"component"}),
         new Item("Arthropod Blood", 2, tags: new List<string> {"component"}),
         new Item("Gigantopillar Silk", 2, tags: new List<string> {"component"}),
         new Item("Vorpid Vines", 2, tags: new List<string> {"component"}),
         new Item("Bumbleshroom Cap", 2, tags: new List<string> {"component"}),
-        new Item("Bloodfang Hide", 2, tags: new List<string> {"component"}),
         new Item("Bloodfang Saliva Gland", 2, tags: new List<string> {"component"}),
+
     };
 
     public enum MiscellaneousPartsEnum
@@ -73,4 +82,18 @@ public class MonsterParts
         BumbleshroomCorpse = 2,
         BloodfangCorpse = 3
     }
+
+    public static List<Item> Essences = new List<Item>
+    {
+        new Item("Tiny Nature Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Tiny Arcana Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Tiny Celestial Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Tiny Spirit Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Tiny Qi Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Small Nature Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Small Arcana Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Small Celestial Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Small Spirit Essence", 10, tags: new List<string> {"essence"}),
+        new Item("Small Qi Essence", 10, tags: new List<string> {"essence"})
+    };
 }

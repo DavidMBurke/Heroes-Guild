@@ -135,7 +135,8 @@ public class Race
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Alchemy), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Enchanting), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.JewelryCrafting), 2 },
-                { NonCombatSkills.GetName(NonCombatSkills.Enum.MonsterWrangling), 2 }
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.MonsterWrangling), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Arcana), 2 }
             },
             attributeModifiers: new Dictionary<string, int>
             {

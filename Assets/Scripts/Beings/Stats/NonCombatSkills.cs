@@ -61,7 +61,8 @@ public class NonCombatSkills
         Mining,
         MonsterWrangling,
         Cartography,
-        Barter
+        Barter,
+        Arcana
     }
 
 
@@ -84,7 +85,8 @@ public class NonCombatSkills
         { Enum.Mining, "Mining" },
         { Enum.MonsterWrangling, "Monster-Wrangling" },
         { Enum.Cartography, "Cartography" },
-        { Enum.Barter, "Barter" }
+        { Enum.Barter, "Barter" },
+        { Enum.Arcana, "Arcana" }
     };
 }
 

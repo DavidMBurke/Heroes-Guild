@@ -34,7 +34,7 @@ public class Item
     public List<string> tags;
 
 
-    public Item(string itemName, int cost, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null, Dictionary<string, float> skillBonuses = null, Dictionary<string, float> skillMultipliers = null)
+    public Item(string itemName = "", int cost = 0, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null, Dictionary<string, float> skillBonuses = null, Dictionary<string, float> skillMultipliers = null, string description = "")
     {
         this.itemName = itemName;
         this.cost = cost;
@@ -46,6 +46,7 @@ public class Item
         this.tags = tags ?? new List<string>();
         this.skillBonuses = skillBonuses ?? new();
         this.skillMultipliers = skillMultipliers ?? new();
+        this.description = description;
     }
 
     public Item Clone()
@@ -60,7 +61,8 @@ public class Item
             new List<Effect>(effects),
             new List<string>(tags),
             new Dictionary<string, float>(skillBonuses),
-            new Dictionary<string, float>(skillMultipliers)
+            new Dictionary<string, float>(skillMultipliers),
+            description
             );
     }
 
@@ -107,11 +109,19 @@ public class Item
         Jewelry.Gems,
         Metals.MetalIngots,
         Metals.MetalOres,
+        Fabrics.Cloths,
+        Fabrics.Threads,
+        Fabrics.BowStrings,
+        Food.Meat.RawMeat,
         MonsterParts.Corpses,
+        MonsterParts.Essences,
         MonsterParts.Hides,
         MonsterParts.Leathers,
+        MonsterParts.Bones,
         MonsterParts.MiscellaneousParts,
-        MonsterParts.ProcessedParts
+        MonsterParts.ProcessedParts,
+        PlantParts.Woods,
+        PlantParts.Misc
     };
 
 }

@@ -43,7 +43,7 @@ public class DevTools : MonoBehaviour
         {
             foreach (Item item in items)
             {
-                item.AddToInventory(gm.stockpile, 10);
+                item.AddToInventory(gm.stockpile, 100);
             }
         }
     }

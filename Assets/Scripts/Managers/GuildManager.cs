@@ -17,8 +17,24 @@ public class GuildManager : MonoBehaviour
     // Workshops
     public List<PlayerCharacter> jewelers;
     public List<PlayerCharacter> armorSmiths;
+    public List<PlayerCharacter> weaponSmiths;
+    public List<PlayerCharacter> leatherWorkers;
+    public List<PlayerCharacter> tailors;
+    public List<PlayerCharacter> fletchers;
+    public List<PlayerCharacter> enchanters;
+    public List<PlayerCharacter> arcanists;
+    public List<PlayerCharacter> alchemists;
+    public List<PlayerCharacter> cooks;
     public WorkshopPage jewelerPage;
     public WorkshopPage armorSmithPage;
+    public WorkshopPage weaponSmithPage;
+    public WorkshopPage leatherWorkersPage;
+    public WorkshopPage tailorPage;
+    public WorkshopPage fletcherPage;
+    public WorkshopPage enchanterPage;
+    public WorkshopPage arcanistPage;
+    public WorkshopPage alchemistPage;
+    public WorkshopPage cooksPage;
 
     // Time
     public float elapsedTime = 0;
@@ -97,6 +113,14 @@ public class GuildManager : MonoBehaviour
         IncrementTime();
         jewelerPage.Tick();
         armorSmithPage.Tick();
+        weaponSmithPage.Tick();
+        leatherWorkersPage.Tick();
+        tailorPage.Tick();
+        fletcherPage.Tick();
+        enchanterPage.Tick();
+        arcanistPage.Tick();
+        alchemistPage.Tick();
+        cooksPage.Tick();
     }
 
     private void IncrementTime()
