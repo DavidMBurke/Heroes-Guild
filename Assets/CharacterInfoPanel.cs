@@ -98,7 +98,7 @@ public class CharacterInfoPanel : MonoBehaviour
         {
             var slot = character.equipmentSlots.equipmentSlots[slotUI.equipmentSlotEnum];
             slotUI.UpdateSlotItem(slot.item);
-            Button slotButton = slotUI.gameObject.GetComponent<Button>();
+            Button slotButton = slotUI.gameObject.GetComponentInChildren<Button>();
             slotButton.onClick.RemoveAllListeners();
             slotButton.onClick.AddListener(() => { equipmentSlotClickHandler(slotUI.equipmentSlotEnum); });
         }

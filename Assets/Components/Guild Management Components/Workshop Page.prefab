@@ -747,8 +747,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000066757, y: 145.4458}
-  m_SizeDelta: {x: 261.32, y: 42.0684}
+  m_AnchoredPosition: {x: -0.00080347, y: 140.58}
+  m_SizeDelta: {x: 247.6, y: 32.343}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5886588509061662081
 CanvasRenderer:
@@ -805,11 +805,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 27.35
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 12
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -841,7 +841,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 1.7557373, z: 0.6630554, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2505,6 +2505,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialSlotsParent: {fileID: 3895834406411512782}
+  selectedSlot: {fileID: 0}
+  selectedTags: []
   itemListItemPrefab: {fileID: 7898215406122944153, guid: 9e9b07b6fd343c34b80c06e5c6d160f3, type: 3}
   materialList: {fileID: 6004317870438745070}
   addToQueueButton: {fileID: 3668818452400683219}
