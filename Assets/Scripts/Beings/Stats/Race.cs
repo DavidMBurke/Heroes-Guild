@@ -5,12 +5,12 @@ public class Race
     public string name;
     public string description;
 
-    public Attributes attributeMods;
-    public Affinities affinityMods;
-    public CombatSkills combatSkillMods;
-    public NonCombatSkills nonCombatSkillMods;
+    public Attributes? attributeMods;
+    public Affinities? affinityMods;
+    public CombatSkills? combatSkillMods;
+    public NonCombatSkills? nonCombatSkillMods;
 
-    public List<int> rollableClasses;
+    public List<int>? rollableClasses;
 
     private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
     {
@@ -24,18 +24,19 @@ public class Race
     public Race(
         string name,
         string description,
-        Dictionary<string, int> combatSkillModifiers = null,
-        Dictionary<string, int> nonCombatSkillModifiers = null,
-        Dictionary<string, int> attributeModifiers = null,
-        Dictionary<string, int> affinityModifiers = null,
-        List<int> rollableClasses = null)
+        Dictionary<string, int>? combatSkillModifiers = null,
+        Dictionary<string, int>? nonCombatSkillModifiers = null,
+        Dictionary<string, int>? attributeModifiers = null,
+        Dictionary<string, int>? affinityModifiers = null,
+        List<int>? rollableClasses = null)
     {
         this.name = name;
         this.description = description;
-        combatSkillMods = new CombatSkills();
-        nonCombatSkillMods = new NonCombatSkills();
-        attributeMods = new Attributes();
-        affinityMods = new Affinities();
+
+        combatSkillMods ??= new CombatSkills();
+        nonCombatSkillMods ??= new NonCombatSkills();
+        attributeMods ??= new Attributes();
+        affinityMods ??= new Affinities();
         this.rollableClasses = rollableClasses ?? new List<int>();
 
         if (attributeModifiers != null)

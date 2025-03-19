@@ -2694,6 +2694,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Finger 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Finger Slot 1
@@ -3221,6 +3229,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Hands
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Hands Slot
@@ -3522,11 +3538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Leather Worker
+      value: Unassign Crafter
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 20.25
+      value: 27.65
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3538,11 +3554,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Leather Worker
+      value: Assign Crafter
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 33.8
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4109,6 +4125,14 @@ PrefabInstance:
     - target: {fileID: 170782311624606637, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: equipmentSlotEnum
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -7296,7 +7320,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 10
+          m_IntArgument: 25
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7434,6 +7458,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Finger 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -8395,7 +8427,7 @@ MonoBehaviour:
         m_MethodName: GoToPage
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 307107833}
+          m_ObjectArgument: {fileID: 1761890491}
           m_ObjectArgumentAssemblyTypeName: MenuPanel, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -9073,6 +9105,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Feet
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -9863,11 +9903,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Leather Worker
+      value: Unassign Enchanter
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 20.25
+      value: 22.05
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -9879,11 +9919,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Leather Worker
+      value: Assign Enchanter
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 25.9
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12186,6 +12226,127 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888482240}
   m_CullTransparentMesh: 1
+--- !u!1 &892755324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 892755325}
+  - component: {fileID: 892755329}
+  - component: {fileID: 892755328}
+  - component: {fileID: 892755327}
+  - component: {fileID: 892755326}
+  m_Layer: 5
+  m_Name: Character List Scroll
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &892755325
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892755324}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1517860441}
+  m_Father: {fileID: 1577238256}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -117.67688, y: -20.664303}
+  m_SizeDelta: {x: 537.9861, y: 291.638}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &892755326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892755324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 0
+--- !u!114 &892755327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892755324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.40784314}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &892755328
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892755324}
+  m_CullTransparentMesh: 1
+--- !u!114 &892755329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892755324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 1517860441}
+  m_Horizontal: 0
+  m_Vertical: 1
+  m_MovementType: 0
+  m_Elasticity: 0.1
+  m_Inertia: 1
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 5
+  m_Viewport: {fileID: 892755325}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &915001636 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6529008065258232709, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
@@ -12367,7 +12528,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: -111.5}
+  m_AnchoredPosition: {x: 0, y: -111.50003}
   m_SizeDelta: {x: 0, y: -223.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &932641278
@@ -13500,6 +13661,14 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Trinket Slot 1
@@ -13611,6 +13780,14 @@ PrefabInstance:
       value: 'Body
 
 '
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -14241,6 +14418,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1559760120438414297, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
+      propertyPath: workshopPage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1597191428611332618, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -14267,11 +14448,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Jeweler
+      value: Unassign Arcanist
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 25.2
+      value: 24.85
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -14283,11 +14464,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Jeweler
+      value: Assign Arcanist
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 30.25
+      value: 29.75
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -15590,6 +15771,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Pouch 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Pouch Slot 2
@@ -15865,7 +16054,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0020751953, y: 59.042828}
+  m_AnchoredPosition: {x: -0.0020751953, y: 58.907265}
   m_SizeDelta: {x: 387.24, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1179220358
@@ -18388,6 +18577,18 @@ PrefabInstance:
       propertyPath: m_text
       value: Head
       objectReference: {fileID: 0}
+    - target: {fileID: 3761349672707170195, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 1734216810}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Head Slot
@@ -18497,6 +18698,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Wrist
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -19237,11 +19446,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1971050334}
-  m_Father: {fileID: 1577238256}
+  m_Father: {fileID: 892755325}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -117.67688, y: -20.6643}
+  m_AnchoredPosition: {x: 0.000022888184, y: 0}
   m_SizeDelta: {x: 537.9861, y: 291.638}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1521842602
@@ -19675,6 +19884,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Legs
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Legs Slot
@@ -19787,6 +20004,14 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Left Hand Slot
@@ -19897,6 +20122,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Right Hand
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Right Hand Slot
@@ -19996,7 +20229,7 @@ RectTransform:
   - {fileID: 981753618}
   - {fileID: 120230113}
   - {fileID: 637274175}
-  - {fileID: 1517860441}
+  - {fileID: 892755325}
   m_Father: {fileID: 234901793}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -20532,6 +20765,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Neck
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -21394,6 +21635,17 @@ RectTransform:
   m_AnchoredPosition: {x: -356.6198, y: 12.499996}
   m_SizeDelta: {x: 86.760376, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1734216810 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3106080450429851588, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+  m_PrefabInstance: {fileID: 1441213053}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1739702521
 GameObject:
   m_ObjectHideFlags: 0
@@ -21552,6 +21804,14 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Pouch Slot 1
@@ -21593,6 +21853,17 @@ MonoBehaviour:
   craftingButtonsParent: {fileID: 156539712}
   workstationsCount: 3
   workstationsAssignedText: {fileID: 410808856}
+--- !u!114 &1761890491 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8582745210108418287, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
+  m_PrefabInstance: {fileID: 1964153556}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761890487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccea7b8ea60115d4bba0cf1e12efbdd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1763831490
 GameObject:
   m_ObjectHideFlags: 0
@@ -22300,6 +22571,14 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
+      objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
       value: Pouch Slot 3
@@ -22979,6 +23258,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1559760120438414297, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
+      propertyPath: workshopPage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1597191428611332618, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -23005,11 +23288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Jeweler
+      value: Unassign Cook
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 25.2
+      value: 29.25
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -23021,11 +23304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Jeweler
+      value: Assign Cook
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 30.25
+      value: 36.15
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -23884,6 +24167,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Ammo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
@@ -24965,11 +25256,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Leather Worker
+      value: Unassign Tailor
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 20.25
+      value: 29.2
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -24981,11 +25272,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Leather Worker
+      value: Assign Tailor
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -25956,11 +26247,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Unassign Leather Worker
+      value: Unassign Fletcher
       objectReference: {fileID: 0}
     - target: {fileID: 1601531743045028356, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 20.25
+      value: 24.65
       objectReference: {fileID: 0}
     - target: {fileID: 1627773865559405543, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -25972,11 +26263,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_text
-      value: Assign Leather Worker
+      value: Assign Fletcher
       objectReference: {fileID: 0}
     - target: {fileID: 3066892649816800654, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_fontSize
-      value: 24
+      value: 29.45
       objectReference: {fileID: 0}
     - target: {fileID: 3298429434208251033, guid: d1a45fa22a2b2584a82f661fbe8dc724, type: 3}
       propertyPath: m_AnchorMax.y
@@ -26847,6 +27138,14 @@ PrefabInstance:
     - target: {fileID: 927423225381418211, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_text
       value: Pouch 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0000038146973
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402320746124606027, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0004043579
       objectReference: {fileID: 0}
     - target: {fileID: 7649854739570163291, guid: feb762421ff10f949bb1038a3a76002b, type: 3}
       propertyPath: m_Name
