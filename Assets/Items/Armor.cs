@@ -95,7 +95,7 @@ public class Armor
             return gauntlets;
         }
 
-        public static Item CreatePlateBoots(Item metalIngot, Item leather)
+        public static Item CreateBoots(Item metalIngot, Item leather)
         {
             string name = $"{metalIngot.itemName} Boots".Replace(" Ingot", "");
             string description = $"{name} padded with {leather}";

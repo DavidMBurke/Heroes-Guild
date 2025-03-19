@@ -38,7 +38,7 @@ public class ArmorSmithPage : WorkshopPage
                     (new List<string> { "smithing", "metal" }, "ingot", 3),
                     (new List<string> { "leather" }, "leather", 3)
                 },
-                (materials) => Armor.Plate.CreatePlateBoots(materials[0], materials[1])
+                (materials) => Armor.Plate.CreateBoots(materials[0], materials[1])
             ),
             new CraftingOption(
                 "Gauntlets",

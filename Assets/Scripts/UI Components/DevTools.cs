@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DevTools : MonoBehaviour
 {
@@ -16,7 +18,7 @@ public class DevTools : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             panel.gameObject.SetActive(!panel.gameObject.activeInHierarchy);
         }
@@ -50,39 +52,45 @@ public class DevTools : MonoBehaviour
 
     public void GenerateRandomEquipment()
     {
-        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
+        List<Item> jewelryMetals = Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")).ToList();
+        List<Item> smithingMetals = Metals.MetalIngots.Where(m => m.tags.Any(t => t == "smithing")).ToList();
+        CreateRandomItems(jewelryMetals, Jewelry.Gems, 10, Jewelry.CreateNecklace);
+        CreateRandomItems(jewelryMetals, Jewelry.Gems, 10, Jewelry.CreateBracelet);
+        CreateRandomItems(jewelryMetals, Jewelry.Gems, 10, Jewelry.CreateRing);
+        CreateRandomItems(smithingMetals, MonsterParts.Leathers, 3, Armor.Plate.CreatePlatebody);
+        CreateRandomItems(smithingMetals, MonsterParts.Leathers, 3, Armor.Plate.CreatePlatelegs);
+        CreateRandomItems(smithingMetals, MonsterParts.Leathers, 3, Armor.Plate.CreateBoots);
+        CreateRandomItems(smithingMetals, MonsterParts.Leathers, 3, Armor.Plate.CreateHelmet);
+        CreateRandomItems(smithingMetals, MonsterParts.Leathers, 3, Armor.Plate.CreateGauntlets);
+        CreateRandomItems(MonsterParts.Leathers, Fabrics.Cloths, 2, Armor.Leather.CreateLeggings);
+        CreateRandomItems(MonsterParts.Leathers, Fabrics.Cloths, 2, Armor.Leather.CreateVambraces);
+        CreateRandomItems(MonsterParts.Leathers, Fabrics.Cloths, 2, Armor.Leather.CreateCoif);
+        CreateRandomItems(MonsterParts.Leathers, Fabrics.Cloths, 2, Armor.Leather.CreateBoots);
+        CreateRandomItems(MonsterParts.Leathers, Fabrics.Cloths, 2, Armor.Leather.CreateTop);
+        CreateRandomItems(Fabrics.Cloths, Fabrics.Threads, 2, Armor.Cloth.CreateShoes);
+        CreateRandomItems(Fabrics.Cloths, Fabrics.Threads, 2, Armor.Cloth.CreateGloves);
+        CreateRandomItems(Fabrics.Cloths, Fabrics.Threads, 2, Armor.Cloth.CreateHat);
+        CreateRandomItems(Fabrics.Cloths, Fabrics.Threads, 2, Armor.Cloth.CreatePants);
+        CreateRandomItems(Fabrics.Cloths, Fabrics.Threads, 2, Armor.Cloth.CreateRobe);
+        CreateRandomItems(smithingMetals, MonsterParts.Bones, 2, Weapons.Melee.CreateDagger);
+        CreateRandomItems(smithingMetals, MonsterParts.Bones, 2, Weapons.Melee.CreateShortsword);
+        CreateRandomItems(PlantParts.Woods, Fabrics.BowStrings, 2, Weapons.Ranged.CreateLongbow);
+        CreateRandomItems(PlantParts.Woods, Fabrics.BowStrings, 2, Weapons.Ranged.CreateShortbow);
+        CreateRandomItems(PlantParts.Woods, MonsterParts.Essences, 2, Weapons.Magic.CreateStaff);
+        CreateRandomItems(PlantParts.Woods, MonsterParts.Essences, 2, Weapons.Magic.CreateWand);
+    }
+
+    public void CreateRandomItems(List<Item> itemList1, List<Item> itemList2, int chanceDenom, Func<Item, Item, Item> craftingFunction)
+    {
+        foreach (Item item1 in itemList1)
         {
-            foreach (Item gem in Jewelry.Gems)
+            foreach (Item item2 in itemList2)
             {
-                float f = Random.Range(0, 10);
+                float f = Random.Range(0, chanceDenom);
                 if (f == 0)
                 {
-                    Item necklace = Jewelry.CreateNecklace(ingot, gem);
-                    necklace.AddToInventory(gm.stockpile, 1);
-                }
-            }
-        }
-        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
-        {
-            foreach (Item gem in Jewelry.Gems)
-            {
-                float f = Random.Range(0, 10);
-                if (f == 0)
-                {
-                    Item necklace = Jewelry.CreateBracelet(ingot, gem);
-                    necklace.AddToInventory(gm.stockpile, 1);
-                }
-            }
-        }
-        foreach (Item ingot in Metals.MetalIngots.Where(m => m.tags.Any(t => t == "jewelry")))
-        {
-            foreach (Item gem in Jewelry.Gems)
-            {
-                float f = Random.Range(0, 10);
-                if (f == 0)
-                {
-                    Item necklace = Jewelry.CreateRing(ingot, gem);
-                    necklace.AddToInventory(gm.stockpile, 1);
+                    Item newItem = craftingFunction(item1, item2);
+                    newItem.AddToInventory(gm.stockpile, 1);
                 }
             }
         }
