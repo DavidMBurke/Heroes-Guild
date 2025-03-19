@@ -11,21 +11,21 @@ public class JewelerPage : WorkshopPage
             new CraftingOption(
                 "Necklace",
                 new List<(List<string>, string, int)> { 
-                    (new List<string> { "metal", "jewelry" }, "ingot", 1), 
+                    (new List<string> { "fine metal" }, "ingot", 1), 
                     (new List<string> { "gem" }, "gem", 1)},
                 (materials) => Jewelry.CreateNecklace(materials[0], materials[1])
             ),
             new CraftingOption(
                 "Ring",
                 new List<(List<string>, string, int)> { 
-                    (new List<string> { "metal", "jewelry" }, "ingot", 1), 
+                    (new List<string> { "fine metal" }, "ingot", 1), 
                     (new List<string> { "gem" }, "gem", 1)},
                 (materials) => Jewelry.CreateRing(materials[0], materials[1])
             ),
             new CraftingOption(
                 "Bracelet",
                 new List<(List<string>, string, int)> { 
-                    (new List<string> { "metal", "jewelry" }, "ingot", 1), 
+                    (new List<string> { "fine metal" }, "ingot", 1), 
                     (new List<string> { "gem" }, "gem", 1)},
                 (materials) => Jewelry.CreateBracelet(materials[0], materials[1])
             )};

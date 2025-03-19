@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -7,21 +6,21 @@ using UnityEngine.UI;
 
 public class CraftingPanel : MonoBehaviour
 {
-    public GameObject materialSlotsParent;
-    List<CraftingMaterialSlot> materialSlots;
-    public CraftingMaterialSlot selectedSlot;
-    public List<string> selectedTags;
+    public GameObject materialSlotsParent = null!;
+    List<CraftingMaterialSlot> materialSlots = null!;
+    public CraftingMaterialSlot selectedSlot = null!;
+    public List<string> selectedTags = null!;
 
-    public GameObject itemListItemPrefab;
-    public GameObject materialList;
-    public Button addToQueueButton;
-    public TextMeshProUGUI craftingMenuHeader;
+    public GameObject itemListItemPrefab = null!;
+    public GameObject materialList = null!;
+    public Button addToQueueButton = null!;
+    public TextMeshProUGUI craftingMenuHeader = null!;
 
-    public WorkshopPage workshopPage;
-    public CraftingOption selectedCraftingOption;
-    private List<PlayerCharacter> crafters;
+    public WorkshopPage workshopPage = null!;
+    public CraftingOption selectedCraftingOption = null!;
+    private List<PlayerCharacter> crafters = null!;
 
-    GuildManager gm;
+    GuildManager gm = null!;
 
     private void Start()
     {
@@ -32,7 +31,6 @@ public class CraftingPanel : MonoBehaviour
     public void InitializeCraftingOptions(List<CraftingOption> craftingOptions, List<PlayerCharacter> crafterList)
     {
         crafters = crafterList;
-
     }
 
     public void SelectCraftingOption(CraftingOption option)
@@ -49,8 +47,10 @@ public class CraftingPanel : MonoBehaviour
             materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
         }
 
+
         for (int i = 0; i < materialSlots.Count(); i++)
         {
+            Debug.Log(option.requiredMaterials.Count);
             if (i < option.requiredMaterials.Count)
             {
                 materialSlots[i].gameObject.SetActive(true);
@@ -76,7 +76,7 @@ public class CraftingPanel : MonoBehaviour
 
         foreach (Item item in gm.stockpile)
         {
-            if (item.tags.All((t) => tags.Contains(t)))
+            if (item.tags.Any((t) => tags.Contains(t)))
             {
                 items.Add(item);
             };
@@ -105,6 +105,13 @@ public class CraftingPanel : MonoBehaviour
             materials.Add(slot.item);
         }
 
+        // Create the crafted item
+        Item craftedItem = selectedCraftingOption.craftingFunction(materials);
+        if (craftedItem == null) {
+            Debug.Log($"No item returned for {selectedCraftingOption}");
+            return;
+        }
+
         // Deduct the correct amount from each material
         foreach (var requiredMaterial in selectedCraftingOption.requiredMaterials)
         {
@@ -116,9 +123,6 @@ public class CraftingPanel : MonoBehaviour
                 materialItem.quantity -= requiredMaterial.quantity;
             }
         }
-
-        // Create the crafted item
-        Item craftedItem = selectedCraftingOption.craftingFunction(materials);
 
         // Add to crafting queue
         GameObject craftedObject = new GameObject();

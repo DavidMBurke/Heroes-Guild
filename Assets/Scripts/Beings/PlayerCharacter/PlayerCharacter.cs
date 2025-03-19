@@ -26,7 +26,7 @@ public class PlayerCharacter : Being
     public bool endMove = false; // Used to signal move action to end mid-movement.
 
     public delegate void InventoryUpdated();
-    public event InventoryUpdated OnInventoryUpdated;
+    public event InventoryUpdated OnInventoryUpdated = null!; 
     private List<Item> _inventory = new List<Item>();
 
     public int levelAttained; // checked against being.level to prompt leveling up.

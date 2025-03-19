@@ -7,34 +7,34 @@ using UnityEngine;
 
 public class GuildManager : MonoBehaviour
 {
-    public static GuildManager instance;
+    public static GuildManager instance = null!;
     public int coin; //base currency in copper, to be displayed in broken down denominations (100 copper -> 1 silver, 100 silver -> 1 gold)
-    public List<PlayerCharacter> unassignedEmployees;
-    public List<PlayerCharacter> charactersForHire;
-    public List<Quest> availableQuests;
+    public List<PlayerCharacter> unassignedEmployees = null!;
+    public List<PlayerCharacter> charactersForHire = null!;
+    public List<Quest> availableQuests = null!;
     public List<Item> stockpile = new List<Item>();
 
     // Workshops
-    public List<PlayerCharacter> jewelers;
-    public List<PlayerCharacter> armorSmiths;
-    public List<PlayerCharacter> weaponSmiths;
-    public List<PlayerCharacter> leatherWorkers;
-    public List<PlayerCharacter> tailors;
-    public List<PlayerCharacter> fletchers;
-    public List<PlayerCharacter> enchanters;
-    public List<PlayerCharacter> arcanists;
-    public List<PlayerCharacter> alchemists;
-    public List<PlayerCharacter> cooks;
-    public WorkshopPage jewelerPage;
-    public WorkshopPage armorSmithPage;
-    public WorkshopPage weaponSmithPage;
-    public WorkshopPage leatherWorkersPage;
-    public WorkshopPage tailorPage;
-    public WorkshopPage fletcherPage;
-    public WorkshopPage enchanterPage;
-    public WorkshopPage arcanistPage;
-    public WorkshopPage alchemistPage;
-    public WorkshopPage cooksPage;
+    public List<PlayerCharacter> jewelers = null!;
+    public List<PlayerCharacter> armorSmiths = null!;
+    public List<PlayerCharacter> weaponSmiths = null!;
+    public List<PlayerCharacter> leatherWorkers = null!;
+    public List<PlayerCharacter> tailors = null!;
+    public List<PlayerCharacter> fletchers = null!;
+    public List<PlayerCharacter> enchanters = null!;
+    public List<PlayerCharacter> arcanists = null!;
+    public List<PlayerCharacter> alchemists = null!;
+    public List<PlayerCharacter> cooks = null!;
+    public WorkshopPage jewelerPage = null!;
+    public WorkshopPage armorSmithPage = null!;
+    public WorkshopPage weaponSmithPage = null!;
+    public WorkshopPage leatherWorkersPage = null!;
+    public WorkshopPage tailorPage = null!;
+    public WorkshopPage fletcherPage = null!;
+    public WorkshopPage enchanterPage = null!;
+    public WorkshopPage arcanistPage = null!;
+    public WorkshopPage alchemistPage = null!;
+    public WorkshopPage cooksPage = null!;
 
     // Time
     public float elapsedTime = 0;

@@ -10,13 +10,13 @@ using UnityEngine.UI;
 /// </summary>
 public class InteractableDisplay : MonoBehaviour
 {
-    private List<TextMeshProUGUI> textComponents;
-    private List<Button> buttonComponents;
-    private TextMeshProUGUI itemName;
-    private Interactable selectedInteractable;
-    private Button pickUpButton;
-    private Button inspectButton;
-    private Button dropButton;
+    private List<TextMeshProUGUI> textComponents = null!;
+    private List<Button> buttonComponents = null!;
+    private TextMeshProUGUI itemName = null!;
+    private Interactable selectedInteractable = null!;
+    private Button pickUpButton = null!;
+    private Button inspectButton = null!;
+    private Button dropButton = null!;
     public Vector3 offScreenPosition;
     private bool moveBeforePickup;
 

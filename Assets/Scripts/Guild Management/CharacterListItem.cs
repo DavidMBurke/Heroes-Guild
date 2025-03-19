@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class CharacterListItem : MonoBehaviour
 {
-    private PlayerCharacter player;
-    private TextMeshProUGUI displayName;
-    private TextMeshProUGUI level;
+    private PlayerCharacter player = null!;
+    private TextMeshProUGUI displayName = null!;
+    private TextMeshProUGUI level = null!;
 
     private void Awake()
     {

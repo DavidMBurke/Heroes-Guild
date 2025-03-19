@@ -6,8 +6,8 @@ using Random = UnityEngine.Random;
 
 public class DevTools : MonoBehaviour
 {
-    MenuPanel panel;
-    GuildManager gm;
+    MenuPanel panel = null!;
+    GuildManager gm = null!;
 
     private void Start()
     {

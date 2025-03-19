@@ -5,12 +5,12 @@ using TMPro;
 
 public class GuildInfoBar : MonoBehaviour
 {
-    public TextMeshProUGUI yearText;
-    public TextMeshProUGUI dayText;
-    public TextMeshProUGUI seasonText;
-    public TextMeshProUGUI timeText;
-    public TextMeshProUGUI coinText;
-    private GuildManager gm;
+    public TextMeshProUGUI yearText = null!;
+    public TextMeshProUGUI dayText = null!;
+    public TextMeshProUGUI seasonText = null!;
+    public TextMeshProUGUI timeText = null!;
+    public TextMeshProUGUI coinText = null!;
+    private GuildManager gm = null!;
 
     private void Start()
     {

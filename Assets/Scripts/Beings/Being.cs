@@ -7,7 +7,7 @@ using UnityEngine;
 public class Being : MonoBehaviour
 {
     // Info
-    public string characterName;
+    public string characterName = null!;
 
     // Movement
     public float moveDistance = 5f;
@@ -20,7 +20,7 @@ public class Being : MonoBehaviour
     // Action
     public bool isTurn = false;
     public bool isInCharacterAction = false;
-    public CharacterAction currentAction;
+    public CharacterAction currentAction = null!;
     public float initiative;
     public bool isInScene = false;
 
@@ -31,13 +31,13 @@ public class Being : MonoBehaviour
     public int level = 1;
     
     // Model
-    private Rigidbody rb;
-    public GameObject model;
+    private Rigidbody rb = null!;
+    public GameObject model = null!;
     public Color characterColor;
 
     // Indicators TODO - Move these to their own class and single object in scene
-    public GameObject turnIndicator;
-    public GameObject rangeIndicator;
+    public GameObject turnIndicator = null!;
+    public GameObject rangeIndicator = null!;
     public Color rangeIndicatorColor;
     public Color rangeIndicatorCombatColor = new Color(.5f, 0, 0, .25f);
     public Color rangeIndicatorMovementColor = new Color(.5f, .5f, .5f, .25f);

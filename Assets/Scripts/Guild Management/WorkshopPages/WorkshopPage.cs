@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public abstract class WorkshopPage : MonoBehaviour
 {
-    public PlayerCharacter selectedCharacter;
-    private GuildManager gm;
+    public PlayerCharacter selectedCharacter = null!;
+    private GuildManager gm = null!;
 
-    public CraftingQueue craftingQueue;
-    AssignWorkersPanel assignWorkersPanel;
-    CraftingPanel craftingPanel;
+    public CraftingQueue craftingQueue = null!;
+    AssignWorkersPanel assignWorkersPanel = null!;
+    CraftingPanel craftingPanel = null!;
 
-    public GameObject craftingButtonsParent;
-    List<Button> craftingButtons;
+    public GameObject craftingButtonsParent = null!;
+    List<Button> craftingButtons = null!;
 
     public int workstationsCount = 3;
-    public TextMeshProUGUI workstationsAssignedText;
+    public TextMeshProUGUI workstationsAssignedText = null!;
 
     private void Awake()
     {

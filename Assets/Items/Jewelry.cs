@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Jewelry
@@ -91,15 +92,15 @@ public class Jewelry
 
     public static Item CreateNecklace(Item metalIngot, Item gem)
     {
-        string name = $"{metalIngot.itemName} {gem.itemName} Necklace".Replace(" Ingot", "");
+        string name = $"{gem.itemName} Necklace";
+        string description = $"{metalIngot.itemName} Necklace with an embedded {gem.itemName}".Replace(" Ingot", "");
         float multiplier = metalIngot.multiplier * gem.multiplier;
         int cost = metalIngot.cost + gem.cost;
-        Item necklace = new Item(name, cost, multiplier);
+        Item necklace = new Item(name, cost, multiplier:multiplier, description:description);
         necklace.craftingIngredients = new List<Item>
         {
             metalIngot, gem
         };
-        necklace.multiplier = multiplier;
         necklace.skillBonuses = metalIngot.skillBonuses.Concat(gem.skillBonuses).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         necklace.skillMultipliers = metalIngot.skillMultipliers.Concat(gem.skillMultipliers).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         necklace.tags = new List<string> { "necklace" };
@@ -113,14 +114,14 @@ public class Jewelry
     public static Item CreateRing(Item metalIngot, Item gem)
     {
         string name = $"{metalIngot.itemName} {gem.itemName} Ring".Replace(" Ingot", "");
+        string description = $"{metalIngot.itemName} Ring with an embedded {gem.itemName}".Replace(" Ingot", "");
         float multiplier = metalIngot.multiplier * gem.multiplier;
         int cost = metalIngot.cost + gem.cost;
-        Item ring = new Item(name, cost, multiplier);
+        Item ring = new Item(name, cost, multiplier: multiplier, description: description);
         ring.craftingIngredients = new List<Item>
         {
             metalIngot, gem
         };
-        ring.multiplier = multiplier;
         ring.skillBonuses = metalIngot.skillBonuses.Concat(gem.skillBonuses).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         ring.skillMultipliers = metalIngot.skillMultipliers.Concat(gem.skillMultipliers).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         ring.tags = new List<string> { "ring" };
@@ -135,14 +136,14 @@ public class Jewelry
     public static Item CreateBracelet(Item metalIngot, Item gem)
     {
         string name = $"{metalIngot.itemName} {gem.itemName} Bracelet".Replace(" Ingot", "");
+        string description = $"{metalIngot.itemName} Ring with an embedded {gem.itemName}".Replace(" Ingot", "");
         float multiplier = metalIngot.multiplier * gem.multiplier;
         int cost = metalIngot.cost + gem.cost;
-        Item bracelet = new Item(name, cost, multiplier);
+        Item bracelet = new Item(name, cost, multiplier: multiplier, description: description);
         bracelet.craftingIngredients = new List<Item>
         {
             metalIngot, gem
         };
-        bracelet.multiplier = multiplier;
         bracelet.skillBonuses = metalIngot.skillBonuses.Concat(gem.skillBonuses).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         bracelet.skillMultipliers = metalIngot.skillMultipliers.Concat(gem.skillMultipliers).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         bracelet.tags = new List<string> { "bracelet" };

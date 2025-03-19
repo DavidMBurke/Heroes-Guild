@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class QuestsPage : MonoBehaviour
 {
-    public QuestPanel questPanel;
-    public GameObject questList;
-    public GameObject questListItemPrefab;
-    public GameObject startQuestPanel;
+    public QuestPanel questPanel = null!;
+    public GameObject questList = null!;
+    public GameObject questListItemPrefab = null!;
+    public GameObject startQuestPanel = null!;
 
-    private Quest selectedQuest;
-    private GuildManager gm;
+    private Quest selectedQuest = null!;
+    private GuildManager gm = null!;
 
     private void Start()
     {

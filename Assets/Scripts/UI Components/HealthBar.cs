@@ -9,9 +9,9 @@ using UnityEngine.UI;
 /// </summary>
 public class HealthBar : MonoBehaviour
 {
-    private List<Image> images;
-    private Image image;
-    private TextMeshProUGUI tmp;
+    private List<Image> images = null!;
+    private Image image = null!;
+    private TextMeshProUGUI tmp = null!;
 
     private void Start()
     {

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class QuestPanel : MonoBehaviour
 {
-    private List<TextMeshProUGUI> tmps;
-    private TextMeshProUGUI title;
-    private TextMeshProUGUI description;
-    public Quest quest;
+    private List<TextMeshProUGUI> tmps = null!;
+    private TextMeshProUGUI title = null!;
+    private TextMeshProUGUI description = null!;
+    public Quest quest = null!;
 
     void Start()
     {

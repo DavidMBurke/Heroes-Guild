@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class CraftingQueue : MonoBehaviour
 {
-    public List<ItemInQueue> itemQueue;
-    public List<ItemInQueue> completedItems;
-    public GameObject itemInQueueList;
-    public GameObject itemInQueueListItemPrefab;
+    public List<ItemInQueue> itemQueue = null!;
+    public List<ItemInQueue> completedItems = null!;
+    public GameObject itemInQueueList = null!;
+    public GameObject itemInQueueListItemPrefab = null!;
 
     public void UpdateQueueList()
     {

@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class InventoryDisplay : MonoBehaviour
 {
-    public PlayerCharacter currentPlayer;
+    public PlayerCharacter currentPlayer = null!;
     public List<InventorySlot> inventorySlots = new List<InventorySlot>();
     void Start()
     {

@@ -33,17 +33,17 @@ public class Metals
 
     public static List<Item> MetalIngots = new List<Item>
     {
-        new Item("Copper Ingot", 10, multiplier: 1f, tags: new List<string> {"smithing", "metal"}),
-        new Item("Brass Ingot", 50, multiplier: 1f, tags: new List<string> {"jewelry", "metal"}),
-        new Item("Iron Ingot", 100, multiplier: 1.5f, tags: new List<string> {"smithing", "metal"}),
-        new Item("Silver Ingot", 500, multiplier: 1.5f, tags: new List<string> {"jewelry", "metal"}),
-        new Item("Steel Ingot", 1000, multiplier: 2.25f, tags: new List<string> {"smithing", "metal"}),
-        new Item("Gold Ingot", 5000, multiplier: 2.25f, tags: new List<string> {"jewelry", "metal"}),
-        new Item("Mythril Ingot", 10000, multiplier: 3.375f, tags: new List<string> {"smithing", "metal"}),
-        new Item("Platinum Ingot", 50000, multiplier: 3.75f, tags: new List<string> {"jewelry", "metal"}),
-        new Item("Adamantium Ingot", 100000, multiplier: 5f, tags: new List<string> {"smithing", "metal"}),
-        new Item("Osmium Ingot", 500000, multiplier: 5f, tags: new List<string> {"jewelry", "metal"}),
-        new Item("Meteorum Ingot", 1000000, multiplier: 7.5f, tags: new List<string> {"smithing", "metal"})
+        new Item("Copper Ingot", 10, multiplier: 1f, tags: new List<string> {"smithing metal"}),
+        new Item("Brass Ingot", 50, multiplier: 1f, tags: new List<string> {"fine metal"}),
+        new Item("Iron Ingot", 100, multiplier: 1.5f, tags: new List<string> {"smithing metal"}),
+        new Item("Silver Ingot", 500, multiplier: 1.5f, tags: new List<string> {"fine metal"}),
+        new Item("Steel Ingot", 1000, multiplier: 2.25f, tags: new List<string> {"smithing metal"}),
+        new Item("Gold Ingot", 5000, multiplier: 2.25f, tags: new List<string> {"fine metal"}),
+        new Item("Mythril Ingot", 10000, multiplier: 3.375f, tags: new List<string> {"smithing metal"}),
+        new Item("Platinum Ingot", 50000, multiplier: 3.75f, tags: new List<string> {"fine metal"}),
+        new Item("Adamantium Ingot", 100000, multiplier: 5f, tags: new List<string> {"smithing metal"}),
+        new Item("Osmium Ingot", 500000, multiplier: 5f, tags: new List<string> {"fine metal"}),
+        new Item("Meteorum Ingot", 1000000, multiplier: 7.5f, tags: new List<string> {"smithing metal"})
     };
 
     public enum MetalIngotEnum

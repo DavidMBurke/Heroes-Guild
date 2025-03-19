@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 public class ItemListItem : MonoBehaviour
 {
-    private Item item;
-    private TextMeshProUGUI itemName;
-    private TextMeshProUGUI quantity;
-    public Button selectButton;
+    private Item item = null!;
+    private TextMeshProUGUI itemName = null!;
+    private TextMeshProUGUI quantity = null!;
+    public Button selectButton = null!;
 
 
     private void Awake()

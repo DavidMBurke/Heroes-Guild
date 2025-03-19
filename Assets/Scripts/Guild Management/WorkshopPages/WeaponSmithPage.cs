@@ -11,7 +11,7 @@ public class WeaponSmithPage : WorkshopPage
             new CraftingOption(
                 "Dagger",
                 new List<(List<string>, string, int)> {
-                    (new List<string> { "smithing", "metal" }, "ingot", 2),
+                    (new List<string> { "smithing metal" }, "ingot", 2),
                     (new List<string> { "bone" }, "bone", 1)
                 },
                 (materials) => Weapons.Melee.CreateDagger(materials[0], materials[1])
@@ -19,7 +19,7 @@ public class WeaponSmithPage : WorkshopPage
             new CraftingOption(
                 "Shortsword",
                 new List<(List<string>, string, int)> {
-                    (new List<string> { "smithing", "metal" }, "ingot", 4),
+                    (new List<string> { "smithing metal" }, "ingot", 4),
                     (new List<string> { "bone" }, "bone", 2)
                 },
                 (materials) => Weapons.Melee.CreateDagger(materials[0], materials[1])

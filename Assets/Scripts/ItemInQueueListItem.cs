@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class ItemInQueueListItem : MonoBehaviour
 {
-    public TMP_Text itemName;
-    public TMP_Text itemPercentComplete;
-    public ItemInQueue itemInQueue;
-    public TMP_Dropdown crafterDropdown;
-    public List<PlayerCharacter> crafterList;
-    public Button collectButton;
+    public TMP_Text itemName = null!;
+    public TMP_Text itemPercentComplete = null!;
+    public ItemInQueue itemInQueue = null!;
+    public TMP_Dropdown crafterDropdown = null!;
+    public List<PlayerCharacter> crafterList = null!;
+    public Button collectButton = null!;
     public float percentComplete = 0f;
 
     public const string NEXT_AVAILABLE_TEXT = "Next Available";

@@ -1,20 +1,19 @@
+#nullable enable
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
-    CanvasGroup canvasGroup;
-    RectTransform rectTransform;
-    Transform originalParent;
-    public TextMeshProUGUI itemName;
-    public TextMeshProUGUI itemQuantity;
+    CanvasGroup canvasGroup = null!;
+    RectTransform rectTransform = null!;
+    Transform originalParent = null!;
+    public TextMeshProUGUI itemName = null!;
+    public TextMeshProUGUI itemQuantity = null!;
     int originalSiblingIndex;
-#nullable enable
     Item? item;
     public InventorySource? source;
     public GameObject? copy;
-#nullable disable
 
     private void Awake()
     {

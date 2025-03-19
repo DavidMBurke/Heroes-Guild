@@ -10,12 +10,12 @@ using UnityEngine.UI;
 /// </summary>
 public class CharacterForHirePanel : MonoBehaviour
 {
-    private List<TextMeshProUGUI> tmps;
-    private TextMeshProUGUI column1;
-    private TextMeshProUGUI column2;
-    public PlayerCharacter character;
-    public Button characterMenuButton;
-    public CharacterInfoPanel characterInfoPanel;
+    private List<TextMeshProUGUI> tmps = null!;
+    private TextMeshProUGUI column1 = null!;
+    private TextMeshProUGUI column2 = null!;
+    public PlayerCharacter character = null!;
+    public Button characterMenuButton = null!;
+    public CharacterInfoPanel characterInfoPanel = null!;
 
 
     void Start()

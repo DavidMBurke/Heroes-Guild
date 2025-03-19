@@ -10,17 +10,17 @@ using UnityEngine.UI;
 
 public class StartQuestPanel : MonoBehaviour
 {
-    public GameObject characterList;
-    public GameObject characterSelection;
-    public GameObject characterSelectionPanel;
-    public GameObject characterInfo;
-    public GameObject characterListItemPrefab;
-    public CharacterSlot[] characterSlots;
+    public GameObject characterList = null!;
+    public GameObject characterSelection = null!;
+    public GameObject characterSelectionPanel = null!;
+    public GameObject characterInfo = null!;
+    public GameObject characterListItemPrefab = null!;
+    public CharacterSlot[] characterSlots = null!;
     public PlayerCharacter[] characters = new PlayerCharacter[6];
     public int selectedIndex;
-    public PlayerCharacter selectedCharacter;
-    private TextMeshProUGUI column1;
-    private TextMeshProUGUI column2;
+    public PlayerCharacter selectedCharacter = null!;
+    private TextMeshProUGUI column1 = null!;
+    private TextMeshProUGUI column2 = null!;
 
     private void Start()
     {

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class HirePage : MonoBehaviour
 {
-    public CharacterForHirePanel panel;
-    public GameObject characterListItemPrefab;
-    public GameObject characterList;
-    public GameObject hireButton;
-    private PlayerCharacter selectedCharacter;
-    private GuildManager gm;
+    public CharacterForHirePanel panel = null!;
+    public GameObject characterListItemPrefab = null!;
+    public GameObject characterList = null!;
+    public GameObject hireButton = null!;
+    private PlayerCharacter selectedCharacter = null!;
+    private GuildManager gm = null!;
 
     public void Start()
     {

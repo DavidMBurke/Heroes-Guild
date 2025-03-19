@@ -3,11 +3,11 @@ using UnityEngine.UI;
 
 public class EmployeesPage : MonoBehaviour
 {
-    public CharacterForHirePanel panel;
-    public GameObject characterListItemPrefab;
-    public GameObject characterListObject;
-    private PlayerCharacter selectedCharacter;
-    private GuildManager gm;
+    public CharacterForHirePanel panel = null!;
+    public GameObject characterListItemPrefab = null!;
+    public GameObject characterListObject = null!;
+    private PlayerCharacter selectedCharacter = null!;
+    private GuildManager gm = null!;
 
     public void Start()
     {

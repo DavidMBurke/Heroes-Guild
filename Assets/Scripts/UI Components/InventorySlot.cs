@@ -9,9 +9,9 @@ using UnityEngine.UI;
 /// </summary>
 public class InventorySlot : MonoBehaviour
 {
-    public Interactable interactable;
-    public Image image;
-    private Being being;
+    public Interactable interactable = null!;
+    public Image image = null!;
+    private Being being = null!;
 
     /// <summary>
     /// Identify Image component

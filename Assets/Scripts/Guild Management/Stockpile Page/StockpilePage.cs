@@ -1,23 +1,20 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class StockpilePage : MonoBehaviour
 {
-    public GameObject itemList;
-    public GameObject itemListItemPrefab;
-    public Item selectedItem;
-    public TMP_InputField inputField;
+    public GameObject itemList = null!;
+    public GameObject itemListItemPrefab = null!;
+    public Item selectedItem = null!;
+    public TMP_InputField inputField = null!;
     public bool searchItemsByName = true;
     public bool searchItemsByTag = true;
-    public GameObject searchByNameToggle;
-    public GameObject searchByTagToggle;
-    public ItemDisplayPanel itemDisplayPanel;
+    public GameObject searchByNameToggle = null!;
+    public GameObject searchByTagToggle = null!;
+    public ItemDisplayPanel itemDisplayPanel = null!;
 
     private void OnEnable()
     {
@@ -44,6 +41,7 @@ public class StockpilePage : MonoBehaviour
         {
             items = GuildManager.instance.stockpile.Where(i => CheckNameFit(i, inputField.text, searchItemsByName, searchItemsByTag)).ToList();
         }
+        items = items.OrderBy(i => i.itemName).ThenBy(i => i.cost).ToList();
         foreach (Item item in items)
         {
             ItemListItem itemListItem = Instantiate(itemListItemPrefab, itemList.transform).GetComponent<ItemListItem>();

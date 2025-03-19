@@ -31,7 +31,7 @@ public class Fabrics
 
     public static List<Item> Threads = new List<Item>
     {
-        new Item("Basic Thread", 10, multiplier: 1f, tags: new List<string> { "thread" }),
+        new Item("Basic Thread", 10, multiplier: 1f, tags: new List<string> { "thread", "basic thread" }),
         new Item("Brass-Imbued Thread", 50, multiplier: 1.25f, tags: new List<string> { "thread" }),
         new Item("Silver-Imbued Thread", 500, multiplier: 1.75f, tags: new List<string> { "thread" }),
         new Item("Gold-Imbued Thread", 5000, multiplier: 2.5f, tags: new List<string> { "thread" }),
@@ -51,10 +51,10 @@ public class Fabrics
 
     public static Item CreateThread(Item plantFiber)
     {
-        return new Item("Basic Thread", 10, multiplier: 1f, tags: new List<string> { "thread" });
+        return new Item("Basic Thread", 10, multiplier: 1f, tags: new List<string> { "thread", "basic thread" });
 
     }
-    public static Item CreateImbuedThread(Item thread, Item metal)
+    public static Item? CreateImbuedThread(Item thread, Item metal)
     {
         string metalName = metal.itemName.Replace(" Ingot", "");
         string threadName = $"{metalName}-Imbued Thread";

@@ -8,11 +8,11 @@ using UnityEngine;
 /// </summary>
 public class TurnOrderBeingDisplay : MonoBehaviour
 {
-    private Being being;
-    private TextMeshProUGUI characterName;
-    private List<TextMeshProUGUI> textComponents;
-    private HealthBar healthBar;
-    private GameObject turnIndicator;
+    private Being being = null!;
+    private TextMeshProUGUI characterName = null!;
+    private List<TextMeshProUGUI> textComponents = null!;
+    private HealthBar healthBar = null!;
+    private GameObject turnIndicator = null!;
 
 
     private void Start()

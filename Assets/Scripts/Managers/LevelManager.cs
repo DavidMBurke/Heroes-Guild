@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager instance;
-    public MapGenerator mapGenerator;
-    private PartyManager partyManager;
-    public List<Enemy> enemies;
+    public static LevelManager instance = null!;
+    public MapGenerator mapGenerator = null!;
+    private PartyManager partyManager = null!;
+    public List<Enemy> enemies = null!;
     [Range(0, 6)]
     public int partyCount;
 

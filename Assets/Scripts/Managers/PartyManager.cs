@@ -8,8 +8,8 @@ using UnityEngine;
 /// Note: Will be populated eventually with inter-party interaction states and logic
 public class PartyManager : MonoBehaviour
 {
-    public GameObject playerCharacterPrefab;
-    public static PartyManager instance;
+    public GameObject playerCharacterPrefab = null!;
+    public static PartyManager instance = null!;
     public PlayerCharacter[] partyMembers = new PlayerCharacter[6];
     public List<PlayerCharacter> movementGroup = new List<PlayerCharacter>();
 

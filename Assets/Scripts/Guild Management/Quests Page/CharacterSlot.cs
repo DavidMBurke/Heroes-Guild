@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public class CharacterSlot : MonoBehaviour
 {
-    public PlayerCharacter player;
-    public TextMeshProUGUI playerName;
-    public TextMeshProUGUI playerLevel;
-    public TextMeshProUGUI playerRace;
-    public TextMeshProUGUI playerClass;
-    public Button removePlayerButton;
+    public PlayerCharacter player = null!;
+    public TextMeshProUGUI playerName = null!;
+    public TextMeshProUGUI playerLevel = null!;
+    public TextMeshProUGUI playerRace = null!;
+    public TextMeshProUGUI playerClass = null!;
+    public Button removePlayerButton = null!;
 
     private void Start()
     {

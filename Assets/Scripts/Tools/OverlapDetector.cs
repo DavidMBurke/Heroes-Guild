@@ -9,7 +9,7 @@ public class OverlapDetector : MonoBehaviour
     /// <summary>
     /// List of overlapping beings
     /// </summary>
-    private List<Being> beingsList;
+    private List<Being> beingsList = null!;
     
     /// <summary>
     /// Update beings list

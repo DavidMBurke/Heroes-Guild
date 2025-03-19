@@ -52,7 +52,6 @@ public class MonsterParts
 
     public static List<Item> MiscellaneousParts = new List<Item>
     {
-        new Item("Plant Fiber", 2, tags: new List<string> {"component"}),
         new Item("Mycellium Clump", 2, tags: new List<string> {"component"}),
         new Item("Arthropod Blood", 2, tags: new List<string> {"component"}),
         new Item("Gigantopillar Silk", 2, tags: new List<string> {"component"}),

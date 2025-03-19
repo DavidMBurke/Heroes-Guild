@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class CharacterInfoPanel : MonoBehaviour
 {
     List<InventoryGridItemUIElement> inventoryGridItems = new();
-    public PlayerCharacter character;
-    public Button playerInventoryButton;
-    public Button guildInventoryButton;
-    public GameObject inventoryGridItemPrefab;
-    public Transform inventoryGrid;
-    public List<EquipmentSlotUIElement> equipmentSlotUIElements;
-    public static CharacterInfoPanel instance;
+    public PlayerCharacter character = null!;
+    public Button playerInventoryButton = null!;
+    public Button guildInventoryButton = null!;
+    public GameObject inventoryGridItemPrefab = null!;
+    public Transform inventoryGrid = null!;
+    public List<EquipmentSlotUIElement> equipmentSlotUIElements = null!;
+    public static CharacterInfoPanel instance = null!;
     InventorySource currentSource;
 
     private void Awake()

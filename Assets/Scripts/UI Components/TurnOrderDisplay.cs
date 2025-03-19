@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TurnOrderDisplay : MonoBehaviour
 {
-    ActionManager actionManager;
-    List<TurnOrderBeingDisplay> beingDisplays;
+    ActionManager actionManager = null!;
+    List<TurnOrderBeingDisplay> beingDisplays = null!;
     void Start()
     {
         actionManager = ActionManager.instance;

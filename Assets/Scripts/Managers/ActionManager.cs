@@ -7,15 +7,15 @@ using UnityEngine;
 /// </summary>
 public class ActionManager : MonoBehaviour
 {
-    public static ActionManager instance;
-    public List<Being> beings;
-    public Being currentBeing;
-    public CameraController cameraController;
+    public static ActionManager instance = null!;
+    public List<Being> beings = null!;
+    public Being currentBeing = null!;
+    public CameraController cameraController = null!;
     int turnIndex = 0;
-    PartyManager partyManager;
+    PartyManager partyManager = null!;
 
     public delegate void PlayerSelected(PlayerCharacter newPlayer);
-    public event PlayerSelected OnPlayerSelected;
+    public event PlayerSelected OnPlayerSelected = null!;
 
     public enum ActionModes
     {

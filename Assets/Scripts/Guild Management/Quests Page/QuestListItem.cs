@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class QuestListItem : MonoBehaviour
 {
-    public Quest quest;
-    public TextMeshProUGUI questName;
-    public TextMeshProUGUI questLocation;
-    public TextMeshProUGUI questLevel;
+    public Quest quest = null!;
+    public TextMeshProUGUI questName = null!;
+    public TextMeshProUGUI questLocation = null!;
+    public TextMeshProUGUI questLevel = null!;
 
     private void Start()
     {

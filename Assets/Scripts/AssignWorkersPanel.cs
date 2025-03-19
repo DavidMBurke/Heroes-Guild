@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class AssignWorkersPanel : MonoBehaviour
 {
-    GuildManager gm;
-    public WorkshopPage workshopPage;
+    GuildManager gm = null!;
+    public WorkshopPage workshopPage = null!;
 
-    public GameObject characterList;
-    public GameObject characterListItemPrefab;
-    public GameObject assignCharacterButton;
-    public GameObject unassignCharacterButton;
-    public Button closeButton;
+    public GameObject characterList = null!;
+    public GameObject characterListItemPrefab = null!;
+    public GameObject assignCharacterButton = null!;
+    public GameObject unassignCharacterButton = null!;
+    public Button closeButton = null!;
 
     private void Awake()
     {

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +13,6 @@ public class Item
     public bool canBePickedUp;
     public float weight = 0;
 
-    [System.NonSerialized]
     public Sprite sprite;
 
     // crafting
@@ -34,7 +34,7 @@ public class Item
     public List<string> tags;
 
 
-    public Item(string itemName = "", int cost = 0, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum> equipSlots = null, ItemBaseStats baseStats = null, List<Effect> effects = null, List<string> tags = null, Dictionary<string, float> skillBonuses = null, Dictionary<string, float> skillMultipliers = null, string description = "")
+    public Item(string itemName = "", int cost = 0, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum>? equipSlots = null, ItemBaseStats? baseStats = null, List<Effect>? effects = null, List<string>? tags = null, Dictionary<string, float>? skillBonuses = null, Dictionary<string, float>? skillMultipliers = null, string description = "", List<Item>? craftingIngredients = null, Sprite? sprite = null)
     {
         this.itemName = itemName;
         this.cost = cost;
@@ -47,38 +47,42 @@ public class Item
         this.skillBonuses = skillBonuses ?? new();
         this.skillMultipliers = skillMultipliers ?? new();
         this.description = description;
+        this.craftingIngredients = craftingIngredients ?? new List<Item>();
+        if (sprite != null)
+        {
+            this.sprite = sprite;
+        } else
+        {
+            this.sprite = Resources.Load<Sprite>("Sprites/GenericItem");
+        }
     }
 
     public Item Clone()
     {
         return new Item(
-            itemName,
-            cost,
-            multiplier,
-            equippable,
-            new List<EquipmentSlots.Enum>(equipSlots),
-            baseStats.Clone(),
-            new List<Effect>(effects),
-            new List<string>(tags),
-            new Dictionary<string, float>(skillBonuses),
-            new Dictionary<string, float>(skillMultipliers),
-            description
+            itemName: itemName,
+            cost: cost,
+            multiplier: multiplier,
+            equippable: equippable,
+            equipSlots: new List<EquipmentSlots.Enum>(equipSlots),
+            baseStats: baseStats.Clone(),
+            effects: new List<Effect>(effects),
+            tags: new List<string>(tags),
+            skillBonuses: new Dictionary<string, float>(skillBonuses),
+            skillMultipliers: new Dictionary<string, float>(skillMultipliers),
+            description: description,
+            craftingIngredients: craftingIngredients,
+            sprite: sprite
             );
     }
 
     public void AddToInventory(List<Item> inventory, int amount)
     {
-        Item inventoryItem = inventory.FirstOrDefault(i => i.itemName == itemName);
-        if (inventoryItem != null)
-        {
-            inventoryItem.quantity += amount;
-            return;
-        }
-
-        Item existingItem = inventory.FirstOrDefault(i => i.itemName == itemName);
+        Item existingItem = inventory.FirstOrDefault(i => i.itemName == itemName && i.description == description);
         if (existingItem != null)
         {
             existingItem.quantity += amount;
+            return;
         }
         else
         {

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class JobAssignmentCharacterListItem : MonoBehaviour
 {
-    public PlayerCharacter character;
-    public TextMeshProUGUI text1;
-    public TextMeshProUGUI text2;
-    public TextMeshProUGUI text3;
+    public PlayerCharacter character = null!;
+    public TextMeshProUGUI text1 = null!;
+    public TextMeshProUGUI text2 = null!;
+    public TextMeshProUGUI text3 = null!;
 
     public void SetText(string text1 = "", string text2 = "", string text3 = "")
     {

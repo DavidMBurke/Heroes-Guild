@@ -8,15 +8,15 @@ using UnityEngine;
 /// </summary>
 public class CharacterDisplay : MonoBehaviour
 {
-    public PartyManager partyManager;
+    public PartyManager partyManager = null!;
     public int partyIndex;
-    private PlayerCharacter character;
-    private TextMeshProUGUI characterName;
-    private TextMeshProUGUI actionPoints;
-    private List<TextMeshProUGUI> textComponents;
-    private GameObject actionPointsObject;
-    private HealthBar healthBar;
-    private ActionManager actionManager;
+    private PlayerCharacter character = null!;
+    private TextMeshProUGUI characterName = null!;
+    private TextMeshProUGUI actionPoints = null!;
+    private List<TextMeshProUGUI> textComponents = null!;
+    private GameObject actionPointsObject = null!;
+    private HealthBar healthBar = null!;
+    private ActionManager actionManager = null!;
     
     private void Start()
     {

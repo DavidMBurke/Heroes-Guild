@@ -11,10 +11,10 @@ using Unity.AI.Navigation;
 /// </summary>
 public class MapGenerator : MonoBehaviour
 {
-    public GroundTile tilePrefab;
-    public Enemy enemyPrefab;
-    public List<GroundTile> tileMap;
-    public NavMeshSurface navMeshSurface;
+    public GroundTile tilePrefab = null!;
+    public Enemy enemyPrefab = null!;
+    public List<GroundTile> tileMap = null!;
+    public NavMeshSurface navMeshSurface = null!;
     public int xCount = 10;
     public int zCount = 10;
     private Vector3 tileSize;

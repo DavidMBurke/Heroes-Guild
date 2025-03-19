@@ -1,20 +1,25 @@
-using System.Collections;
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CraftingMaterialSlot : MonoBehaviour
 {
     public Item? item;
-    public TextMeshProUGUI itemName;
-    public TextMeshProUGUI itemType;
-    public Sprite image;
+    public TextMeshProUGUI itemName = null!;
+    public TextMeshProUGUI itemType = null!;
+    public Image image = null!;
     
     public void SetItem(Item? item = null)
     {
         this.item = item;
-        itemName.text = item?.itemName?? "";
+        if (item == null) {
+            return;
+        }
+        itemName.text = item.itemName;
+        image.sprite = item.sprite;
     }
 
     public bool CheckCorrectItemInSlot(List<string> tags)

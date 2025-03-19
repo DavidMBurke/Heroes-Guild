@@ -59,8 +59,8 @@ public class TailorPage : WorkshopPage
             new CraftingOption(
                 "Imbued Thread",
                 new List<(List<string>, string, int)> {
-                    (new List<string> { "thread" }, "thread", 5),
-                    (new List<string> { "metal" }, "metal ingot", 1)
+                    (new List<string> { "basic thread" }, "thread", 5),
+                    (new List<string> { "fine metal" }, "ingot", 1)
                 },
                 (materials) => Fabrics.CreateImbuedThread(materials[0], materials[1])
             ),

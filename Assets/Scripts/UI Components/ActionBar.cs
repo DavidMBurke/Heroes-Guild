@@ -9,12 +9,12 @@ using UnityEngine.UI;
 /// </summary>
 public class ActionBar : MonoBehaviour
 {
-    public Button endTurnButton; // - 
-    public Button moveButton;     // | These buttons will have fixed positions on the action bar
-    public Button endMoveButton;  // |
+    public Button endTurnButton = null!;
+    public Button moveButton = null!;
+    public Button endMoveButton = null!;
     private List<Button> playerActionButtons = new List<Button>();
-    public ActionButtons actionButtons;
-    public Button buttonPrefab;
+    public ActionButtons actionButtons = null!;
+    public Button buttonPrefab = null!;
 
     private void Start()
     {

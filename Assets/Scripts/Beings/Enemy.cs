@@ -1,20 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-/// <summary>
-/// Enemy NPC
-/// </summary>
 public class Enemy : Being
 {
     public float enemyTurnTime = 3;
     public int group;
     public bool isAwareOfPlayers = false;
-    public GameObject sightSphere;
+    public GameObject sightSphere = null!;
     List<Being> overlappingBeings = new List<Being>();
-    OverlapDetector detector;
+    OverlapDetector detector = null!;
 
     new void Start()
     {

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 
 public class Class
@@ -29,17 +30,17 @@ public class Class
     Class(
         string name, 
         string description, 
-        Dictionary<string, int> combatSkillModifiers = null,
-        Dictionary<string, int> nonCombatSkillModifiers = null,
-        Dictionary<string, int> attributeModifiers = null,
-        Dictionary<string, int> affinityModifiers = null)
+        Dictionary<string, int>? combatSkillModifiers = null,
+        Dictionary<string, int>? nonCombatSkillModifiers = null,
+        Dictionary<string, int>? attributeModifiers = null,
+        Dictionary<string, int>? affinityModifiers = null)
     {
         this.name = name;
         this.description = description;
-        combatSkillMods = new CombatSkills();
-        nonCombatSkillMods = new NonCombatSkills();
-        attributeMods = new Attributes();
-        affinityMods = new Affinities();
+        combatSkillMods ??= new CombatSkills();
+        nonCombatSkillMods ??= new NonCombatSkills();
+        attributeMods ??= new Attributes();
+        affinityMods ??= new Affinities();
 
 
 
