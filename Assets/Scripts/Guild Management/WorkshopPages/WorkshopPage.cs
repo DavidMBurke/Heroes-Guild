@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -7,8 +8,6 @@ using UnityEngine.UI;
 public abstract class WorkshopPage : MonoBehaviour
 {
     public PlayerCharacter selectedCharacter = null!;
-    private GuildManager gm = null!;
-
     public CraftingQueue craftingQueue = null!;
     AssignWorkersPanel assignWorkersPanel = null!;
     CraftingPanel craftingPanel = null!;
@@ -21,7 +20,6 @@ public abstract class WorkshopPage : MonoBehaviour
 
     private void Awake()
     {
-        gm = GuildManager.instance;
         craftingQueue = GetComponentInChildren<CraftingQueue>();
         assignWorkersPanel = GetComponentInChildren<AssignWorkersPanel>();
         assignWorkersPanel.workshopPage = this;
@@ -62,9 +60,7 @@ public abstract class WorkshopPage : MonoBehaviour
     {
         foreach (PlayerCharacter crafter in GetCrafters())
         {
-#nullable enable
             ItemInQueue? queuedItem = craftingQueue.itemQueue.FirstOrDefault(i => i.assignedCrafter == crafter);
-#nullable disable
             if (queuedItem == null)
             {
                 queuedItem = craftingQueue.itemQueue.FirstOrDefault(i => i.assignedCrafter == null);
@@ -114,7 +110,7 @@ public abstract class WorkshopPage : MonoBehaviour
         }
     }
 
-    void ToggleCraftingPanel(CraftingOption option)
+    public void ToggleCraftingPanel(CraftingOption option)
     {
         if (craftingPanel.gameObject.activeInHierarchy && craftingPanel.selectedCraftingOption == option)
         {

@@ -10,6 +10,7 @@ public class ItemListItem : MonoBehaviour
     private Item item = null!;
     private TextMeshProUGUI itemName = null!;
     private TextMeshProUGUI quantity = null!;
+    public Image image = null!;
     public Button selectButton = null!;
 
 
@@ -35,6 +36,7 @@ public class ItemListItem : MonoBehaviour
         }
         itemName.text = item.itemName;
         quantity.text = item.quantity.ToString();
+        image.sprite = item.sprite;
     }
 
     public Item GetItem()

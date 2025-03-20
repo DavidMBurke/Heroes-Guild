@@ -143,4 +143,9 @@ public class CraftingPanel : MonoBehaviour
             itemListItem.selectButton.onClick.AddListener(() => itemSlot.SetItem(item));
         }
     }
+
+    public void CloseCraftingPanel()
+    {
+        workshopPage.ToggleCraftingPanel(selectedCraftingOption);
+    }
 }
