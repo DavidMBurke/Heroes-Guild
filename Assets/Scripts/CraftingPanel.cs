@@ -26,9 +26,10 @@ public class CraftingPanel : MonoBehaviour
     {
         gm = GuildManager.instance;
         materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
+        SelectCraftingOption(selectedCraftingOption);
     }
 
-    public void InitializeCraftingOptions(List<CraftingOption> craftingOptions, List<PlayerCharacter> crafterList)
+    public void InitializeCraftingOptions(List<PlayerCharacter> crafterList)
     {
         crafters = crafterList;
     }
@@ -42,15 +43,8 @@ public class CraftingPanel : MonoBehaviour
 
     public void SetupMaterialSlots(CraftingOption option)
     {
-        if (materialSlots == null || materialSlots.Count == 0)
-        {
-            materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
-        }
-
-
         for (int i = 0; i < materialSlots.Count(); i++)
         {
-            Debug.Log(option.requiredMaterials.Count);
             if (i < option.requiredMaterials.Count)
             {
                 materialSlots[i].gameObject.SetActive(true);

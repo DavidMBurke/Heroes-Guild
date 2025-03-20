@@ -33,7 +33,7 @@ public abstract class WorkshopPage : MonoBehaviour
 
     private void Start()
     {
-        craftingPanel.InitializeCraftingOptions(GetCraftingOptions(), GetCrafters());
+        craftingPanel.InitializeCraftingOptions(GetCrafters());
         UpdateWorkStationsAvailabilityText();
     }
 
