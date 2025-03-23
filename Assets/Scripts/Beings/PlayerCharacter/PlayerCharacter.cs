@@ -103,13 +103,20 @@ public class PlayerCharacter : Being
         OnInventoryUpdated?.Invoke();
     }
 
-    public void RemoveFromInventory(Item item)
+    public void RemoveFromInventory(Item item, int quantity = 1)
     {
-        if (inventory.Remove(item))
+        Item inventoryItem = inventory.First(i => i.itemName == item.itemName && i.description == item.description);
+        if (inventoryItem == null)
         {
-            OnInventoryUpdated?.Invoke();
+            Debug.LogWarning("Attempted to remove item not in inventory");
             return;
         }
+        inventoryItem.quantity -= quantity;
+        if (inventoryItem.quantity <= 0)
+        {
+            inventory.Remove(inventoryItem);
+        }
+        OnInventoryUpdated?.Invoke();
     }
 
     public static void RollStat(ref int stat, int minVal, int diceCount, int diceMin, int diceMax)

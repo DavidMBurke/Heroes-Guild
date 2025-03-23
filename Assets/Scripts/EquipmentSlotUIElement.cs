@@ -17,11 +17,12 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
     {
         if (eventData.pointerDrag.TryGetComponent(out InventoryGridItemUIElement draggedItem))
         {
-            Item newItem = draggedItem.GetItem();
+            Item newItem = draggedItem.GetItem().Clone();
             if (newItem == null || !newItem.equipSlots.Any(es => es == equipmentSlotEnum))
             {
                 return;
             }
+            newItem.quantity = 1;
             PlayerCharacter character = CharacterInfoPanel.instance.character;
             EquipmentSlot slot = character.equipmentSlots.equipmentSlots[equipmentSlotEnum];
             Item? replacedItem = slot.item;
@@ -42,11 +43,11 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
             {
                 if (draggedItem.source == InventorySource.Player)
                 {
-                    character.AddToInventory(slot.item);
+                    character.AddToInventory(replacedItem);
                 }
                 if (draggedItem.source == InventorySource.Guild)
                 {
-                    GuildManager.instance.AddToStockpile(slot.item);
+                    GuildManager.instance.AddToStockpile(replacedItem);
                 }
             }
 

@@ -101,12 +101,12 @@ public class GuildManager : MonoBehaviour
 
     }
 
-    public void RemoveFromStockpile(Item item)
+    public void RemoveFromStockpile(Item item, int quantity = 1)
     {
         Item stockpileItem = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
         if (stockpileItem != null)
         {
-            stockpileItem.quantity -= item.quantity;
+            stockpileItem.quantity -= quantity;
             if (stockpileItem.quantity <= 0)
             {
                 stockpile.Remove(stockpileItem);
