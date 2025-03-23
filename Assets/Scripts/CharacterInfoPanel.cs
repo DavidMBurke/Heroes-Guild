@@ -14,6 +14,7 @@ public class CharacterInfoPanel : MonoBehaviour
     public List<EquipmentSlotUIElement> equipmentSlotUIElements = null!;
     public static CharacterInfoPanel instance = null!;
     InventorySource currentSource;
+    EquipmentSlots.Enum? activeFilter = null;
 
     private void Awake()
     {
@@ -47,30 +48,22 @@ public class CharacterInfoPanel : MonoBehaviour
 
     public void playerInventoryButtonClickHandler()
     {
-        ResetListItems();
         currentSource = InventorySource.Player;
-        SetNewListItems(character.inventory, InventorySource.Player);
+        UpdateInventoryList();
     }
 
     public void guildInventoryButtonClickHandler()
     {
-        ResetListItems();
         currentSource = InventorySource.Guild;
-        SetNewListItems(GuildManager.instance.stockpile, InventorySource.Guild);
+        UpdateInventoryList();
     }
 
     public void equipmentSlotClickHandler(EquipmentSlots.Enum slotEnum)
     {
-        List<Item> items = new List<Item>();
-        if (currentSource == InventorySource.Player)
-        {
-            items = character.inventory;
-        }
-        if (currentSource == InventorySource.Guild) {
-            items = GuildManager.instance.stockpile;
-        }
-        SetNewListItems(items.Where(i => i.equipSlots.Any(s => s == slotEnum)).ToList(), currentSource);
+        activeFilter = slotEnum;
+        UpdateInventoryList();
     }
+
 
     void ResetListItems()
     {
@@ -79,6 +72,26 @@ public class CharacterInfoPanel : MonoBehaviour
             Destroy(child.gameObject);
         }
         inventoryGridItems.Clear();
+    }
+
+    void UpdateInventoryList()
+    {
+        List<Item> items = new();
+        if (currentSource == InventorySource.Player)
+        {
+            items = character.inventory;
+        } 
+        else
+        {
+            items = GuildManager.instance.stockpile;
+        }
+
+        if (activeFilter.HasValue)
+        {
+            items = items.Where(i => i.equipSlots.Any(s => s == activeFilter.Value)).ToList();
+        }
+
+        SetNewListItems(items, currentSource);
     }
 
     void SetNewListItems(List<Item> itemList, InventorySource source)
