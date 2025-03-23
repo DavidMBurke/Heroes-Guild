@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,7 @@ using UnityEngine.EventSystems;
 public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
 {
     public EquipmentSlots.Enum equipmentSlotEnum;
-#nullable enable
     public Item? slotItem;
-#nullable disable
     public TextMeshProUGUI itemName;
 
 
@@ -25,16 +24,14 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
             }
             PlayerCharacter character = CharacterInfoPanel.instance.character;
             EquipmentSlot slot = character.equipmentSlots.equipmentSlots[equipmentSlotEnum];
-#nullable enable
             Item? replacedItem = slot.item;
-#nullable disable
             if (draggedItem.source == InventorySource.Player)
             {
                 character.RemoveFromInventory(newItem);
             }
             else if (draggedItem.source == InventorySource.Guild)
             {
-                GuildManager.instance.stockpile.Remove(newItem);
+                GuildManager.instance.RemoveFromStockpile(newItem);
             }
             else
             {
@@ -49,7 +46,7 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
                 }
                 if (draggedItem.source == InventorySource.Guild)
                 {
-                    GuildManager.instance.stockpile.Add(slot.item);
+                    GuildManager.instance.AddToStockpile(slot.item);
                 }
             }
 

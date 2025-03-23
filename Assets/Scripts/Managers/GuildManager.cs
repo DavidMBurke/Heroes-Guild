@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
@@ -86,9 +87,35 @@ public class GuildManager : MonoBehaviour
         coin -= amount;
     }
 
+    public void AddToStockpile(Item item)
+    {
+        Item stockPileItem = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
+        if (stockPileItem != null)
+        {
+            stockPileItem.quantity += item.quantity;
+        }
+        else
+        {
+            stockpile.Add(item);
+        }
+
+    }
+
     public void RemoveFromStockpile(Item item)
     {
-
+        Item stockpileItem = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
+        if (stockpileItem != null)
+        {
+            stockpileItem.quantity -= item.quantity;
+            if (stockpileItem.quantity <= 0)
+            {
+                stockpile.Remove(stockpileItem);
+            }
+        } else
+        {
+            Debug.LogError($"Tried to remove {item.itemName} from stockpile but item was not found");
+        }
+        
     }
 
     public void GenerateCharactersForHire(int amount)
