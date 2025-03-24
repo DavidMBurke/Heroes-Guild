@@ -14,6 +14,7 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
     Item? item;
     public InventorySource? source;
     public GameObject? copy;
+    private GameObject placeholder = null!;
 
     private void Awake()
     {
@@ -23,10 +24,19 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (item == null) return;
+
         canvasGroup.alpha = .6f;
         canvasGroup.blocksRaycasts = false;
         originalParent = transform.parent;
         originalSiblingIndex = transform.GetSiblingIndex();
+
+        placeholder = new GameObject("Placeholder");
+        placeholder.transform.SetParent(originalParent);
+        placeholder.transform.SetSiblingIndex(originalSiblingIndex);
+        RectTransform placeholderRect = placeholder.AddComponent<RectTransform>();
+        placeholderRect.sizeDelta = rectTransform.sizeDelta;
+
         transform.SetParent(transform.root);
     }
 
@@ -43,6 +53,10 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
         {
             transform.SetParent(originalParent);
             transform.SetSiblingIndex(originalSiblingIndex);
+        }
+        if (placeholder != null)
+        {
+            Destroy(placeholder);
         }
     }
 
@@ -66,6 +80,29 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
             draggedItem.transform.SetParent(transform.parent);
             draggedItem.transform.SetSiblingIndex(targetIndex);
         }
+        else if (eventData.pointerDrag.TryGetComponent(out EquipmentSlotUIElement draggedSlot))
+        {
+            if (draggedSlot.slotItem == null) return;
+            PlayerCharacter character = CharacterInfoPanel.instance.character;
+            Item removedItem = draggedSlot.slotItem.Clone();
+            character.equipmentSlots.equipmentSlots[draggedSlot.equipmentSlotEnum].item = null;
+            draggedSlot.UpdateSlotItem(null);
+
+            if (CharacterInfoPanel.instance.currentSource == InventorySource.Player)
+            {
+                CharacterInfoPanel.instance.character.AddToInventory(removedItem);
+            }
+            else if (CharacterInfoPanel.instance.currentSource == InventorySource.Guild)
+            {
+                GuildManager.instance.AddToStockpile(removedItem);
+            }
+
+            InventoryGridItemUIElement newItem = Instantiate(CharacterInfoPanel.instance.inventoryGridItemPrefab, transform.parent)
+                .GetComponent<InventoryGridItemUIElement>();
+            newItem.SetItem(removedItem, CharacterInfoPanel.instance.currentSource);
+            newItem.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        }
+
     }
 }
 

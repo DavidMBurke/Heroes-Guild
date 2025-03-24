@@ -280,6 +280,7 @@ GameObject:
   - component: {fileID: 170782311624606637}
   - component: {fileID: 2216766009448476752}
   - component: {fileID: 3106080450429851588}
+  - component: {fileID: 6708618137151294533}
   m_Layer: 5
   m_Name: Equipment Slot UI Component
   m_TagString: Untagged
@@ -329,6 +330,7 @@ MonoBehaviour:
     quantity: 0
     canBePickedUp: 0
     weight: 0
+    sprite: {fileID: 0}
     multiplier: 0
     equippable: 0
     equipSlots: 
@@ -373,6 +375,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &6708618137151294533
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649854739570163291}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9070994879343753270
 GameObject:
   m_ObjectHideFlags: 0

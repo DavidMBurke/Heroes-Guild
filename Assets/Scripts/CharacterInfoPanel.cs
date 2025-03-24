@@ -13,7 +13,7 @@ public class CharacterInfoPanel : MonoBehaviour
     public Transform inventoryGrid = null!;
     public List<EquipmentSlotUIElement> equipmentSlotUIElements = null!;
     public static CharacterInfoPanel instance = null!;
-    InventorySource currentSource;
+    public InventorySource currentSource;
     EquipmentSlots.Enum? activeFilter = null;
 
     private void Awake()

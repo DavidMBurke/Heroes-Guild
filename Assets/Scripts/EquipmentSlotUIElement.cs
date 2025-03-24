@@ -1,17 +1,25 @@
 #nullable enable
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
+public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public EquipmentSlots.Enum equipmentSlotEnum;
     public Item? slotItem;
     public TextMeshProUGUI itemName;
+    private CanvasGroup canvasGroup = null!;
+    private RectTransform rectTransform = null!;
+    private GameObject draggedItemObject = null!;
+    private Transform originalParent = null!;
 
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+        canvasGroup = GetComponent<CanvasGroup>();
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -69,10 +77,57 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler
         }
     }
 
-    public void UpdateSlotItem(Item item)
+    public void UpdateSlotItem(Item? item)
     {
         slotItem = item;
         itemName.text = item?.itemName ?? "";
+        gameObject.SetActive(true);
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (slotItem == null) return;
+
+        canvasGroup.alpha = .6f;
+        canvasGroup.blocksRaycasts = false;
+
+        draggedItemObject = new GameObject("DraggedItem");
+        draggedItemObject.transform.SetParent(transform.root);
+        draggedItemObject.transform.SetAsLastSibling();
+
+        RectTransform draggedRect = draggedItemObject.AddComponent<RectTransform>();
+        draggedRect.sizeDelta = rectTransform.sizeDelta;
+        draggedRect.anchorMin = new Vector2(0.5f, 0.5f);
+        draggedRect.anchorMax = new Vector2(0.5f, 0.5f);
+        draggedRect.pivot = new Vector2(0.5f, 0.5f);
+
+        Image draggedImage = draggedItemObject.AddComponent<Image>();
+        draggedImage.sprite = GetComponent<Image>().sprite;
+        draggedImage.raycastTarget = false;
+
+        draggedItemObject.transform.position = Input.mousePosition;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (draggedItemObject == null) return;
+        draggedItemObject.transform.position = Input.mousePosition;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        canvasGroup.alpha = 1f;
+        canvasGroup.blocksRaycasts = true;
+
+        if (draggedItemObject != null)
+        {
+            Destroy(draggedItemObject);
+        }
+
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            UpdateSlotItem(slotItem);
+        }
     }
 
 }
