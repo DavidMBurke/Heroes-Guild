@@ -103,6 +103,14 @@ public class CharacterInfoPanel : MonoBehaviour
             inventoryGridItems.Add(gridItem);
             gridItem.SetItem(item, source);
         }
+        int slotsToFill = 6 - inventoryGridItems.Count() % 6;
+        Debug.Log(slotsToFill);
+        for (int i = 0; i < slotsToFill + 12; i++)
+        {
+            InventoryGridItemUIElement gridItem = Instantiate(inventoryGridItemPrefab, inventoryGrid).GetComponent<InventoryGridItemUIElement>();
+            inventoryGridItems.Add(gridItem);
+            gridItem.SetItem(null);
+        }
     }
 
     void MapEquipmentSlots()

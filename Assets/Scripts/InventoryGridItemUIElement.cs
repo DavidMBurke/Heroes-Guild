@@ -42,11 +42,13 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (item == null) return;
         rectTransform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (item == null) return;
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
         if (transform.parent == transform.root)
