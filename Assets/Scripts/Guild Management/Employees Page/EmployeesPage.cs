@@ -39,11 +39,16 @@ public class EmployeesPage : MonoBehaviour
                 SelectCharacter(character);
             });
             listItem.SetCharacter(character);
+            if (character == selectedCharacter)
+            {
+                listItem.SetHighlight();
+            }
         }
     }
     public void SelectCharacter(PlayerCharacter character)
     {
         selectedCharacter = character;
         panel.AssignCharacter(character);
+        ResetList();
     }
 }

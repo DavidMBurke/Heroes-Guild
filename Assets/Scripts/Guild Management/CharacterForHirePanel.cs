@@ -10,22 +10,13 @@ using UnityEngine.UI;
 /// </summary>
 public class CharacterForHirePanel : MonoBehaviour
 {
-    private List<TextMeshProUGUI> tmps = null!;
-    private TextMeshProUGUI column1 = null!;
-    private TextMeshProUGUI column2 = null!;
+    public TextMeshProUGUI column1 = null!;
+    public TextMeshProUGUI column2 = null!;
     public PlayerCharacter character = null!;
     public Button characterMenuButton = null!;
     public CharacterInfoPanel characterInfoPanel = null!;
 
-
-    void Start()
-    {
-        tmps = GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        column1 = tmps.First(t => t.name == "Column 1 Text");
-        column2 = tmps.First(t => t.name == "Column 2 Text");
-    }
-
-    void Update()
+    void UpdateText()
     {
         if (character == null)
         {
@@ -36,7 +27,7 @@ public class CharacterForHirePanel : MonoBehaviour
             characterMenuButton.onClick.AddListener(() => CharacterMenuButtonOnClickHandler());
             return;
         }
-        characterMenuButton.gameObject.SetActive(true);
+        //characterMenuButton.gameObject.SetActive(true);
         column1.text =
             $"{character.characterName} \n" +
             $"Race: {character.race.name} \n" +
@@ -86,6 +77,6 @@ public class CharacterForHirePanel : MonoBehaviour
     public void AssignCharacter(PlayerCharacter playerCharacter)
     {
         character = playerCharacter;
-
+        UpdateText();
     }
 }

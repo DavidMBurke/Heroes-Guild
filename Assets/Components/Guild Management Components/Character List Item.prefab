@@ -225,9 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449bb6a849a2bf54186588290e39bd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  playerName: {fileID: 0}
-  playerLevel: {fileID: 0}
+  background: {fileID: 4316243379792971733}
+  highlightColor: {r: 0, g: 0.91298866, b: 1, a: 1}
 --- !u!114 &2315691502858147294
 MonoBehaviour:
   m_ObjectHideFlags: 0

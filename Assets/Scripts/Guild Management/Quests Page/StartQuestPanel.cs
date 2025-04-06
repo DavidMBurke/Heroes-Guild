@@ -69,8 +69,12 @@ public class StartQuestPanel : MonoBehaviour
             CharacterListItem characterListItem = Instantiate(characterListItemPrefab, characterSelectionPanel.transform).GetComponent<CharacterListItem>();
             
             Button button = characterListItem.GetComponent<Button>();
-            button.onClick.AddListener(() => SelectCharacter(index, character));
+            button.onClick.AddListener(() => SelectCharacter(index, character, characterListItem));
             characterListItem.SetCharacter(character);
+            if (character == selectedCharacter)
+            {
+                characterListItem.SetHighlight();
+            }
         }
     }
 
@@ -89,10 +93,11 @@ public class StartQuestPanel : MonoBehaviour
         characterSelection.SetActive(false);
     }
 
-    public void SelectCharacter(int index, PlayerCharacter character)
+    public void SelectCharacter(int index, PlayerCharacter character, CharacterListItem characterListItem)
     {
         selectedIndex = index;
         selectedCharacter = character;
+        DisplayCharacterSelection(index);
     }
 
     public void RemoveCharacter(int index)

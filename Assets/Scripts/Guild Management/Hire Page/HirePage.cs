@@ -11,6 +11,9 @@ public class HirePage : MonoBehaviour
     public GameObject hireButton = null!;
     private PlayerCharacter selectedCharacter = null!;
     private GuildManager gm = null!;
+    public TextMeshProUGUI costToHire = null!;
+    private int hiringFeeMultiplier = 30; //multiplies by daily salary
+
 
     public void Start()
     {
@@ -37,30 +40,38 @@ public class HirePage : MonoBehaviour
                 SelectCharacter(character);
             });
             listItem.SetCharacter(character);
+            if (character == selectedCharacter)
+            {
+                listItem.SetHighlight();
+            }
         }
     }
 
     private void Update()
     {
         hireButton.SetActive(panel.character != null);
+        costToHire.gameObject.SetActive(panel.character != null);
     }
 
     public void SelectCharacter(PlayerCharacter character)
     {
         selectedCharacter = character;
         panel.AssignCharacter(character);
-        hireButton.GetComponentInChildren<TextMeshProUGUI>().text = $"Hire ({character.salary}/week)";
+        costToHire.text = $"Cost: {hiringFeeMultiplier * character.salary} (+{character.salary}/day)";
+        ResetList();
     }
 
     public void HireSelectedCharacter()
     {
-        if (gm.coin < selectedCharacter.salary)
+        if (gm.coin < (hiringFeeMultiplier * selectedCharacter.salary))
         {
             Debug.Log("Cannot afford");
             return;
         }
+        gm.coin -= (hiringFeeMultiplier * selectedCharacter.salary);
         gm.charactersForHire.Remove(selectedCharacter);
         gm.unassignedEmployees.Add(selectedCharacter);
         ResetList();
+        GuildManager.instance.CalculateDailyExpenses();
     }
 }

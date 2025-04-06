@@ -1,21 +1,18 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GuildManager : MonoBehaviour
 {
     public static GuildManager instance = null!;
     public int coin; //base currency in copper, to be displayed in broken down denominations (100 copper -> 1 silver, 100 silver -> 1 gold)
-    public List<PlayerCharacter> unassignedEmployees = null!;
+    public int dailyExpenses;
     public List<PlayerCharacter> charactersForHire = null!;
     public List<Quest> availableQuests = null!;
     public List<Item> stockpile = new List<Item>();
 
-    // Workshops
+    // Employees
+    public List<PlayerCharacter> unassignedEmployees = null!;
     public List<PlayerCharacter> jewelers = null!;
     public List<PlayerCharacter> armorSmiths = null!;
     public List<PlayerCharacter> weaponSmiths = null!;
@@ -26,6 +23,8 @@ public class GuildManager : MonoBehaviour
     public List<PlayerCharacter> arcanists = null!;
     public List<PlayerCharacter> alchemists = null!;
     public List<PlayerCharacter> cooks = null!;
+    Dictionary<string, List<PlayerCharacter>> workerGroups;
+
     public WorkshopPage jewelerPage = null!;
     public WorkshopPage armorSmithPage = null!;
     public WorkshopPage weaponSmithPage = null!;
@@ -36,6 +35,9 @@ public class GuildManager : MonoBehaviour
     public WorkshopPage arcanistPage = null!;
     public WorkshopPage alchemistPage = null!;
     public WorkshopPage cooksPage = null!;
+    
+
+
 
     // Time
     public float elapsedTime = 0;
@@ -62,6 +64,22 @@ public class GuildManager : MonoBehaviour
         availableQuests.Add(quest);
         timePerTick = 1;
         timeAdvancing = false;
+        coin = 10000;
+
+        workerGroups = new Dictionary<string, List<PlayerCharacter>> {
+            { "UnassignedEmployees", unassignedEmployees },
+            { "Jewelers", jewelers },
+            { "ArmorSmiths", armorSmiths },
+            { "WeaponSmiths", weaponSmiths },
+            { "LeatherWorkers", leatherWorkers },
+            { "Tailors", tailors },
+            { "Fletchers", fletchers },
+            { "Enchanters", enchanters },
+            { "Arcanists", arcanists },
+            { "Alchemists", alchemists },
+            { "Cooks", cooks }
+        };
+
     }
 
     private void Update()
@@ -111,7 +129,8 @@ public class GuildManager : MonoBehaviour
             {
                 stockpile.Remove(stockpileItem);
             }
-        } else
+        } 
+        else
         {
             Debug.LogError($"Tried to remove {item.itemName} from stockpile but item was not found");
         }
@@ -162,6 +181,7 @@ public class GuildManager : MonoBehaviour
         {
             hour -= 24;
             day += 1;
+            SubtractDailyExpenses();
         }
         if (day >= 30)
         {
@@ -173,6 +193,24 @@ public class GuildManager : MonoBehaviour
             season -= 4;
             year += 1;
         }
+    }
+
+    public void CalculateDailyExpenses()
+    {
+        int expenses = 0;
+        foreach (var group in workerGroups)
+        {
+            foreach (PlayerCharacter worker in group.Value)
+            {
+                expenses += worker.salary;
+            }
+        }
+        dailyExpenses = expenses;
+    }
+
+    private void SubtractDailyExpenses()
+    {
+        coin -= dailyExpenses;
     }
 
     public void SetTimePerTick(float timePerTick)

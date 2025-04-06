@@ -31,7 +31,7 @@ public class PlayerCharacter : Being
 
     public int levelAttained; // checked against being.level to prompt leveling up.
 
-    public int salary = 10; //coin per week
+    public int salary = 1; //coin per day
 
     public new List<Item> inventory
     {
@@ -159,6 +159,7 @@ public class PlayerCharacter : Being
         combatSkills = CombatSkills.RollBaseSkills(playerClass.combatSkillMods);
         nonCombatSkills = NonCombatSkills.RollBaseSkills(race.nonCombatSkillMods);
         level = CalculateCharacterLevel();
+        salary = level;
 
         /// vvv PLACEHOLDER GARBAGE TO MAKE THIS WORK ON FRONT END vvv
         /// This will be dynamically generated and stored in the future
@@ -230,7 +231,7 @@ public class PlayerCharacter : Being
         logText += $" totalLevelPoints: {totalLevelPoints}";
         int level = (int)(totalLevelPoints / pointsPerLevelUp);
         logText += $" level: {level}";
-        //Debug.Log(logText);
+        
         return level;
     }
 
