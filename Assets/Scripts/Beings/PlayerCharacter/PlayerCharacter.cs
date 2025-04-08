@@ -33,6 +33,8 @@ public class PlayerCharacter : Being
 
     public int salary = 1; //coin per day
 
+    public bool assignedToQuest;
+
     public new List<Item> inventory
     {
         get => _inventory;

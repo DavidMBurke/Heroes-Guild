@@ -27,7 +27,10 @@ public class CharacterForHirePanel : MonoBehaviour
             characterMenuButton.onClick.AddListener(() => CharacterMenuButtonOnClickHandler());
             return;
         }
-        //characterMenuButton.gameObject.SetActive(true);
+        if (characterInfoPanel != null)
+        {
+            characterMenuButton.gameObject.SetActive(true);
+        }
         column1.text =
             $"{character.characterName} \n" +
             $"Race: {character.race.name} \n" +

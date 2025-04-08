@@ -29,7 +29,7 @@ public class QuestPanel : MonoBehaviour
         description.text = quest.description;
     }
 
-    public void SelectQuest(Quest _quest)
+    public void SetQuest(Quest _quest)
     {
         quest = _quest;
     }

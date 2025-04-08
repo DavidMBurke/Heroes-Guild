@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class GuildManager : MonoBehaviour
     public int coin; //base currency in copper, to be displayed in broken down denominations (100 copper -> 1 silver, 100 silver -> 1 gold)
     public int dailyExpenses;
     public List<PlayerCharacter> charactersForHire = null!;
-    public List<Quest> availableQuests = null!;
+    public List<Quest> quests = null!;
     public List<Item> stockpile = new List<Item>();
 
     // Employees
@@ -36,9 +37,6 @@ public class GuildManager : MonoBehaviour
     public WorkshopPage alchemistPage = null!;
     public WorkshopPage cooksPage = null!;
     
-
-
-
     // Time
     public float elapsedTime = 0;
     public bool timeAdvancing;
@@ -52,16 +50,7 @@ public class GuildManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        GameObject questGameObject = Instantiate(new GameObject());
-        Quest quest = questGameObject.AddComponent<Quest>();
-        quest.name = "First Quest";
-        quest.questName = "First Quest";
-        quest.location = "Forest";
-        quest.level = 1;
-        quest.description = "Go aventure!";
-        quest.coinReward = 1000;
-        quest.xpReward = 1000;
-        availableQuests.Add(quest);
+        AddPlaceholderQuests();
         timePerTick = 1;
         timeAdvancing = false;
         coin = 10000;
@@ -80,6 +69,31 @@ public class GuildManager : MonoBehaviour
             { "Cooks", cooks }
         };
 
+    }
+
+    private void AddPlaceholderQuests()
+    {
+        GameObject questGameObject = Instantiate(new GameObject());
+        Quest quest = questGameObject.AddComponent<Quest>();
+        quest.name = "First Quest";
+        quest.questName = "First Quest";
+        quest.location = "Forest";
+        quest.level = 1;
+        quest.description = "Go aventure!";
+        quest.coinReward = 1000;
+        quest.xpReward = 1000;
+        quests.Add(quest);
+
+        GameObject questGameObject2 = Instantiate(new GameObject());
+        Quest quest2 = questGameObject2.AddComponent<Quest>();
+        quest2.name = "Placeholder Quest";
+        quest2.questName = "Placeholder Quest";
+        quest2.location = "Forest";
+        quest2.level = 2;
+        quest2.description = "Yada yada yada!";
+        quest2.coinReward = 1000;
+        quest2.xpReward = 1000;
+        quests.Add(quest2);
     }
 
     private void Update()
@@ -167,6 +181,10 @@ public class GuildManager : MonoBehaviour
         arcanistPage.Tick();
         alchemistPage.Tick();
         cooksPage.Tick();
+        foreach (Quest quest in quests)
+        {
+            quest.Tick();
+        }
     }
 
     private void IncrementTime()
@@ -221,6 +239,22 @@ public class GuildManager : MonoBehaviour
     public void SetTimeAdvancing(bool isAdvancing)
     {
         timeAdvancing = isAdvancing;
+    }
+
+    public void AdvanceToNextDay()
+    {
+        int timeout = 60 * 24;
+        int iteration = 0;
+        Tick();
+        while (!(hour == 6 && minute == 0))
+        {
+            iteration++;
+            if (iteration > timeout)
+            {
+                Debug.LogError("Skipped greater than 24 hours");
+            }
+            Tick();
+        }
     }
 
 }

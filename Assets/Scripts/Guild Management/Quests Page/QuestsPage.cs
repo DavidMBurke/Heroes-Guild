@@ -10,8 +10,9 @@ public class QuestsPage : MonoBehaviour
     public GameObject questListItemPrefab = null!;
     public GameObject startQuestPanel = null!;
 
-    private Quest selectedQuest = null!;
+    public Quest selectedQuest = null!;
     private GuildManager gm = null!;
+    
 
     private void Start()
     {
@@ -22,39 +23,58 @@ public class QuestsPage : MonoBehaviour
 
     private void ResetList()
     {
-        gm.availableQuests.RemoveAll(quest => quest == null);
+        gm.quests.RemoveAll(quest => quest == null);
         foreach (Transform child in questList.transform)
         {
             Destroy(child.gameObject);
         }
-        foreach (Quest quest in gm.availableQuests)
+        foreach (Quest quest in gm.quests)
         {
             QuestListItem questListItem = Instantiate(questListItemPrefab, questList.transform).GetComponent<QuestListItem>();
-            Button button = questListItem.GetComponent<Button>();
-            button.onClick.AddListener(() =>
+            Quest q = quest;
+            questListItem.button.onClick.AddListener(() =>
             {
-                SelectQuest(quest);
+                SelectQuest(q);
             });
-            questListItem.quest = quest;
+            questListItem.quest = q;
+            if (q == selectedQuest)
+            {
+                questListItem.SetHighlight();
+            }
         }
     }
 
     public void SelectQuest(Quest quest)
     {
         selectedQuest = quest;
-        questPanel.SelectQuest(quest);
+        questPanel.SetQuest(quest);
         ResetList();
-        startQuestPanel.SetActive(true);
     }
 
     public void OpenStartQuestMenu()
     {
         startQuestPanel.SetActive(true);
-        startQuestPanel.GetComponent<StartQuestPanel>().ClearCharacterSelection();
+        QuestManagementPanel panel = startQuestPanel.GetComponent<QuestManagementPanel>();
+        panel.SetQuest(selectedQuest);
+        panel.ClearCharacterSelection();
     }
 
     public void HideStartQuestMenu()
     {
         startQuestPanel.SetActive(false);
+    }
+
+    public void RemoveQuest(Quest quest)
+    {
+        GuildManager.instance.quests.Remove(quest);
+        foreach (Transform child in questList.transform)
+        {
+            QuestListItem listItem = child.GetComponent<QuestListItem>();
+            if (listItem != null && listItem.quest == quest)
+            {
+                Destroy(child.gameObject);
+                break;
+            }
+        }
     }
 }
