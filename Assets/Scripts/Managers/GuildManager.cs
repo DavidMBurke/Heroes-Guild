@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,18 +12,18 @@ public class GuildManager : MonoBehaviour
     public List<Item> stockpile = new List<Item>();
 
     // Employees
-    public List<PlayerCharacter> unassignedEmployees = null!;
-    public List<PlayerCharacter> jewelers = null!;
-    public List<PlayerCharacter> armorSmiths = null!;
-    public List<PlayerCharacter> weaponSmiths = null!;
-    public List<PlayerCharacter> leatherWorkers = null!;
-    public List<PlayerCharacter> tailors = null!;
-    public List<PlayerCharacter> fletchers = null!;
-    public List<PlayerCharacter> enchanters = null!;
-    public List<PlayerCharacter> arcanists = null!;
-    public List<PlayerCharacter> alchemists = null!;
-    public List<PlayerCharacter> cooks = null!;
-    Dictionary<string, List<PlayerCharacter>> workerGroups;
+    public List<PlayerCharacter> unassignedEmployees = new();
+    public List<PlayerCharacter> jewelers = new();
+    public List<PlayerCharacter> armorSmiths = new();
+    public List<PlayerCharacter> weaponSmiths = new();
+    public List<PlayerCharacter> leatherWorkers = new();
+    public List<PlayerCharacter> tailors = new();
+    public List<PlayerCharacter> fletchers = new();
+    public List<PlayerCharacter> enchanters = new();
+    public List<PlayerCharacter> arcanists = new();
+    public List<PlayerCharacter> alchemists = new();
+    public List<PlayerCharacter> cooks = new();
+    public Dictionary<string, List<PlayerCharacter>> workerGroups;
 
     public WorkshopPage jewelerPage = null!;
     public WorkshopPage armorSmithPage = null!;
@@ -46,6 +45,8 @@ public class GuildManager : MonoBehaviour
     public int hour;
     public int minute;
     public float timePerTick;
+    public float dayStartHour = 6;
+    public float dayEnd = 20;
 
     private void Awake()
     {
@@ -75,25 +76,64 @@ public class GuildManager : MonoBehaviour
     {
         GameObject questGameObject = Instantiate(new GameObject());
         Quest quest = questGameObject.AddComponent<Quest>();
-        quest.name = "First Quest";
-        quest.questName = "First Quest";
+        quest.name = "Missing Caravan";
+        quest.questName = "Missing Caravan";
         quest.location = "Forest";
         quest.level = 1;
-        quest.description = "Go aventure!";
+        quest.description = "The supply caravan that was supposed to arrive yesterday never came. We will need those supplies to get started in establishing our guild!";
         quest.coinReward = 1000;
         quest.xpReward = 1000;
+        quest.staysAvailable = true;
+        quest.itemReward = new List<Item> {
+            Fabrics.Cloths[(int)Fabrics.ClothEnum.BasicCloth].Clone(100),
+            Fabrics.Threads[(int)Fabrics.ThreadEnum.BasicThread].Clone(100),
+            PlantParts.Woods[(int)PlantParts.WoodsEnum.AshWood].Clone(100),
+            PlantParts.Misc[(int)PlantParts.MiscEnum.PlantFiber].Clone(100),
+            
+        };
         quests.Add(quest);
 
-        GameObject questGameObject2 = Instantiate(new GameObject());
-        Quest quest2 = questGameObject2.AddComponent<Quest>();
-        quest2.name = "Placeholder Quest";
-        quest2.questName = "Placeholder Quest";
-        quest2.location = "Forest";
-        quest2.level = 2;
-        quest2.description = "Yada yada yada!";
-        quest2.coinReward = 1000;
-        quest2.xpReward = 1000;
-        quests.Add(quest2);
+        GameObject HuntingQuestObject = Instantiate(new GameObject());
+        Quest huntingQuest = HuntingQuestObject.AddComponent<Quest>();
+        huntingQuest.name = "Hunting Expedition";
+        huntingQuest.questName = "Hunting Expedition";
+        huntingQuest.location = "Forest";
+        huntingQuest.level = 1;
+        huntingQuest.description = "Go and collect resources from the monsters in the nearby forest!";
+        huntingQuest.coinReward = 1000;
+        huntingQuest.xpReward = 1000;
+        huntingQuest.staysAvailable = true;
+        huntingQuest.itemReward = new List<Item> {
+            MonsterParts.Bones[(int)MonsterParts.BonesEnum.BloodfangBone].Clone(100),
+            MonsterParts.Bones[(int)MonsterParts.BonesEnum.BrindlegrazerBone].Clone(100),
+            MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BloodfangLeather].Clone(100),
+            MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BrindlegrazerLeather].Clone(100),
+            MonsterParts.Essences[(int)MonsterParts.EssencesEnum.TinyNatureEssence].Clone(50),
+            MonsterParts.Essences[(int)MonsterParts.EssencesEnum.SmallNatureEssence].Clone(50),
+            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBrindlegrazerMeat].Clone(100),
+            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBloodfangMeat].Clone(100),
+            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawGigantopillarMeat].Clone(100),
+            
+        };
+        quests.Add(huntingQuest);
+
+        GameObject MiningQuestObject = Instantiate(new GameObject());
+        Quest miningQuest = MiningQuestObject.AddComponent<Quest>();
+        miningQuest.name = "Mining Expedition";
+        miningQuest.questName = "Mining Expedition";
+        miningQuest.location = "Caves";
+        miningQuest.level = 1;
+        miningQuest.description = "Go and collect metal ores in the nearby caves!";
+        miningQuest.coinReward = 1000;
+        miningQuest.xpReward = 1000;
+        miningQuest.staysAvailable = true;
+        miningQuest.itemReward = new List<Item> {
+            Metals.MetalIngots[(int)Metals.MetalIngotEnum.CopperIngot].Clone(100),
+            Metals.MetalIngots[(int)Metals.MetalIngotEnum.IronIngot].Clone(100),
+            Metals.MetalIngots[(int)Metals.MetalIngotEnum.BrassIngot].Clone(100),
+            Metals.MetalIngots[(int)Metals.MetalIngotEnum.SilverIngot].Clone(100),
+        };
+        quests.Add(miningQuest);
     }
 
     private void Update()
@@ -171,6 +211,8 @@ public class GuildManager : MonoBehaviour
     public void Tick()
     {
         IncrementTime();
+        if (hour == dayStartHour && minute == 0)
+            StartDay();
         jewelerPage.Tick();
         armorSmithPage.Tick();
         weaponSmithPage.Tick();
@@ -185,6 +227,16 @@ public class GuildManager : MonoBehaviour
         {
             quest.Tick();
         }
+    }
+
+    public void StartDay()
+    {
+        
+    }
+    
+    public void EndDay()
+    {
+
     }
 
     private void IncrementTime()

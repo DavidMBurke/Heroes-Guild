@@ -93,7 +93,7 @@ public class CraftingPanel : MonoBehaviour
 
             if (slot.item == null || slot.item.quantity < requiredMaterial.quantity)
             {
-                Debug.Log($"Insufficient {requiredMaterial.itemTypeName}. Required: {requiredMaterial.quantity}, Available: {slot.item?.quantity ?? 0}");
+                AlertManager.instance.ShowAlert($"Insufficient {requiredMaterial.itemTypeName}. Required: {requiredMaterial.quantity}, Available: {slot.item?.quantity ?? 0}");
                 return;
             }
             materials.Add(slot.item);
@@ -102,7 +102,7 @@ public class CraftingPanel : MonoBehaviour
         // Create the crafted item
         Item craftedItem = selectedCraftingOption.craftingFunction(materials);
         if (craftedItem == null) {
-            Debug.Log($"No item returned for {selectedCraftingOption}");
+            Debug.LogError($"No item returned for {selectedCraftingOption}");
             return;
         }
 

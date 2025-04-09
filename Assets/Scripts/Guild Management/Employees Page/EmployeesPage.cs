@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class EmployeesPage : MonoBehaviour
 {
-    public CharacterForHirePanel panel = null!;
+    public CharacterSummaryPanel panel = null!;
     public GameObject characterListItemPrefab = null!;
     public GameObject characterListObject = null!;
     private PlayerCharacter selectedCharacter = null!;
@@ -29,19 +29,22 @@ public class EmployeesPage : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach (PlayerCharacter character in gm.unassignedEmployees)
+        foreach (var group in gm.workerGroups)
         {
-            GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterListObject.transform);
-            CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
-            Button button = listItem.GetComponent<Button>();
-            button.onClick.AddListener(() =>
+            foreach (PlayerCharacter character in group.Value)
             {
-                SelectCharacter(character);
-            });
-            listItem.SetCharacter(character);
-            if (character == selectedCharacter)
-            {
-                listItem.SetHighlight();
+                GameObject characterListItemObject = Instantiate(characterListItemPrefab, characterListObject.transform);
+                CharacterListItem listItem = characterListItemObject.GetComponent<CharacterListItem>();
+                Button button = listItem.GetComponent<Button>();
+                button.onClick.AddListener(() =>
+                {
+                    SelectCharacter(character);
+                });
+                listItem.SetCharacter(character);
+                if (character == selectedCharacter)
+                {
+                    listItem.SetHighlight();
+                }
             }
         }
     }

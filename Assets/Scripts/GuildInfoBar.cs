@@ -36,6 +36,6 @@ public class GuildInfoBar : MonoBehaviour
             };
         timeText.text = $"{gm.hour:D2}:{gm.minute:D2}";
         coinText.text = gm.coin.ToString();
-        expensesText.text = $"Expenses: {gm.dailyExpenses}/day";
+        expensesText.text = $"Expenses:    {gm.dailyExpenses} /day";
     }
 }

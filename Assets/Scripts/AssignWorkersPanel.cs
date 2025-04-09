@@ -120,7 +120,7 @@ public class AssignWorkersPanel : MonoBehaviour
         List<PlayerCharacter> currentCrafters = workshopPage.GetCrafters();
         if (currentCrafters.Count >= workshopPage.workstationsCount)
         {
-            Debug.Log("More workstations needed to assign more crafters.");
+            AlertManager.instance.ShowAlert("More workstations needed to assign more crafters.");
             return;
         }
 

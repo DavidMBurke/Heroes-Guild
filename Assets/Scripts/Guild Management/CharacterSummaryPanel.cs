@@ -8,13 +8,13 @@ using UnityEngine.UI;
 /// <summary>
 /// Character panels on the For Hire screen
 /// </summary>
-public class CharacterForHirePanel : MonoBehaviour
+public class CharacterSummaryPanel : MonoBehaviour
 {
     public TextMeshProUGUI column1 = null!;
     public TextMeshProUGUI column2 = null!;
     public PlayerCharacter character = null!;
     public Button characterMenuButton = null!;
-    public CharacterInfoPanel characterInfoPanel = null!;
+    public CharacterInfoPage characterInfoPage = null!;
 
     void UpdateText()
     {
@@ -23,13 +23,13 @@ public class CharacterForHirePanel : MonoBehaviour
             column1.text = string.Empty;
             column2.text = string.Empty;
             characterMenuButton.gameObject.SetActive(false);
-            characterMenuButton.onClick.RemoveAllListeners();
-            characterMenuButton.onClick.AddListener(() => CharacterMenuButtonOnClickHandler());
             return;
         }
-        if (characterInfoPanel != null)
+        if (characterInfoPage != null)
         {
             characterMenuButton.gameObject.SetActive(true);
+            characterMenuButton.onClick.RemoveAllListeners();
+            characterMenuButton.onClick.AddListener(() => CharacterMenuButtonOnClickHandler());
         }
         column1.text =
             $"{character.characterName} \n" +
@@ -47,8 +47,8 @@ public class CharacterForHirePanel : MonoBehaviour
 
     private void CharacterMenuButtonOnClickHandler()
     {
-        characterInfoPanel.Open();
-        characterInfoPanel.SetCharacter(character);
+        characterInfoPage.Open();
+        characterInfoPage.SetCharacter(character);
     }
 
     private string FormatAttributes(Dictionary<string, Attribute> attributeDict)

@@ -9,7 +9,7 @@ public class Item
     public string itemName;
     public string description;
     public int cost;
-    public int quantity = 1;
+    public int quantity;
     public bool canBePickedUp;
     public float weight = 0;
 
@@ -34,10 +34,11 @@ public class Item
     public List<string> tags;
 
 
-    public Item(string itemName = "", int cost = 0, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum>? equipSlots = null, ItemBaseStats? baseStats = null, List<Effect>? effects = null, List<string>? tags = null, Dictionary<string, float>? skillBonuses = null, Dictionary<string, float>? skillMultipliers = null, string description = "", List<Item>? craftingIngredients = null, Sprite? sprite = null)
+    public Item(string itemName = "", int cost = 0, int quantity = 1, float multiplier = 1f, bool equippable = false, List<EquipmentSlots.Enum>? equipSlots = null, ItemBaseStats? baseStats = null, List<Effect>? effects = null, List<string>? tags = null, Dictionary<string, float>? skillBonuses = null, Dictionary<string, float>? skillMultipliers = null, string description = "", List<Item>? craftingIngredients = null, Sprite? sprite = null)
     {
         this.itemName = itemName;
         this.cost = cost;
+        this.quantity = quantity;
         this.multiplier = multiplier;
         this.equippable = equippable;
         this.equipSlots = equipSlots ?? new List<EquipmentSlots.Enum>();
@@ -57,11 +58,12 @@ public class Item
         }
     }
 
-    public Item Clone()
+    public Item Clone(int? newQuantity = null)
     {
         return new Item(
             itemName: itemName,
             cost: cost,
+            quantity: newQuantity ?? quantity,
             multiplier: multiplier,
             equippable: equippable,
             equipSlots: new List<EquipmentSlots.Enum>(equipSlots),
@@ -76,18 +78,18 @@ public class Item
             );
     }
 
-    public void AddToInventory(List<Item> inventory, int amount)
+    public void AddToInventory(List<Item> inventory, int? amount = null)
     {
         Item existingItem = inventory.FirstOrDefault(i => i.itemName == itemName && i.description == description);
         if (existingItem != null)
         {
-            existingItem.quantity += amount;
+            existingItem.quantity += amount ?? quantity;
             return;
         }
         else
         {
             Item newItem = Clone();
-            newItem.quantity = amount;
+            newItem.quantity = amount ?? quantity;
             inventory.Add(newItem);
         }
     }
@@ -122,7 +124,7 @@ public class Item
         MonsterParts.Hides,
         MonsterParts.Leathers,
         MonsterParts.Bones,
-        MonsterParts.MiscellaneousParts,
+        MonsterParts.Misc,
         MonsterParts.ProcessedParts,
         PlantParts.Woods,
         PlantParts.Misc

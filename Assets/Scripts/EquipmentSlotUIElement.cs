@@ -31,7 +31,7 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler, IBeginDragHan
                 return;
             }
             newItem.quantity = 1;
-            PlayerCharacter character = CharacterInfoPanel.instance.character;
+            PlayerCharacter character = CharacterInfoPage.instance.character;
             EquipmentSlot slot = character.equipmentSlots.equipmentSlots[equipmentSlotEnum];
             Item? replacedItem = slot.item;
             if (draggedItem.source == InventorySource.Player)
@@ -44,7 +44,7 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler, IBeginDragHan
             }
             else
             {
-                Debug.Log("draggedItem has no source");
+                Debug.LogError("draggedItem has no source");
             }
             
             if (replacedItem != null)
@@ -55,7 +55,7 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler, IBeginDragHan
                 }
                 if (draggedItem.source == InventorySource.Guild)
                 {
-                    GuildManager.instance.AddToStockpile(replacedItem);
+                    replacedItem.AddToInventory(GuildManager.instance.stockpile);
                 }
             }
 
@@ -67,11 +67,11 @@ public class EquipmentSlotUIElement : MonoBehaviour, IDropHandler, IBeginDragHan
 
             if (draggedItem.source == InventorySource.Player)
             {
-                CharacterInfoPanel.instance.playerInventoryButtonClickHandler();
+                CharacterInfoPage.instance.playerInventoryButtonClickHandler();
             }
             if (draggedItem.source == InventorySource.Guild)
             {
-                CharacterInfoPanel.instance.guildInventoryButtonClickHandler();
+                CharacterInfoPage.instance.guildInventoryButtonClickHandler();
             }
 
         }

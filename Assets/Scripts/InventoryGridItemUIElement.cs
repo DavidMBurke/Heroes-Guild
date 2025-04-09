@@ -85,23 +85,23 @@ public class InventoryGridItemUIElement : MonoBehaviour, IBeginDragHandler, IDra
         else if (eventData.pointerDrag.TryGetComponent(out EquipmentSlotUIElement draggedSlot))
         {
             if (draggedSlot.slotItem == null) return;
-            PlayerCharacter character = CharacterInfoPanel.instance.character;
+            PlayerCharacter character = CharacterInfoPage.instance.character;
             Item removedItem = draggedSlot.slotItem.Clone();
             character.equipmentSlots.equipmentSlots[draggedSlot.equipmentSlotEnum].item = null;
             draggedSlot.UpdateSlotItem(null);
 
-            if (CharacterInfoPanel.instance.currentSource == InventorySource.Player)
+            if (CharacterInfoPage.instance.currentSource == InventorySource.Player)
             {
-                CharacterInfoPanel.instance.character.AddToInventory(removedItem);
+                CharacterInfoPage.instance.character.AddToInventory(removedItem);
             }
-            else if (CharacterInfoPanel.instance.currentSource == InventorySource.Guild)
+            else if (CharacterInfoPage.instance.currentSource == InventorySource.Guild)
             {
-                GuildManager.instance.AddToStockpile(removedItem);
+                removedItem.AddToInventory(GuildManager.instance.stockpile);
             }
 
-            InventoryGridItemUIElement newItem = Instantiate(CharacterInfoPanel.instance.inventoryGridItemPrefab, transform.parent)
+            InventoryGridItemUIElement newItem = Instantiate(CharacterInfoPage.instance.inventoryGridItemPrefab, transform.parent)
                 .GetComponent<InventoryGridItemUIElement>();
-            newItem.SetItem(removedItem, CharacterInfoPanel.instance.currentSource);
+            newItem.SetItem(removedItem, CharacterInfoPage.instance.currentSource);
             newItem.transform.SetSiblingIndex(transform.GetSiblingIndex());
         }
 

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HirePage : MonoBehaviour
 {
-    public CharacterForHirePanel panel = null!;
+    public CharacterSummaryPanel panel = null!;
     public GameObject characterListItemPrefab = null!;
     public GameObject characterList = null!;
     public GameObject hireButton = null!;
@@ -65,7 +65,7 @@ public class HirePage : MonoBehaviour
     {
         if (gm.coin < (hiringFeeMultiplier * selectedCharacter.salary))
         {
-            Debug.Log("Cannot afford");
+            AlertManager.instance.ShowAlert("Cannot afford");
             return;
         }
         gm.coin -= (hiringFeeMultiplier * selectedCharacter.salary);

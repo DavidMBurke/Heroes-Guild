@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterInfoPanel : MonoBehaviour
+public class CharacterInfoPage : MonoBehaviour
 {
     List<InventoryGridItemUIElement> inventoryGridItems = new();
     public PlayerCharacter character = null!;
@@ -12,7 +12,7 @@ public class CharacterInfoPanel : MonoBehaviour
     public GameObject inventoryGridItemPrefab = null!;
     public Transform inventoryGrid = null!;
     public List<EquipmentSlotUIElement> equipmentSlotUIElements = null!;
-    public static CharacterInfoPanel instance = null!;
+    public static CharacterInfoPage instance = null!;
     public InventorySource currentSource;
     EquipmentSlots.Enum? activeFilter = null;
 

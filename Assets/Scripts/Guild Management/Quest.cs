@@ -9,11 +9,12 @@ public class Quest : MonoBehaviour
     public int level;
     public int xpReward;
     public int coinReward;
-    List<object> items = null!;
+    public List<Item> itemReward = null!;
     public List<PlayerCharacter> characters = new();
     public int travelTime = 120;
     public int remainingTime = 0;
     public StatusEnum questStatus = StatusEnum.NotStarted;
+    public bool staysAvailable = false;
 
 
     public enum StatusEnum
@@ -50,6 +51,10 @@ public class Quest : MonoBehaviour
         foreach (PlayerCharacter character in characters)
         {
             character.assignedToQuest = false;
+        }
+        foreach (Item item in itemReward)
+        {
+            item.AddToInventory(GuildManager.instance.stockpile);
         }
     }
 

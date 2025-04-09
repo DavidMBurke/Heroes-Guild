@@ -50,7 +50,7 @@ public class MonsterParts
         LeatherStrips = 0
     }
 
-    public static List<Item> MiscellaneousParts = new List<Item>
+    public static List<Item> Misc = new List<Item>
     {
         new Item("Mycellium Clump", 2, tags: new List<string> {"component"}),
         new Item("Arthropod Blood", 2, tags: new List<string> {"component"}),
@@ -61,9 +61,14 @@ public class MonsterParts
 
     };
 
-    public enum MiscellaneousPartsEnum
+    public enum MiscEnum
     {
-        
+        MycelliumClump = 0,
+        ArthropodBlood,
+        GigantopillarSilk,
+        VorpidVines,
+        BumbleshroomCap,
+        BloodfangSalivaGland
     }
 
     public static List<Item> Corpses = new List<Item>
@@ -95,4 +100,18 @@ public class MonsterParts
         new Item("Small Spirit Essence", 10, tags: new List<string> {"essence"}),
         new Item("Small Qi Essence", 10, tags: new List<string> {"essence"})
     };
+
+    public enum EssencesEnum
+    {
+        TinyNatureEssence = 0,
+        TinyArcanaEssence = 0,
+        TinyCelestialEssence = 0,
+        TinySpiritEssence = 0,
+        TinyQiEssence = 0,
+        SmallNatureEssence = 0,
+        SmallArcanaEssence = 0,
+        SmallCelestialEssence = 0,
+        SmallSpiritEssence = 0,
+        SmallQiEssence = 0
+    }
 }

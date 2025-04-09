@@ -9,8 +9,16 @@ public class Food
         public static List<Item> RawMeat = new List<Item>
         {
             new Item("Raw Gigantopillar Meat", 10, multiplier: 1f, tags: new List<string> {"raw meat"}),
+            new Item("Raw Brindlegrazer Meat", 10, multiplier: 1f, tags: new List<string> {"raw meat"}),
             new Item("Raw Bloodfang Meat", 25, multiplier: 1.1f, tags: new List<string> {"raw meat"}),
         };
+
+        public enum RawMeatEnum
+        {
+            RawGigantopillarMeat = 0,
+            RawBrindlegrazerMeat,
+            RawBloodfangMeat
+        }
 
         public static Item CreateGrilledMeat(Item rawMeat)
         {
