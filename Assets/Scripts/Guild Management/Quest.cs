@@ -50,7 +50,8 @@ public class Quest : MonoBehaviour
     {
         foreach (PlayerCharacter character in characters)
         {
-            character.assignedToQuest = false;
+            GuildManager.instance.unassignedEmployees.Add(character);
+            GuildManager.instance.assignedToQuest.Remove(character);
         }
         foreach (Item item in itemReward)
         {

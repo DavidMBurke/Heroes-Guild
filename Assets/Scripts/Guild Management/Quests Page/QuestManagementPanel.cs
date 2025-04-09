@@ -34,6 +34,11 @@ public class QuestManagementPanel : MonoBehaviour
     {
         questProgressionButton.onClick.RemoveAllListeners();
 
+        foreach (CharacterSlot slot in characterSlots)
+        {
+            slot.SetPlayersRemovable(currentQuest.questStatus == Quest.StatusEnum.NotStarted);
+        }
+
         switch (currentQuest.questStatus)
         {
             case Quest.StatusEnum.NotStarted:
@@ -122,7 +127,10 @@ public class QuestManagementPanel : MonoBehaviour
     {
         if (characters[index] == null)
         {
-            DisplayCharacterSelection(index);
+            if (currentQuest.questStatus == Quest.StatusEnum.NotStarted)
+            {
+                DisplayCharacterSelection(index);
+            }
             return;
         }
         DisplayCharacterInfo(characters[index]);
@@ -141,7 +149,7 @@ public class QuestManagementPanel : MonoBehaviour
         characterInfo.SetActive(false);
         characterSelection.SetActive(true);
         ClearCharacterSelection();
-        foreach (PlayerCharacter character in GuildManager.instance.unassignedEmployees.Where(p => !p.assignedToQuest)) {
+        foreach (PlayerCharacter character in GuildManager.instance.unassignedEmployees) {
             if (character == null || characters.Contains(character))
                 continue;
             CharacterListItem characterListItem = Instantiate(characterListItemPrefab, characterSelectionPanel.transform).GetComponent<CharacterListItem>();
@@ -167,7 +175,8 @@ public class QuestManagementPanel : MonoBehaviour
     public void AssignCharacter()
     {
         characters[selectedIndex] = selectedCharacter;
-        selectedCharacter.assignedToQuest = true;
+        GuildManager.instance.assignedToQuest.Add(selectedCharacter);
+        GuildManager.instance.unassignedEmployees.Remove(selectedCharacter);
         UpdateQuestCharacters();
         UpdateSlots();
         characterSelection.SetActive(false);
@@ -182,7 +191,8 @@ public class QuestManagementPanel : MonoBehaviour
 
     public void RemoveCharacter(int index)
     {
-        characters[index].assignedToQuest = false;
+        GuildManager.instance.unassignedEmployees.Add(selectedCharacter);
+        GuildManager.instance.assignedToQuest.Remove(selectedCharacter);
         characters[index] = null;
         UpdateQuestCharacters();
         UpdateSlots();
@@ -252,6 +262,11 @@ public class QuestManagementPanel : MonoBehaviour
 
     public void StartQuest()
     {
+        if (currentQuest.characters.Count() < 1)
+        {
+            AlertManager.instance.ShowAlert("At least one adventurer required to begin quest");
+            return;
+        }
         currentQuest.StartQuest();
     }
 

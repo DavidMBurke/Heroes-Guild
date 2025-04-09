@@ -41,4 +41,8 @@ public class CharacterSlot : MonoBehaviour
         playerClass.text = player.playerClass.name;
     }
 
+    public void SetPlayersRemovable(bool removable)
+    {
+        removePlayerButton.gameObject.SetActive(removable);
+    }
 }

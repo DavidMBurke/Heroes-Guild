@@ -13,6 +13,7 @@ public class GuildManager : MonoBehaviour
 
     // Employees
     public List<PlayerCharacter> unassignedEmployees = new();
+    public List<PlayerCharacter> assignedToQuest = new();
     public List<PlayerCharacter> jewelers = new();
     public List<PlayerCharacter> armorSmiths = new();
     public List<PlayerCharacter> weaponSmiths = new();
@@ -57,17 +58,18 @@ public class GuildManager : MonoBehaviour
         coin = 10000;
 
         workerGroups = new Dictionary<string, List<PlayerCharacter>> {
-            { "UnassignedEmployees", unassignedEmployees },
-            { "Jewelers", jewelers },
-            { "ArmorSmiths", armorSmiths },
-            { "WeaponSmiths", weaponSmiths },
-            { "LeatherWorkers", leatherWorkers },
-            { "Tailors", tailors },
-            { "Fletchers", fletchers },
-            { "Enchanters", enchanters },
-            { "Arcanists", arcanists },
-            { "Alchemists", alchemists },
-            { "Cooks", cooks }
+            { "Unassigned", unassignedEmployees },
+            { "In Quest", assignedToQuest },
+            { "Jeweler", jewelers },
+            { "Armor Smith", armorSmiths },
+            { "Weapon Smith", weaponSmiths },
+            { "Leather Worker", leatherWorkers },
+            { "Tailor", tailors },
+            { "Fletcher", fletchers },
+            { "Enchanter", enchanters },
+            { "Arcanist", arcanists },
+            { "Alchemist", alchemists },
+            { "Cook", cooks }
         };
 
     }
