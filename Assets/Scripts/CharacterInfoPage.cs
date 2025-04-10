@@ -15,6 +15,9 @@ public class CharacterInfoPage : MonoBehaviour
     public static CharacterInfoPage instance = null!;
     public InventorySource currentSource;
     EquipmentSlots.Enum? activeFilter = null;
+    private Color initialButtonColor;
+    public Color highlightButtonColor;
+
 
     private void Awake()
     {
@@ -27,6 +30,7 @@ public class CharacterInfoPage : MonoBehaviour
         playerInventoryButton.onClick.AddListener(() => playerInventoryButtonClickHandler());
         guildInventoryButton.onClick.AddListener(() => guildInventoryButtonClickHandler());
         Close();
+        initialButtonColor = playerInventoryButton.gameObject.GetComponent<Image>().color;
     }
 
     public void SetCharacter(PlayerCharacter character)
@@ -49,12 +53,16 @@ public class CharacterInfoPage : MonoBehaviour
     public void playerInventoryButtonClickHandler()
     {
         currentSource = InventorySource.Player;
+        playerInventoryButton.gameObject.GetComponent<Image>().color = highlightButtonColor;
+        guildInventoryButton.gameObject.GetComponent<Image>().color = initialButtonColor;
         UpdateInventoryList();
     }
 
     public void guildInventoryButtonClickHandler()
     {
         currentSource = InventorySource.Guild;
+        playerInventoryButton.gameObject.GetComponent<Image>().color = initialButtonColor;
+        guildInventoryButton.gameObject.GetComponent<Image>().color = highlightButtonColor;
         UpdateInventoryList();
     }
 
