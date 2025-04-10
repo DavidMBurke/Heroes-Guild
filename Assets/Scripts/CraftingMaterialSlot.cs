@@ -24,7 +24,10 @@ public class CraftingMaterialSlot : MonoBehaviour
             return;
         }
         itemName.text = item.itemName;
-        image.sprite = item.sprite;
+        if (image?.sprite != null) //bandaid for playest, getting null reference errors here
+        {
+            image.sprite = item.sprite ?? null;
+        }
     }
 
     public bool CheckCorrectItemInSlot(List<string> tags)

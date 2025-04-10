@@ -107,7 +107,6 @@ public class QuestManagementPanel : MonoBehaviour
             button.onClick.AddListener(() => CharacterClickHandler(index));
             characterSlots[i].removePlayerButton.onClick.AddListener(() => RemoveCharacter(index));
         }
-        UpdateSlots();
         characterSelection.SetActive(false);
         characterInfo.SetActive(false);
     }
@@ -119,7 +118,7 @@ public class QuestManagementPanel : MonoBehaviour
         location.text = quest.location;
         for (int i = 0; i < characters.Length; i++)
         {
-            characters[i] = i < quest.characters.Count ? quest.characters[i] : null!;
+            characters[i] = i < quest.characters.Count ? quest.characters[i] : null;
         }
         UpdateSlots();
     }

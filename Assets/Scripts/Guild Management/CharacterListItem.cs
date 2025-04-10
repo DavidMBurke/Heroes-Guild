@@ -8,20 +8,13 @@ using UnityEngine.UI;
 public class CharacterListItem : MonoBehaviour
 {
     private PlayerCharacter player = null!;
-    private TextMeshProUGUI displayName = null!;
-    private TextMeshProUGUI level = null!;
+    public TextMeshProUGUI displayName = null!;
+    public TextMeshProUGUI level = null!;
     public Image background;
     private Color initialColor;
     public Color highlightColor;
     public TMP_Dropdown jobDropdown = null!;
     public bool canAssignJobs = false;
-
-    private void Awake()
-    {
-        List<TextMeshProUGUI> textItems = GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        displayName = textItems.First(tmp => tmp.gameObject.name == "Name");
-        level = textItems.First(tmp => tmp.gameObject.name == "Level");
-    }
 
     public void SetHighlight(bool highlight = true)
     {

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CraftingPanel : MonoBehaviour
 {
     public GameObject materialSlotsParent = null!;
-    List<CraftingMaterialSlot> materialSlots = null!;
+    public List<CraftingMaterialSlot> materialSlots = null!;
     public CraftingMaterialSlot selectedSlot = null!;
     public List<string> selectedTags = null!;
 
@@ -26,7 +26,6 @@ public class CraftingPanel : MonoBehaviour
     private void Start()
     {
         gm = GuildManager.instance;
-        materialSlots = materialSlotsParent.GetComponentsInChildren<CraftingMaterialSlot>().ToList();
         SelectCraftingOption(selectedCraftingOption);
     }
 

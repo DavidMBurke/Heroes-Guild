@@ -795,6 +795,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449bb6a849a2bf54186588290e39bd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayName: {fileID: 3288918311557804353}
+  level: {fileID: 2812720389704704715}
   background: {fileID: 4316243379792971733}
   highlightColor: {r: 0, g: 0.91298866, b: 1, a: 1}
   jobDropdown: {fileID: 9182508071600444539}

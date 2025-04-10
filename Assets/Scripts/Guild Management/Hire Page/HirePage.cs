@@ -26,7 +26,11 @@ public class HirePage : MonoBehaviour
 
     public void ResetList()
     {
-        gm.charactersForHire.RemoveAll(character => character == null);
+        if (gm?.charactersForHire == null)
+        {
+            return;
+        }
+            gm.charactersForHire.RemoveAll(character => character == null);
         foreach (Transform child in characterList.transform)
         {
             Destroy(child.gameObject);

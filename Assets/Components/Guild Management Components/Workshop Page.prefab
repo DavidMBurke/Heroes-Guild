@@ -2610,6 +2610,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialSlotsParent: {fileID: 3895834406411512782}
+  materialSlots:
+  - {fileID: 8753164826653647077}
+  - {fileID: 2662961322126751057}
+  - {fileID: 4228284956532466523}
+  - {fileID: 5488860437999507147}
+  - {fileID: 3438289952365926959}
+  - {fileID: 7774440653897484940}
   selectedSlot: {fileID: 0}
   selectedTags: []
   itemListItemPrefab: {fileID: 7898215406122944153, guid: 9e9b07b6fd343c34b80c06e5c6d160f3, type: 3}

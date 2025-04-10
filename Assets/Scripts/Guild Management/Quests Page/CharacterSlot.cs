@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,15 +10,6 @@ public class CharacterSlot : MonoBehaviour
     public TextMeshProUGUI playerRace = null!;
     public TextMeshProUGUI playerClass = null!;
     public Button removePlayerButton = null!;
-
-    private void Start()
-    {
-        List<TextMeshProUGUI> textItems = GetComponentsInChildren<TextMeshProUGUI>().ToList();
-        playerName = textItems.First(tmp => tmp.gameObject.name == "Name");
-        playerLevel = textItems.First(tmp => tmp.gameObject.name == "Level");
-        playerRace = textItems.First(tmp => tmp.gameObject.name == "Race");
-        playerClass = textItems.First(tmp => tmp.gameObject.name == "Class");
-    }
 
     public void UpdateSlot()
     {

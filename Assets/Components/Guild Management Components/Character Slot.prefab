@@ -57,10 +57,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  playerName: {fileID: 0}
-  playerLevel: {fileID: 0}
-  playerRace: {fileID: 0}
-  playerClass: {fileID: 0}
+  playerName: {fileID: 2553953933128434515}
+  playerLevel: {fileID: 6921448010947552684}
+  playerRace: {fileID: 4867809215732488256}
+  playerClass: {fileID: 687698485330547466}
   removePlayerButton: {fileID: 8002766090198737271}
 --- !u!114 &8792743231140724796
 MonoBehaviour:
