@@ -798,7 +798,7 @@ MonoBehaviour:
   background: {fileID: 4316243379792971733}
   highlightColor: {r: 0, g: 0.91298866, b: 1, a: 1}
   jobDropdown: {fileID: 9182508071600444539}
-  canAssignJobs: 1
+  canAssignJobs: 0
 --- !u!114 &2315691502858147294
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -37,16 +38,16 @@ public class CharacterListItem : MonoBehaviour
     private void Start()
     {
         initialColor = GetComponent<Image>().color;
-        if (canAssignJobs)
-        {
-            PopulateJobDropdown();
-        }
     }
 
     public void SetCharacter(PlayerCharacter newPlayer)
     {
         player = newPlayer;
         UpdateDisplayInfo();
+        if (canAssignJobs)
+        {
+            PopulateJobDropdown();
+        }
     }
 
     public void SetDisplayName(string name)
@@ -54,7 +55,7 @@ public class CharacterListItem : MonoBehaviour
         displayName.text = name;
     }
 
-    private void UpdateDisplayInfo()
+    public void UpdateDisplayInfo()
     {
         if (player == null)
         {
@@ -73,21 +74,56 @@ public class CharacterListItem : MonoBehaviour
     {
         jobDropdown.ClearOptions();
 
-        var jobOptions = GuildManager.instance.workerGroups.Keys
+        var workerGroups = GuildManager.instance.workerGroups;
+
+        string? currentAssignment = workerGroups
+            .FirstOrDefault(kvp => kvp.Value.Contains(player)).Key;
+
+        List<string> jobOptions = workerGroups.Keys
             .Where(job => job != "In Quest")
             .ToList();
 
+
+        bool isInQuest = currentAssignment == "In Quest";
+
+        if (isInQuest)
+        {
+            jobOptions.Insert(0, "In Quest");
+        }
+
         jobDropdown.AddOptions(jobOptions);
-        jobDropdown.onValueChanged.AddListener(OnJobSelected);
+
+        if (!string.IsNullOrEmpty(currentAssignment) && jobOptions.Contains(currentAssignment))
+        {
+            int index = jobOptions.IndexOf(currentAssignment);
+            jobDropdown.SetValueWithoutNotify(index);
+        }
+        else
+        {
+            int index = jobOptions.IndexOf("Unassigned");
+            if (index != -1)
+            {
+                jobDropdown.SetValueWithoutNotify(index);
+            }
+        }
+
+        jobDropdown.interactable = !isInQuest;
+
+        if (!isInQuest)
+        {
+            jobDropdown.onValueChanged.AddListener(OnJobSelected);
+        }
     }
 
     private void OnJobSelected(int index)
     {
         string selectedJob = jobDropdown.options[index].text;
 
+        var workerGroups = GuildManager.instance.workerGroups;
+
         if (selectedJob == "Unassigned")
         {
-            foreach (List<PlayerCharacter> group in GuildManager.instance.workerGroups.Values)
+            foreach (List<PlayerCharacter> group in workerGroups.Values)
             {
                 if (group.Contains(player))
                 {
@@ -98,9 +134,9 @@ public class CharacterListItem : MonoBehaviour
             return;
         }
 
-        List<PlayerCharacter> workshopList = GuildManager.instance.workerGroups[selectedJob];
+        List<PlayerCharacter> workshopList = workerGroups[selectedJob];
 
-        WorkshopPage workshop = selectedJob switch
+        WorkshopPage? workshop = selectedJob switch
         {
             "Jeweler" => GuildManager.instance.jewelerPage,
             "Armor Smith" => GuildManager.instance.armorSmithPage,

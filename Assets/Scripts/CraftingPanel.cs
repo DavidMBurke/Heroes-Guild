@@ -15,6 +15,7 @@ public class CraftingPanel : MonoBehaviour
     public GameObject materialList = null!;
     public Button addToQueueButton = null!;
     public TextMeshProUGUI craftingMenuHeader = null!;
+    public TextMeshProUGUI noCraftingItemsText = null;
 
     public WorkshopPage workshopPage = null!;
     public CraftingOption selectedCraftingOption = null!;
@@ -38,6 +39,10 @@ public class CraftingPanel : MonoBehaviour
     {
         selectedCraftingOption = option;
         craftingMenuHeader.text = $"Craft {option.itemName}";
+
+        ClearMaterialSelection();
+        ClearMaterialList();
+
         SetupMaterialSlots(option);
     }
 
@@ -60,6 +65,8 @@ public class CraftingPanel : MonoBehaviour
                 materialSlots[i].gameObject.SetActive(false);
             }
         }
+        selectedSlot = null;
+        noCraftingItemsText.gameObject.SetActive(false);
     }
 
     public void SelectItemSlot(List<string> tags, CraftingMaterialSlot itemSlot)
@@ -142,10 +149,37 @@ public class CraftingPanel : MonoBehaviour
             itemListItem.SetItem(item);
             itemListItem.selectButton.onClick.AddListener(() => itemSlot.SetItem(item));
         }
+        noCraftingItemsText.gameObject.SetActive(items.Count == 0);
     }
 
     public void CloseCraftingPanel()
     {
+        ClearMaterialSelection();
+        ClearMaterialList();
         workshopPage.ToggleCraftingPanel(selectedCraftingOption);
+    }
+
+    private void ClearMaterialSelection()
+    {
+        if (materialSlots == null) return;
+
+        foreach (var slot in materialSlots)
+        {
+            slot.SetItem(null);
+            slot.gameObject.SetActive(false);
+        }
+
+        selectedSlot = null!;
+        selectedTags = null!;
+    }
+
+    private void ClearMaterialList()
+    {
+        foreach (Transform child in materialList.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        noCraftingItemsText?.gameObject.SetActive(false);
     }
 }

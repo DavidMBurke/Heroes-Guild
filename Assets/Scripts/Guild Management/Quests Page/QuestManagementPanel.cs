@@ -27,6 +27,7 @@ public class QuestManagementPanel : MonoBehaviour
     private TextMeshProUGUI questProgressionButtonText = null!;
     public TextMeshProUGUI questProgressionText = null!;
     public QuestsPage questsPage = null!;
+    public GameObject noCharactersAvailableText = null!;
 
 
 
@@ -162,6 +163,7 @@ public class QuestManagementPanel : MonoBehaviour
                 characterListItem.SetHighlight();
             }
         }
+        noCharactersAvailableText.gameObject.SetActive(GuildManager.instance.unassignedEmployees.Count == 0);
     }
 
     public void ClearCharacterSelection()

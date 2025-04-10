@@ -93,6 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   background: {fileID: 855379405181793536}
   highlightColor: {r: 0, g: 0.7871661, b: 0.9622642, a: 1}
+  jobDropdown: {fileID: 0}
+  canAssignJobs: 0
 --- !u!114 &5754804555920643538
 MonoBehaviour:
   m_ObjectHideFlags: 0

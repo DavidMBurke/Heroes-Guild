@@ -230,6 +230,8 @@ MonoBehaviour:
   text1: {fileID: 2428873486447329624}
   text2: {fileID: 7206876448424354440}
   text3: {fileID: 6356421608048018609}
+  background: {fileID: 696517125037687588}
+  highlightColor: {r: 0, g: 0.9137255, b: 1, a: 1}
 --- !u!114 &160323581841447900
 MonoBehaviour:
   m_ObjectHideFlags: 0

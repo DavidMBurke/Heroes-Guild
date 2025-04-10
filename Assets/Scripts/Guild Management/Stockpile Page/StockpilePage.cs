@@ -15,6 +15,7 @@ public class StockpilePage : MonoBehaviour
     public GameObject searchByNameToggle = null!;
     public GameObject searchByTagToggle = null!;
     public ItemDisplayPanel itemDisplayPanel = null!;
+    public GameObject noItemsText = null!;
 
     private void OnEnable()
     {
@@ -48,6 +49,7 @@ public class StockpilePage : MonoBehaviour
             itemListItem.SetItem(item);
             itemListItem.selectButton.onClick.AddListener(() => SelectItem(itemListItem.GetItem()));
         }
+        noItemsText.gameObject.SetActive(items.Count == 0);
     }
 
     private bool CheckNameFit(Item item, string searchText, bool searchByName, bool searchByTag)

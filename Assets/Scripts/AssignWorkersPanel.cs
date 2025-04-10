@@ -12,6 +12,7 @@ public class AssignWorkersPanel : MonoBehaviour
     public GameObject assignCharacterButton = null!;
     public GameObject unassignCharacterButton = null!;
     public Button closeButton = null!;
+    public GameObject noAvailableWorkerText = null!;
 
     private void Awake()
     {
@@ -57,6 +58,8 @@ public class AssignWorkersPanel : MonoBehaviour
         {
             CreateCharacterListItem(character, false, skillName);
         }
+
+        noAvailableWorkerText.gameObject.SetActive(gm.unassignedEmployees.Count == 0);
     }
 
     private void CreateCharacterListItem(PlayerCharacter character, bool isAssigned, string skillName)
@@ -75,6 +78,10 @@ public class AssignWorkersPanel : MonoBehaviour
         string text2 = "Lvl: " + character.level.ToString();
         string text3 = skillName + ": " + character.nonCombatSkills.skills[skillName].level.ToString();
         listItem.SetText(text1, text2, text3);
+        if (character == workshopPage.selectedCharacter)
+        {
+            listItem.SetHighlight(true);
+        }
     }
 
     public void SelectCharacter(PlayerCharacter character)

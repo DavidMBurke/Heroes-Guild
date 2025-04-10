@@ -110,7 +110,7 @@ public class Item
     }
 
     // For generation of every item for debugging
-    public static List<List<Item>> allItemLists = new()
+    public static List<List<Item>> GenerateAllItemLists => new()
     {
         Jewelry.Gems,
         Metals.MetalIngots,

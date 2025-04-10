@@ -41,10 +41,18 @@ public class DevTools : MonoBehaviour
 
     public void GenerateCraftingItems()
     {
-        foreach (List<Item> items in Item.allItemLists)
+        foreach (List<Item> items in Item.GenerateAllItemLists)
         {
+            if (items == null)
+            {
+                Debug.LogError($"List {Item.GenerateAllItemLists.IndexOf(items)} cannot be found");
+            }
             foreach (Item item in items)
             {
+                if (item == null)
+                {
+                    Debug.LogError($"Item {items.IndexOf(item)} of {Item.GenerateAllItemLists.IndexOf(items)} cannot be found");
+                }
                 item.AddToInventory(gm.stockpile, 100);
             }
         }

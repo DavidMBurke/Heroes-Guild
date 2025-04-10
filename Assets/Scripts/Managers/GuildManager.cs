@@ -36,6 +36,7 @@ public class GuildManager : MonoBehaviour
     public WorkshopPage arcanistPage = null!;
     public WorkshopPage alchemistPage = null!;
     public WorkshopPage cooksPage = null!;
+    public HirePage hirePage = null!;
     
     // Time
     public float elapsedTime = 0;
@@ -134,6 +135,22 @@ public class GuildManager : MonoBehaviour
             Metals.MetalIngots[(int)Metals.MetalIngotEnum.IronIngot].Clone(100),
             Metals.MetalIngots[(int)Metals.MetalIngotEnum.BrassIngot].Clone(100),
             Metals.MetalIngots[(int)Metals.MetalIngotEnum.SilverIngot].Clone(100),
+            Jewelry.Gems[(int)Jewelry.GemEnum.RedFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.OrangeFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.YellowFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.GreenFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.BlueFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.PurpleFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.BlackFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.WhiteFluorite].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.RedGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.OrangeGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.YellowGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.GreenGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.BlueGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.PurpleGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.BlackGarnet].Clone(5),
+            Jewelry.Gems[(int)Jewelry.GemEnum.WhiteGarnet].Clone(5),
         };
         quests.Add(miningQuest);
     }
@@ -233,7 +250,26 @@ public class GuildManager : MonoBehaviour
 
     public void StartDay()
     {
-        
+        List<PlayerCharacter> charactersToRemove = new();
+
+        foreach (PlayerCharacter employee in charactersForHire)
+        {
+            int random = Random.Range(0, 10);
+            if (random < 2)
+            {
+                charactersToRemove.Add(employee);
+            }
+        }
+        charactersForHire.RemoveAll(c => charactersToRemove.Contains(c));
+        for (int i = 0; i < 10; i++)
+        {
+            int random = Random.Range(0, 10);
+            if (random < 3)
+            {
+            charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
+            }
+        }
+        hirePage.ResetList();
     }
     
     public void EndDay()

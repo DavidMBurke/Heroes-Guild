@@ -16,6 +16,8 @@ public class CraftingMaterialSlot : MonoBehaviour
     {
         this.item = item;
         if (item == null) {
+            itemName.text = string.Empty;
+            image.sprite = null;
             return;
         }
         itemName.text = item.itemName;

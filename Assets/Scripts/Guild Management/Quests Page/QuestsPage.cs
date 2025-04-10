@@ -9,6 +9,7 @@ public class QuestsPage : MonoBehaviour
     public GameObject questList = null!;
     public GameObject questListItemPrefab = null!;
     public GameObject startQuestPanel = null!;
+    public GameObject selectQuestButton = null!;
 
     public Quest selectedQuest = null!;
     private GuildManager gm = null!;
@@ -42,6 +43,7 @@ public class QuestsPage : MonoBehaviour
                 questListItem.SetHighlight();
             }
         }
+        selectQuestButton.gameObject.SetActive(selectedQuest != null);
     }
 
     public void SelectQuest(Quest quest)
@@ -76,5 +78,7 @@ public class QuestsPage : MonoBehaviour
                 break;
             }
         }
+        selectedQuest = null;
+        ResetList();
     }
 }

@@ -90,6 +90,91 @@ public class Jewelry
         new Item("White Diamond", 5000000, multiplier: 5f, tags: new List<string> { "gem" }, skillBonuses: new Dictionary<string, float> { { CombatSkills.GetName(CombatSkills.Enum.Healing), 1f } }),
     };
 
+    public enum GemEnum
+    {
+        RedFluorite = 0,
+        OrangeFluorite,
+        YellowFluorite,
+        GreenFluorite,
+        BlueFluorite,
+        PurpleFluorite,
+        BlackFluorite,
+        WhiteFluorite,
+
+        RedGarnet,
+        OrangeGarnet,
+        YellowGarnet,
+        GreenGarnet,
+        BlueGarnet,
+        PurpleGarnet,
+        BlackGarnet,
+        WhiteGarnet,
+
+        RedTopaz,
+        OrangeTopaz,
+        YellowTopaz,
+        GreenTopaz,
+        BlueTopaz,
+        PurpleTopaz,
+        BlackTopaz,
+        WhiteTopaz,
+
+        RedZircon,
+        OrangeZircon,
+        YellowZircon,
+        GreenZircon,
+        BlueZircon,
+        PurpleZircon,
+        BlackZircon,
+        WhiteZircon,
+
+        RedSpinel,
+        OrangeSpinel,
+        YellowSpinel,
+        GreenSpinel,
+        BlueSpinel,
+        PurpleSpinel,
+        BlackSpinel,
+        WhiteSpinel,
+
+        RedTourmaline,
+        OrangeTourmaline,
+        YellowTourmaline,
+        GreenTourmaline,
+        BlueTourmaline,
+        PurpleTourmaline,
+        BlackTourmaline,
+        WhiteTourmaline,
+
+        RedOpal,
+        OrangeOpal,
+        YellowOpal,
+        GreenOpal,
+        BlueOpal,
+        PurpleOpal,
+        BlackOpal,
+        WhiteOpal,
+
+        RedSapphire,
+        OrangeSapphire,
+        YellowSapphire,
+        GreenSapphire,
+        BlueSapphire,
+        PurpleSapphire,
+        BlackSapphire,
+        WhiteSapphire,
+
+        RedDiamond,
+        OrangeDiamond,
+        YellowDiamond,
+        GreenDiamond,
+        BlueDiamond,
+        PurpleDiamond,
+        BlackDiamond,
+        WhiteDiamond
+    }
+
+
     public static Item CreateNecklace(Item metalIngot, Item gem)
     {
         string name = $"{gem.itemName} Necklace";

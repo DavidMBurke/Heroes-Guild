@@ -13,6 +13,7 @@ public class HirePage : MonoBehaviour
     private GuildManager gm = null!;
     public TextMeshProUGUI costToHire = null!;
     private int hiringFeeMultiplier = 30; //multiplies by daily salary
+    public GameObject noEmployeesForHireText = null!;
 
 
     public void Start()
@@ -23,7 +24,7 @@ public class HirePage : MonoBehaviour
         hireButton.SetActive(false);
     }
 
-    private void ResetList()
+    public void ResetList()
     {
         gm.charactersForHire.RemoveAll(character => character == null);
         foreach (Transform child in characterList.transform)
@@ -44,7 +45,9 @@ public class HirePage : MonoBehaviour
             {
                 listItem.SetHighlight();
             }
+            listItem.jobDropdown.gameObject.SetActive(false);
         }
+        noEmployeesForHireText.SetActive(gm.charactersForHire.Count == 0);
     }
 
     private void Update()
