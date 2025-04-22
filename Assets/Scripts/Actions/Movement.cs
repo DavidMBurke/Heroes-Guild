@@ -28,10 +28,9 @@ public class Movement
             while ((remainingMovement > 1f || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
-                if (!player.isInCharacterAction)
-                {
-                    player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
-                }
+
+                player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     if ((player.isMoving && actionManager.IsTurnBasedMode()) || UIManager.CheckForUIElement())
