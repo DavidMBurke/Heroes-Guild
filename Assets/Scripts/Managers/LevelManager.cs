@@ -52,6 +52,7 @@ public class LevelManager : MonoBehaviour
                 continue;
             }
             playerCharacter.RollNewStats();
+            playerCharacter.isInScene = true;
             partyManager.partyMembers[i] = playerCharacter;
         }
         if (partyManager.partyMembers[0] == null)

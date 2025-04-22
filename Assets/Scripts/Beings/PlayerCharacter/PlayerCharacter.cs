@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -46,6 +47,13 @@ public class PlayerCharacter : Being
     new void Start()
     {
         base.Start();
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+        } else
+        {
+            Debug.LogWarning($"{name} could not snap to NavMesh. Check if terrain is baked");
+        }
     }
 
     private new void Update()

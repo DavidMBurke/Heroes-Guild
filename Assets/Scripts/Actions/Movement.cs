@@ -10,10 +10,7 @@ public class Movement
     /// <summary>
     /// Show range indicator if in turn-based mode, and move a character to position if within movement range, or indefinitely if free mode
     /// </summary>
-    /// TODO - Pathing
-    /// TODO --- Go around collidable things
     /// TODO --- Indication of accessible areas on move indicator
-    /// TODO --- Stop movement if spotted by enemy
     /// <param name="being"></param>
     /// <param name="action"></param>
     /// <returns></returns>
@@ -31,7 +28,10 @@ public class Movement
             while ((remainingMovement > 1f || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
-                player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
+                if (!player.isInCharacterAction)
+                {
+                    player.rangeIndicator.gameObject.SetActive(actionManager.IsTurnBasedMode());
+                }
                 if (Input.GetMouseButtonDown(0))
                 {
                     if ((player.isMoving && actionManager.IsTurnBasedMode()) || UIManager.CheckForUIElement())
@@ -54,6 +54,12 @@ public class Movement
                         {
                             while (Vector3.Distance(player.transform.position, corner) > 1f && player.isMoving)
                             {
+                                Vector3 direction = (corner - player.transform.position).normalized;
+                                if (direction != Vector3.zero)
+                                {
+                                    Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+                                    player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, toRotation, 360 * Time.deltaTime);
+                                }
                                 player.transform.position = Vector3.MoveTowards(player.transform.position, corner, player.moveSpeed * Time.deltaTime);
                                 if (actionManager.IsTurnBasedMode())
                                 {

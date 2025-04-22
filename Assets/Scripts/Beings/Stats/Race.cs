@@ -113,7 +113,9 @@ public class Race
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.ArmorSmithing), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.WeaponSmithing), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Mining), 2 },
-                { NonCombatSkills.GetName(NonCombatSkills.Enum.Cartography), 2 }
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Cartography), 2 },
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.MonsterWrangling), 2 },
+
             },
             attributeModifiers: new Dictionary<string, int>
             {
@@ -155,6 +157,7 @@ public class Race
         new Race(GetName(Enum.MouseFolk), "Mouse people known for stealth, agility and perseverance",
             nonCombatSkillModifiers: new Dictionary<string, int>
             {
+                { NonCombatSkills.GetName(NonCombatSkills.Enum.Trapping), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Cooking), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Fletching), 2 },
                 { NonCombatSkills.GetName(NonCombatSkills.Enum.Herbalism), 2 },

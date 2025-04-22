@@ -421,9 +421,11 @@ MonoBehaviour:
   isTurn: 0
   isInCharacterAction: 0
   initiative: 0
+  isInScene: 1
   health: 30
   maxHealth: 30
   isAlive: 1
+  level: 1
   model: {fileID: 1654134770227477690}
   characterColor: {r: 0.9490196, g: 0.4477109, b: 0.07058823, a: 0}
   turnIndicator: {fileID: 1976752531031884022}

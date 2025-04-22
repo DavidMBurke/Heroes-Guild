@@ -133,7 +133,7 @@ public class Being : MonoBehaviour
             return;
         }
         FixVertical();
-        FixPosition();
+        //FixPosition();
     }
 
     /// <summary>
