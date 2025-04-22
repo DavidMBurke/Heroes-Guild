@@ -159,6 +159,7 @@ public class ActionManager : MonoBehaviour
         if (beings[turnIndex] is PlayerCharacter player)
         {
             player.StartTurn();
+            OnPlayerSelected?.Invoke(player);
         }
         if (currentBeing is Enemy enemy)
         {

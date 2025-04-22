@@ -34,6 +34,7 @@ public class PlayerCharacter : Being
 
     public int salary = 1; //coin per day
 
+
     public new List<Item> inventory
     {
         get => _inventory;
@@ -86,6 +87,7 @@ public class PlayerCharacter : Being
         {
             EndCharacterAction();
         }
+        action.endSignal = false;
         currentAction = action;
         StartCoroutine(action.action(action.character, action));
     }

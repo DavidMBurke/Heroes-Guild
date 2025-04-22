@@ -24,7 +24,6 @@ public class Attack
         attacker.rangeIndicatorColor = attacker.rangeIndicatorCombatColor;
         while (inAttack)
         {
-            Debug.Log("Set rangeIndicator active");
             attacker.rangeIndicator.gameObject.SetActive(true);
             attacker.rangeIndicator.gameObject.transform.localScale = new Vector3(range * 2, scale.y, range * 2);
             if (Input.GetMouseButtonDown(0))
@@ -59,6 +58,7 @@ public class Attack
             }
             if (Input.GetMouseButtonDown(1) || action.endSignal)
             {
+                Debug.Log($"{action.endSignal}");
                 inAttack = false;
             }
             yield return null;

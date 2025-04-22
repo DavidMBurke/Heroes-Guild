@@ -94,7 +94,8 @@ public class ActionBar : MonoBehaviour
 
             Button newButton = Instantiate(buttonPrefab, parent: actionButtons.gameObject.transform);
             newButton.GetComponentInChildren<TextMeshProUGUI>().text = action.actionName;
-            newButton.onClick.AddListener(() => ActionManager.instance.ExecuteCharacterAction(action));
+            CharacterAction copiedAction = new CharacterAction(action.action, action.character, action.actionName);
+            newButton.onClick.AddListener(() => ActionManager.instance.ExecuteCharacterAction(copiedAction));
             playerActionButtons.Add(newButton);
         }
     }
@@ -142,6 +143,7 @@ public class ActionBar : MonoBehaviour
             Debug.LogWarning("null player in HandlePlayerSelectied");
             return;
         }
+        Debug.Log($"{player.name} selected");
         PopulateCharacterActionButtons(player);
     }
 }
