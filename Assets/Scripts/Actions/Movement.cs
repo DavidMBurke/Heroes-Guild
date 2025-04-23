@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -49,6 +51,13 @@ public class Movement
                     {
                         player.rangeIndicator.gameObject.SetActive(false);
                         player.isMoving = true;
+
+                        foreach (PlayerCharacter follower in PartyManager.instance.movementGroup)
+                        {
+                            Vector3 followerTarget = targetPosition + (follower.transform.position - player.transform.position).normalized * 1.5f;
+                            ActionManager.instance.StartCoroutine(MoveFollower(follower, followerTarget, player.moveSpeed));
+                        }
+
                         foreach (Vector3 corner in path.corners)
                         {
                             while (Vector3.Distance(player.transform.position, corner) > 1f && player.isMoving)
@@ -89,6 +98,30 @@ public class Movement
             }
             player.endMove = false;
             player.isInMovementAction = false;
+        }
+    }
+    private static IEnumerator MoveFollower(PlayerCharacter follower, Vector3 targetPosition, float speed)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (!NavMesh.CalculatePath(follower.transform.position, targetPosition, NavMesh.AllAreas, path))
+        {
+            Debug.LogWarning($"Follower {follower.name} path invalid.");
+            yield break;
+        }
+
+        foreach (Vector3 corner in path.corners)
+        {
+            while (Vector3.Distance(follower.transform.position, corner) > 0.5f)
+            {
+                Vector3 direction = (corner - follower.transform.position).normalized;
+                if (direction != Vector3.zero)
+                {
+                    Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+                    follower.transform.rotation = Quaternion.RotateTowards(follower.transform.rotation, toRotation, 360 * Time.deltaTime);
+                }
+                follower.transform.position = Vector3.MoveTowards(follower.transform.position, corner, speed * Time.deltaTime);
+                yield return null;
+            }
         }
     }
 
