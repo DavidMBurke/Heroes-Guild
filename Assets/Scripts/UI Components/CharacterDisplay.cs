@@ -50,6 +50,15 @@ public class CharacterDisplay : MonoBehaviour
         {
             return;
         }
-        actionManager.SelectCharacter(character);
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            partyManager.AddOrRemoveCharacterFromMovementGroup(character);
+        } 
+        else
+        {
+            partyManager.ClearCharactersFromMovementGroup();
+            actionManager.SelectCharacter(character);
+        }
     }
 }

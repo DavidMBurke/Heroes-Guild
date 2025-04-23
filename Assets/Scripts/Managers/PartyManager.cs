@@ -18,4 +18,33 @@ public class PartyManager : MonoBehaviour
         instance = this;
     }
 
+    public void AddOrRemoveCharacterFromMovementGroup(PlayerCharacter character)
+    {
+        if (movementGroup.Contains(character))
+        {
+            movementGroup.Remove(character);
+        } else
+        {
+            movementGroup.Add(character);
+        }
+    }
+
+    public void AddCharacterToMovementGroup(PlayerCharacter character)
+    {
+        movementGroup.Add(character);
+    }
+
+    public void RemoveCharacterFromMovementGroup(PlayerCharacter character)
+    {
+        movementGroup.Remove(character);
+    }
+
+    public void ClearCharactersFromMovementGroup()
+    {
+        foreach (PlayerCharacter character in movementGroup)
+        {
+            movementGroup.Remove(character);
+        }
+    }
+
 }
