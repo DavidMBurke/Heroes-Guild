@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4363666482165383952}
-  - component: {fileID: 1086988230281258872}
   - component: {fileID: 8533392401343051483}
   - component: {fileID: 8842099037814161459}
   m_Layer: 6
@@ -36,48 +35,6 @@ Transform:
   - {fileID: 2357378900064915438}
   m_Father: {fileID: 7275265633646685545}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1086988230281258872
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2861516032672779164}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &8533392401343051483
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -259,7 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Jimbo
-  moveDistance: 5
+  moveDistance: 10
   moveSpeed: 5
   isMoving: 0
   isInMovementAction: 0
@@ -272,7 +229,7 @@ MonoBehaviour:
   maxHealth: 100
   isAlive: 1
   level: 1
-  model: {fileID: 2861516032672779164}
+  model: {fileID: 352250119337177778}
   characterColor: {r: 0.3392601, g: 0, b: 1, a: 0}
   turnIndicator: {fileID: 3087967353488094556}
   rangeIndicator: {fileID: 6539324038521611055}
@@ -494,6 +451,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
+--- !u!1 &352250119337177778 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -1499827246450854550, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
+  m_PrefabInstance: {fileID: 8056089324840962008}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7513767742144192563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f88a0b9a83061184782eef1b014f6592, type: 3}
