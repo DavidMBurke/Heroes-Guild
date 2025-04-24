@@ -63,7 +63,7 @@ public class Movement
 
                         foreach (Vector3 corner in path.corners)
                         {
-                            while (Vector3.Distance(player.transform.position, corner) > 1f && player.isMoving)
+                            while (Vector3.Distance(player.transform.position, corner) > .01f && player.isMoving)
                             {
                                 Vector3 direction = (corner - player.transform.position).normalized;
                                 if (direction != Vector3.zero)
