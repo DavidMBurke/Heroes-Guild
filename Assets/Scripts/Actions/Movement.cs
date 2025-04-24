@@ -27,6 +27,9 @@ public class Movement
             Vector3 targetPosition = player.startingPosition;
             player.rangeIndicatorColor = player.rangeIndicatorMovementColor;
             player.isMoving = false;
+            player.endMove = false;
+            action.endSignal = false;
+            player.startingPosition = player.transform.position;
             while ((remainingMovement > 1f || actionManager.IsFreeMode()) && player.endMove == false && action.endSignal == false)
             {
                 player.rangeIndicator.gameObject.transform.localScale = new Vector3(remainingMovement * 2, scale.y, remainingMovement * 2);
@@ -55,7 +58,7 @@ public class Movement
                         foreach (PlayerCharacter follower in PartyManager.instance.movementGroup)
                         {
                             Vector3 followerTarget = targetPosition + (follower.transform.position - player.transform.position).normalized * 1.5f;
-                            ActionManager.instance.StartCoroutine(MoveFollower(follower, followerTarget, player.moveSpeed));
+                            PartyManager.instance.StartFollowerMovement(follower, MoveFollower(follower, followerTarget, player.moveSpeed));
                         }
 
                         foreach (Vector3 corner in path.corners)
@@ -123,6 +126,8 @@ public class Movement
                 yield return null;
             }
         }
+
+        PartyManager.instance.followerMovementCoroutines.Remove(follower);
     }
 
     /// <summary>

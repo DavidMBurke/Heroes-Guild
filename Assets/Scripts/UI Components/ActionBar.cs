@@ -143,7 +143,6 @@ public class ActionBar : MonoBehaviour
             Debug.LogWarning("null player in HandlePlayerSelectied");
             return;
         }
-        Debug.Log($"{player.name} selected");
         PopulateCharacterActionButtons(player);
     }
 }

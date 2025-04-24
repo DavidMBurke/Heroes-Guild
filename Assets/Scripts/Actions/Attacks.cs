@@ -58,7 +58,6 @@ public class Attack
             }
             if (Input.GetMouseButtonDown(1) || action.endSignal)
             {
-                Debug.Log($"{action.endSignal}");
                 inAttack = false;
             }
             yield return null;

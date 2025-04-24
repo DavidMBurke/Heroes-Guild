@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,28 @@ public class PartyManager : MonoBehaviour
     public static PartyManager instance = null!;
     public PlayerCharacter[] partyMembers = new PlayerCharacter[6];
     public List<PlayerCharacter> movementGroup = new List<PlayerCharacter>();
+
+    public Dictionary<PlayerCharacter, Coroutine> followerMovementCoroutines = new();
+
+    public void StartFollowerMovement(PlayerCharacter follower, IEnumerator routine)
+    {
+        if (followerMovementCoroutines.TryGetValue(follower, out Coroutine existing))
+        {
+            StopCoroutine(existing);
+        }
+
+        Coroutine newCoroutine = StartCoroutine(routine);
+        followerMovementCoroutines[follower] = newCoroutine;
+    }
+
+    public void StopFollowerMovement(PlayerCharacter follower)
+    {
+        if (followerMovementCoroutines.TryGetValue(follower, out Coroutine existing))
+        {
+            StopCoroutine(existing);
+            followerMovementCoroutines.Remove(follower);
+        }
+    }
 
     private void Awake()
     {
@@ -41,10 +64,7 @@ public class PartyManager : MonoBehaviour
 
     public void ClearCharactersFromMovementGroup()
     {
-        foreach (PlayerCharacter character in movementGroup)
-        {
-            movementGroup.Remove(character);
-        }
+        movementGroup.Clear();
     }
 
 }

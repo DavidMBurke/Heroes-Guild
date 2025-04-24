@@ -78,6 +78,7 @@ public class ActionManager : MonoBehaviour
     /// </summary>
     private void StartTurnBasedMode()
     {
+        PartyManager.instance.ClearCharactersFromMovementGroup();
         actionMode = ActionModes.TurnBased;
         InitializeBeings();
         StartTurn();
