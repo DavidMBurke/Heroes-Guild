@@ -2,21 +2,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /// <summary>
-/// State and UI-Specific Functions
+/// Handles UI state queries and UI-specific utility functions.
 /// </summary>
 public class UIManager : MonoBehaviour
 {
     /// <summary>
-    /// Return true if pointer is over a UI element
+    /// Checks if the mouse pointer is currently over a UI element.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True if the pointer is over a UI element; otherwise, false.</returns>
     public static bool CheckForUIElement()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            return true;
-        }
-        return false;
+        return EventSystem.current.IsPointerOverGameObject();
     }
-
 }

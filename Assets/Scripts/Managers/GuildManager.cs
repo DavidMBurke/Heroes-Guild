@@ -2,16 +2,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manages the overall state and progression of the guild including economy, time, employees, and quests.
+/// </summary>
 public class GuildManager : MonoBehaviour
 {
     public static GuildManager instance = null!;
-    public int coin; //base currency in copper, to be displayed in broken down denominations (100 copper -> 1 silver, 100 silver -> 1 gold)
+
+    // ========== Currency & Economy ==========
+    public int coin; // stored in copper
     public int dailyExpenses;
+
+    // ========== Characters & Resources ==========
     public List<PlayerCharacter> charactersForHire = null!;
     public List<Quest> quests = null!;
-    public List<Item> stockpile = new List<Item>();
+    public List<Item> stockpile = new();
 
-    // Employees
+    // ========== Employee Management ==========
     public List<PlayerCharacter> unassignedEmployees = new();
     public List<PlayerCharacter> assignedToQuest = new();
     public List<PlayerCharacter> jewelers = new();
@@ -26,6 +33,7 @@ public class GuildManager : MonoBehaviour
     public List<PlayerCharacter> cooks = new();
     public Dictionary<string, List<PlayerCharacter>> workerGroups;
 
+    // ========== UI Pages ==========
     public WorkshopPage jewelerPage = null!;
     public WorkshopPage armorSmithPage = null!;
     public WorkshopPage weaponSmithPage = null!;
@@ -37,12 +45,12 @@ public class GuildManager : MonoBehaviour
     public WorkshopPage alchemistPage = null!;
     public WorkshopPage cooksPage = null!;
     public HirePage hirePage = null!;
-    
-    // Time
+
+    // ========== Time & Progression ==========
     public float elapsedTime = 0;
     public bool timeAdvancing;
     public int year = 1;
-    public int season; //30 day per season
+    public int season;
     public int day = 1;
     public int hour;
     public int minute;
@@ -58,7 +66,8 @@ public class GuildManager : MonoBehaviour
         timeAdvancing = false;
         coin = 10000;
 
-        workerGroups = new Dictionary<string, List<PlayerCharacter>> {
+        workerGroups = new Dictionary<string, List<PlayerCharacter>>
+        {
             { "Unassigned", unassignedEmployees },
             { "In Quest", assignedToQuest },
             { "Jeweler", jewelers },
@@ -72,87 +81,6 @@ public class GuildManager : MonoBehaviour
             { "Alchemist", alchemists },
             { "Cook", cooks }
         };
-
-    }
-
-    private void AddPlaceholderQuests()
-    {
-        GameObject questGameObject = Instantiate(new GameObject());
-        Quest quest = questGameObject.AddComponent<Quest>();
-        quest.name = "Missing Caravan";
-        quest.questName = "Missing Caravan";
-        quest.location = "Forest";
-        quest.level = 1;
-        quest.description = "The supply caravan that was supposed to arrive yesterday never came. We will need those supplies to get started in establishing our guild!";
-        quest.coinReward = 1000;
-        quest.xpReward = 1000;
-        quest.staysAvailable = true;
-        quest.itemReward = new List<Item> {
-            Fabrics.Cloths[(int)Fabrics.ClothEnum.BasicCloth].Clone(100),
-            Fabrics.Threads[(int)Fabrics.ThreadEnum.BasicThread].Clone(100),
-            PlantParts.Woods[(int)PlantParts.WoodsEnum.AshWood].Clone(100),
-            PlantParts.Misc[(int)PlantParts.MiscEnum.PlantFiber].Clone(100),
-            
-        };
-        quests.Add(quest);
-
-        GameObject HuntingQuestObject = Instantiate(new GameObject());
-        Quest huntingQuest = HuntingQuestObject.AddComponent<Quest>();
-        huntingQuest.name = "Hunting Expedition";
-        huntingQuest.questName = "Hunting Expedition";
-        huntingQuest.location = "Forest";
-        huntingQuest.level = 1;
-        huntingQuest.description = "Go and collect resources from the monsters in the nearby forest!";
-        huntingQuest.coinReward = 1000;
-        huntingQuest.xpReward = 1000;
-        huntingQuest.staysAvailable = true;
-        huntingQuest.itemReward = new List<Item> {
-            MonsterParts.Bones[(int)MonsterParts.BonesEnum.BloodfangBone].Clone(100),
-            MonsterParts.Bones[(int)MonsterParts.BonesEnum.BrindlegrazerBone].Clone(100),
-            MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BloodfangLeather].Clone(100),
-            MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BrindlegrazerLeather].Clone(100),
-            MonsterParts.Essences[(int)MonsterParts.EssencesEnum.TinyNatureEssence].Clone(50),
-            MonsterParts.Essences[(int)MonsterParts.EssencesEnum.SmallNatureEssence].Clone(50),
-            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBrindlegrazerMeat].Clone(100),
-            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBloodfangMeat].Clone(100),
-            Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawGigantopillarMeat].Clone(100),
-            
-        };
-        quests.Add(huntingQuest);
-
-        GameObject MiningQuestObject = Instantiate(new GameObject());
-        Quest miningQuest = MiningQuestObject.AddComponent<Quest>();
-        miningQuest.name = "Mining Expedition";
-        miningQuest.questName = "Mining Expedition";
-        miningQuest.location = "Caves";
-        miningQuest.level = 1;
-        miningQuest.description = "Go and collect metal ores in the nearby caves!";
-        miningQuest.coinReward = 1000;
-        miningQuest.xpReward = 1000;
-        miningQuest.staysAvailable = true;
-        miningQuest.itemReward = new List<Item> {
-            Metals.MetalIngots[(int)Metals.MetalIngotEnum.CopperIngot].Clone(100),
-            Metals.MetalIngots[(int)Metals.MetalIngotEnum.IronIngot].Clone(100),
-            Metals.MetalIngots[(int)Metals.MetalIngotEnum.BrassIngot].Clone(100),
-            Metals.MetalIngots[(int)Metals.MetalIngotEnum.SilverIngot].Clone(100),
-            Jewelry.Gems[(int)Jewelry.GemEnum.RedFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.OrangeFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.YellowFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.GreenFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.BlueFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.PurpleFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.BlackFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.WhiteFluorite].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.RedGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.OrangeGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.YellowGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.GreenGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.BlueGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.PurpleGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.BlackGarnet].Clone(5),
-            Jewelry.Gems[(int)Jewelry.GemEnum.WhiteGarnet].Clone(5),
-        };
-        quests.Add(miningQuest);
     }
 
     private void Update()
@@ -168,47 +96,44 @@ public class GuildManager : MonoBehaviour
         }
     }
 
-    public void AddCoin(int amount)
-    {
-        coin += amount;
-    }
+    // ========== Currency Methods ==========
 
-    public void RemoveCoin(int amount)
-    {
-        coin -= amount;
-    }
+    public void AddCoin(int amount) => coin += amount;
+    public void RemoveCoin(int amount) => coin -= amount;
+
+    // ========== Stockpile Management ==========
 
     public void AddToStockpile(Item item)
     {
-        Item stockPileItem = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
-        if (stockPileItem != null)
+        Item existing = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
+        if (existing != null)
         {
-            stockPileItem.quantity += item.quantity;
+            existing.quantity += item.quantity;
         }
         else
         {
             stockpile.Add(item);
         }
-
     }
 
     public void RemoveFromStockpile(Item item, int quantity = 1)
     {
-        Item stockpileItem = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
-        if (stockpileItem != null)
+        Item existing = stockpile.FirstOrDefault(i => i.itemName == item.itemName && i.description == item.description);
+        if (existing != null)
         {
-            stockpileItem.quantity -= quantity;
-            if (stockpileItem.quantity <= 0)
+            existing.quantity -= quantity;
+            if (existing.quantity <= 0)
             {
-                stockpile.Remove(stockpileItem);
+                stockpile.Remove(existing);
             }
-        } 
+        }
         else
         {
-            Debug.LogError($"Tried to remove {item.itemName} from stockpile but item was not found");
+            Debug.LogError($"Tried to remove {item.itemName} from stockpile but item was not found.");
         }
-        
     }
+
+    // ========== Character Generation ==========
 
     public void GenerateCharactersForHire(int amount)
     {
@@ -227,11 +152,15 @@ public class GuildManager : MonoBehaviour
         }
     }
 
+    // ========== Daily & Tick Logic ==========
+
     public void Tick()
     {
         IncrementTime();
+
         if (hour == dayStartHour && minute == 0)
             StartDay();
+
         jewelerPage.Tick();
         armorSmithPage.Tick();
         weaponSmithPage.Tick();
@@ -242,6 +171,7 @@ public class GuildManager : MonoBehaviour
         arcanistPage.Tick();
         alchemistPage.Tick();
         cooksPage.Tick();
+
         foreach (Quest quest in quests)
         {
             quest.Tick();
@@ -250,101 +180,165 @@ public class GuildManager : MonoBehaviour
 
     public void StartDay()
     {
-        List<PlayerCharacter> charactersToRemove = new();
-
-        foreach (PlayerCharacter employee in charactersForHire)
+        List<PlayerCharacter> toRemove = new();
+        foreach (var employee in charactersForHire)
         {
-            int random = Random.Range(0, 10);
-            if (random < 2)
-            {
-                charactersToRemove.Add(employee);
-            }
+            if (Random.Range(0, 10) < 2)
+                toRemove.Add(employee);
         }
-        charactersForHire.RemoveAll(c => charactersToRemove.Contains(c));
+        charactersForHire.RemoveAll(c => toRemove.Contains(c));
+
         for (int i = 0; i < 10; i++)
         {
-            int random = Random.Range(0, 10);
-            if (random < 3)
-            {
-            charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
-            }
+            if (Random.Range(0, 10) < 3)
+                charactersForHire.Add(PlayerCharacter.CreateNewCharacter());
         }
+
         hirePage.ResetList();
     }
-    
-    public void EndDay()
-    {
 
-    }
+    public void EndDay() { /* Future end-of-day logic */ }
 
     private void IncrementTime()
     {
         minute += 1;
         if (minute >= 60)
         {
-            minute -= 60;
+            minute = 0;
             hour += 1;
         }
+
         if (hour >= 24)
         {
-            hour -= 24;
+            hour = 0;
             day += 1;
             SubtractDailyExpenses();
         }
+
         if (day >= 30)
         {
-            day -= 30;
+            day = 0;
             season += 1;
         }
+
         if (season >= 4)
         {
-            season -= 4;
+            season = 0;
             year += 1;
         }
     }
 
     public void CalculateDailyExpenses()
     {
-        int expenses = 0;
-        foreach (var group in workerGroups)
+        int total = 0;
+        foreach (var group in workerGroups.Values)
         {
-            foreach (PlayerCharacter worker in group.Value)
+            foreach (var worker in group)
             {
-                expenses += worker.salary;
+                total += worker.salary;
             }
         }
-        dailyExpenses = expenses;
+        dailyExpenses = total;
     }
 
-    private void SubtractDailyExpenses()
-    {
-        coin -= dailyExpenses;
-    }
+    private void SubtractDailyExpenses() => coin -= dailyExpenses;
 
-    public void SetTimePerTick(float timePerTick)
-    {
-        this.timePerTick = timePerTick;
-    }
+    public void SetTimePerTick(float timePerTick) => this.timePerTick = timePerTick;
+    public void SetTimeAdvancing(bool isAdvancing) => timeAdvancing = isAdvancing;
 
-    public void SetTimeAdvancing(bool isAdvancing)
-    {
-        timeAdvancing = isAdvancing;
-    }
-
+    /// <summary>
+    /// Advances time to the start of the next day.
+    /// </summary>
     public void AdvanceToNextDay()
     {
         int timeout = 60 * 24;
         int iteration = 0;
         Tick();
+
         while (!(hour == 6 && minute == 0))
         {
-            iteration++;
-            if (iteration > timeout)
+            if (++iteration > timeout)
             {
                 Debug.LogError("Skipped greater than 24 hours");
+                break;
             }
             Tick();
         }
     }
 
+    // ========== Placeholder Quest Setup ==========
+
+    private void AddPlaceholderQuests()
+    {
+        quests = new List<Quest>();
+
+        // Missing Caravan Quest
+        quests.Add(CreateQuest("Missing Caravan", "Forest", 1,
+            "The supply caravan that was supposed to arrive yesterday never came...",
+            1000, 1000,
+            new List<Item> {
+                Fabrics.Cloths[(int)Fabrics.ClothEnum.BasicCloth].Clone(100),
+                Fabrics.Threads[(int)Fabrics.ThreadEnum.BasicThread].Clone(100),
+                PlantParts.Woods[(int)PlantParts.WoodsEnum.AshWood].Clone(100),
+                PlantParts.Misc[(int)PlantParts.MiscEnum.PlantFiber].Clone(100),
+            }));
+
+        // Hunting Expedition
+        quests.Add(CreateQuest("Hunting Expedition", "Forest", 1,
+            "Go and collect resources from the monsters in the nearby forest!",
+            1000, 1000,
+            new List<Item> {
+                MonsterParts.Bones[(int)MonsterParts.BonesEnum.BloodfangBone].Clone(100),
+                MonsterParts.Bones[(int)MonsterParts.BonesEnum.BrindlegrazerBone].Clone(100),
+                MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BloodfangLeather].Clone(100),
+                MonsterParts.Leathers[(int)MonsterParts.LeathersEnum.BrindlegrazerLeather].Clone(100),
+                MonsterParts.Essences[(int)MonsterParts.EssencesEnum.TinyNatureEssence].Clone(50),
+                MonsterParts.Essences[(int)MonsterParts.EssencesEnum.SmallNatureEssence].Clone(50),
+                Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBrindlegrazerMeat].Clone(100),
+                Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawBloodfangMeat].Clone(100),
+                Food.Meat.RawMeat[(int)Food.Meat.RawMeatEnum.RawGigantopillarMeat].Clone(100),
+            }));
+
+        // Mining Expedition
+        quests.Add(CreateQuest("Mining Expedition", "Caves", 1,
+            "Go and collect metal ores in the nearby caves!",
+            1000, 1000,
+            new List<Item> {
+                Metals.MetalIngots[(int)Metals.MetalIngotEnum.CopperIngot].Clone(100),
+                Metals.MetalIngots[(int)Metals.MetalIngotEnum.IronIngot].Clone(100),
+                Metals.MetalIngots[(int)Metals.MetalIngotEnum.BrassIngot].Clone(100),
+                Metals.MetalIngots[(int)Metals.MetalIngotEnum.SilverIngot].Clone(100),
+                Jewelry.Gems[(int)Jewelry.GemEnum.RedFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.OrangeFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.YellowFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.GreenFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.BlueFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.PurpleFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.BlackFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.WhiteFluorite].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.RedGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.OrangeGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.YellowGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.GreenGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.BlueGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.PurpleGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.BlackGarnet].Clone(5),
+                Jewelry.Gems[(int)Jewelry.GemEnum.WhiteGarnet].Clone(5),
+            }));
+    }
+
+    private Quest CreateQuest(string name, string location, int level, string description, int coinReward, int xpReward, List<Item> itemReward)
+    {
+        GameObject questGO = Instantiate(new GameObject(name));
+        Quest quest = questGO.AddComponent<Quest>();
+        quest.questName = name;
+        quest.location = location;
+        quest.level = level;
+        quest.description = description;
+        quest.coinReward = coinReward;
+        quest.xpReward = xpReward;
+        quest.staysAvailable = true;
+        quest.itemReward = itemReward;
+        return quest;
+    }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Manage state related to Actions and Turn Order
+/// Manages combat and exploration states, handling turn-based and free action modes.
 /// </summary>
 public class ActionManager : MonoBehaviour
 {
@@ -11,8 +11,8 @@ public class ActionManager : MonoBehaviour
     public List<Being> beings = null!;
     public Being currentBeing = null!;
     public CameraController cameraController = null!;
-    int turnIndex = 0;
-    PartyManager partyManager = null!;
+    private int turnIndex = 0;
+    private PartyManager partyManager = null!;
 
     public delegate void PlayerSelected(PlayerCharacter newPlayer);
     public event PlayerSelected OnPlayerSelected = null!;
@@ -25,56 +25,62 @@ public class ActionManager : MonoBehaviour
 
     private ActionModes actionMode = ActionModes.Free;
 
-    /// <summary>
-    /// Return true if in Turn Based Mode
-    /// </summary>
-    /// <returns></returns>
-    public bool IsTurnBasedMode()
-    {
-        return (actionMode == ActionModes.TurnBased);
-    }
-
-    /// <summary>
-    /// Return true if in Free Mode
-    /// </summary>
-    /// <returns></returns>
-    public bool IsFreeMode()
-    {
-        return (actionMode == ActionModes.Free);
-    }
-
-    void Start()
-    {
-        partyManager = FindObjectOfType<PartyManager>();
-        SelectCharacter(partyManager.partyMembers.FirstOrDefault());
-    }
+    // ========== Unity Lifecycle ==========
 
     private void Awake()
     {
         instance = this;
     }
 
+    private void Start()
+    {
+        partyManager = FindObjectOfType<PartyManager>();
+        SelectCharacter(partyManager.partyMembers.FirstOrDefault());
+    }
+
     private void Update()
     {
-        // TODO - Lots of unneccessary list generation here, can be done once and updated at turn ends
-        List<Enemy> enemies = FindObjectsOfType<Being>().OfType<Enemy>().Where(e => e.isAwareOfPlayers).ToList();
-        bool enemiesAreAlive = enemies.FirstOrDefault(e => e.isAlive == true) != null;
+        // Transition to turn-based mode if enemies are aware of players
+        List<Enemy> enemies = FindObjectsOfType<Being>()
+            .OfType<Enemy>()
+            .Where(e => e.isAwareOfPlayers)
+            .ToList();
+
+        bool enemiesAreAlive = enemies.Any(e => e.isAlive);
+
         if (actionMode == ActionModes.Free && enemiesAreAlive)
         {
             StartTurnBasedMode();
         }
-        if (actionMode == ActionModes.TurnBased && !enemiesAreAlive)
+        else if (actionMode == ActionModes.TurnBased && !enemiesAreAlive)
         {
             StartFreeMode();
         }
-        if (Input.GetMouseButtonDown(1) && !UIManager.CheckForUIElement()) {
-            ExecuteCharacterAction(new CharacterAction((player, action) => Interaction.InteractWithWorldItem(player, action), currentBeing));
+
+        // Right click interaction trigger
+        if (Input.GetMouseButtonDown(1) && !UIManager.CheckForUIElement())
+        {
+            ExecuteCharacterAction(new CharacterAction((player, action) =>
+                Interaction.InteractWithWorldItem(player, action), currentBeing));
         }
     }
-    
+
+    // ========== Mode Checks ==========
 
     /// <summary>
-    /// Set Mode to Turn Based Mode, initialize beings and start the first turn
+    /// Returns whether the game is currently in turn-based mode.
+    /// </summary>
+    public bool IsTurnBasedMode() => actionMode == ActionModes.TurnBased;
+
+    /// <summary>
+    /// Returns whether the game is currently in free movement mode.
+    /// </summary>
+    public bool IsFreeMode() => actionMode == ActionModes.Free;
+
+    // ========== Mode Transitions ==========
+
+    /// <summary>
+    /// Switches to turn-based mode, initializes characters, and starts the turn cycle.
     /// </summary>
     private void StartTurnBasedMode()
     {
@@ -85,7 +91,7 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Set Mode to Free Mode, switch to a live party member
+    /// Switches to free mode, selecting the first available party member.
     /// </summary>
     private void StartFreeMode()
     {
@@ -98,47 +104,52 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Set initiative values and sort beings into turn order
+    /// Initializes the list of beings and determines turn order based on initiative.
     /// </summary>
     private void InitializeBeings()
     {
         beings = new List<Being>();
-        List<Being> players = FindObjectsOfType<Being>().Where(b => b.isAlive && b.GetType() == typeof(PlayerCharacter)).ToList();
-        foreach (Being player in players)
-        {
-            beings.Add(player);
-        }
-        List<Being> engagedEnemy = FindObjectsOfType<Being>().Where(b => b.isAlive).OfType<Enemy>().Where(e => e.isAwareOfPlayers).OfType<Being>().ToList();
-        foreach (Being enemy in engagedEnemy)
-        {
-            beings.Add(enemy);
-        }
+
+        // Add live players
+        var players = FindObjectsOfType<Being>()
+            .Where(b => b.isAlive && b.GetType() == typeof(PlayerCharacter))
+            .ToList();
+        beings.AddRange(players);
+
+        // Add live and aware enemies
+        var engagedEnemies = FindObjectsOfType<Being>()
+            .OfType<Enemy>()
+            .Where(e => e.isAlive && e.isAwareOfPlayers)
+            .Cast<Being>()
+            .ToList();
+        beings.AddRange(engagedEnemies);
+
+        // Set initiative and sort turn order
         foreach (Being being in beings)
         {
             being.isTurn = false;
             being.initiative = Random.Range(0, 100);
         }
+
         beings = beings.OrderBy(b => b.initiative).ToList();
         currentBeing = beings[turnIndex];
     }
-    
+
+    // ========== Turn Management ==========
+
     /// <summary>
-    /// End the current turn, select the next being in turn order, and start their turn
+    /// Ends the current turn and starts the next being's turn in order.
     /// </summary>
     public void NextTurn()
     {
         EndTurn();
-        turnIndex++;
-        if (turnIndex >= beings.Count)
-        {
-            turnIndex = 0;
-        }
+        turnIndex = (turnIndex + 1) % beings.Count;
         currentBeing = beings[turnIndex];
         StartTurn();
     }
 
     /// <summary>
-    /// End the current being's turn
+    /// Ends the turn for the current being.
     /// </summary>
     private void EndTurn()
     {
@@ -146,14 +157,14 @@ public class ActionManager : MonoBehaviour
         {
             player.EndTurn();
         }
-        if (currentBeing is Enemy enemy)
+        else if (currentBeing is Enemy enemy)
         {
             enemy.EndTurn();
         }
     }
 
     /// <summary>
-    /// Start the current being's turn
+    /// Starts the turn for the current being.
     /// </summary>
     private void StartTurn()
     {
@@ -162,16 +173,17 @@ public class ActionManager : MonoBehaviour
             player.StartTurn();
             OnPlayerSelected?.Invoke(player);
         }
-        if (currentBeing is Enemy enemy)
+        else if (currentBeing is Enemy enemy)
         {
             enemy.StartTurn(this);
         }
     }
 
+    // ========== Character Control ==========
+
     /// <summary>
-    /// Change turns to another character (used in Free Mode)
+    /// Selects a new player-controlled character in free mode.
     /// </summary>
-    /// <param name="selectedPlayer"></param>
     public void SelectCharacter(PlayerCharacter selectedPlayer)
     {
         if (currentBeing is PlayerCharacter previousPlayer)
@@ -179,20 +191,16 @@ public class ActionManager : MonoBehaviour
             previousPlayer.endMove = true;
             previousPlayer.isInMovementAction = false;
         }
+
         EndTurn();
         currentBeing = selectedPlayer;
         selectedPlayer.StartTurn();
-
-        if (currentBeing is PlayerCharacter player)
-        {
-            OnPlayerSelected?.Invoke(player);
-        }
+        OnPlayerSelected?.Invoke(selectedPlayer);
     }
 
     /// <summary>
-    /// Update endMove flag on player to true
+    /// Marks the current player's move as ended.
     /// </summary>
-    /// TODO - This probably isn't necessary with the endSignal flags on actions, see if it can be removed
     public void EndMove()
     {
         if (currentBeing is PlayerCharacter player)
@@ -202,9 +210,8 @@ public class ActionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// End the current being's action and start a new one
+    /// Executes a new character action, replacing any currently running one.
     /// </summary>
-    /// <param name="action"></param>
     public void ExecuteCharacterAction(CharacterAction action)
     {
         if (currentBeing.currentAction != null)
@@ -219,5 +226,4 @@ public class ActionManager : MonoBehaviour
             player.StartCharacterAction(action);
         }
     }
-
 }
