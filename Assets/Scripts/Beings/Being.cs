@@ -6,10 +6,14 @@ using UnityEngine;
 /// </summary>
 public class Being : MonoBehaviour
 {
+    // =====================
     // Info
+    // =====================
     public string characterName = null!;
 
+    // =====================
     // Movement
+    // =====================
     public float moveDistance = 5f;
     public float moveSpeed = 5f;
     public bool isMoving = false; // To prevent mid-movement, probably will expand this to isInterruptable for any action that needs to complete
@@ -17,20 +21,26 @@ public class Being : MonoBehaviour
     protected Vector3 targetPosition;
     public Vector3 startingPosition;
 
+    // =====================
     // Action
+    // =====================
     public bool isTurn = false;
     public bool isInCharacterAction = false;
     public CharacterAction currentAction = null!;
     public float initiative;
     public bool isInScene = false;
 
+    // =====================
     // Stats
+    // =====================
     public int health = 100;
     public int maxHealth = 100;
     public bool isAlive = true;
     public int level = 1;
-    
-    // Model
+
+    // =====================
+    // Model and Visuals
+    // =====================
     private Rigidbody rb = null!;
     public GameObject model = null!;
     public Color characterColor;
@@ -44,63 +54,69 @@ public class Being : MonoBehaviour
     public Color turnIndicatorColor = new Color(0, 1f, 0, .2f);
     public float interactDistance = 1.5f;
 
+    // =====================
     // Inventory
+    // =====================
     public List<Item> inventory;
 
+    /// <summary>
+    /// Unity Start method. Initializes references and visuals if in scene.
+    /// </summary>
     protected void Start()
     {
         targetPosition = transform.position;
         rb = GetComponentInChildren<Rigidbody>();
-        if (!isInScene)
-        {
-            return;
-        }
-        ApplyColors();
-    }
 
-    protected void Update()
-    {
-        if (!isInScene)
-        {
-            return;
-        }
-        turnIndicator.SetActive(isTurn);
+        if (!isInScene) return;
+
         ApplyColors();
-        checkStatus();
     }
 
     /// <summary>
-    /// Check status indicators
+    /// Unity Update method. Refreshes status and visuals if in scene.
     /// </summary>
-    private void checkStatus()
+    protected void Update()
+    {
+        if (!isInScene) return;
+
+        turnIndicator.SetActive(isTurn);
+        ApplyColors();
+        CheckStatus();
+    }
+
+    /// <summary>
+    /// Checks the being's status (e.g. health) and updates if needed.
+    /// </summary>
+    private void CheckStatus()
     {
         if (health <= 0 && isAlive)
         {
-            die();
+            Die();
         }
     }
 
     /// <summary>
-    /// Set isAlive to false, renove rotational lock and push over
+    /// Handles death logic: disables physics constraints and adds torque to "knock over" the character.
     /// </summary>
-    private void die()
+    private void Die()
     {
         isAlive = false;
         rb.constraints = RigidbodyConstraints.None;
         rb.AddTorque(new Vector3(0, 0, 1.5f), ForceMode.Impulse);
     }
 
+    /// <summary>
+    /// Called when values change in editor. Updates visual representation.
+    /// </summary>
     protected void OnValidate()
     {
-        if (!isInScene)
-        {
-            return;
-        }
+        if (!isInScene) return;
+
         ApplyColors();
     }
 
     /// <summary>
-    /// Set colors and transparency of being, turn indicator and range indicator
+    /// Applies character color and transparency to model and indicators.
     /// </summary>
     private void ApplyColors()
     {
@@ -108,38 +124,39 @@ public class Being : MonoBehaviour
         MeshRenderer turnIndicatorRenderer = turnIndicator.GetComponent<MeshRenderer>();
         MeshRenderer rangeIndicatorRenderer = rangeIndicator.GetComponent<MeshRenderer>();
 
-        // Did this because sharedMaterial was causing the wrong items to get colored in playmode
-        // but material was throwing errors for instantiating materials in edit mode
         if (Application.isPlaying)
         {
             turnIndicatorRenderer.material = new Material(Shader.Find("Transparent/Diffuse"));
             rangeIndicatorRenderer.material = new Material(Shader.Find("Transparent/Diffuse"));
 
             renderer.material.color = characterColor;
-            turnIndicatorRenderer.material.color = turnIndicatorColor;
-            rangeIndicatorRenderer.material.color = rangeIndicatorColor;
-        } else if (renderer != null && renderer.sharedMaterial != null) {
-            renderer.sharedMaterial.color = characterColor;
-            turnIndicatorRenderer.sharedMaterial.color = turnIndicatorColor;
-            rangeIndicatorRenderer.sharedMaterial.color = rangeIndicatorColor;
         }
-
-    }
-
-    protected void FixedUpdate()
-    {
-        if (!isInScene)
+        else if (renderer != null && renderer.sharedMaterial != null)
         {
-            return;
+            renderer.sharedMaterial.color = characterColor;
         }
-        FixVertical();
-        //FixPosition();
+
+        if (turnIndicatorRenderer?.sharedMaterial != null)
+            turnIndicatorRenderer.sharedMaterial.color = turnIndicatorColor;
+
+        if (rangeIndicatorRenderer?.sharedMaterial != null)
+            rangeIndicatorRenderer.sharedMaterial.color = rangeIndicatorColor;
     }
 
     /// <summary>
-    /// Set and lock being upright
+    /// Unity FixedUpdate method. Locks vertical rotation and posture.
     /// </summary>
-    /// note: For some reason only doing one of locking rotation and setting to zero still allowed falling over but both do not
+    protected void FixedUpdate()
+    {
+        if (!isInScene) return;
+
+        FixVertical();
+        //FixPosition(); // Optional: Re-enable if needed for fixing Y-axis offset
+    }
+
+    /// <summary>
+    /// Locks the being's rotation to upright if alive.
+    /// </summary>
     private void FixVertical()
     {
         if (!isAlive)
@@ -147,20 +164,21 @@ public class Being : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;
             return;
         }
+
         Vector3 rotation = transform.eulerAngles;
-        rotation.z = 0;
         rotation.x = 0;
+        rotation.z = 0;
         transform.eulerAngles = rotation;
+
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     /// <summary>
-    /// Set position vertical
+    /// Resets the position to align with the model's transform.
     /// </summary>
     private void FixPosition()
     {
-        transform.position = model.gameObject.transform.position;
-        model.gameObject.transform.localPosition = Vector3.zero;
+        transform.position = model.transform.position;
+        model.transform.localPosition = Vector3.zero;
     }
-
 }

@@ -1,34 +1,35 @@
-
-
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Analytics;
 
 /// <summary>
-/// Collection of Attack functions to be passed in as coroutines
+/// Collection of attack functions to be executed as coroutines.
 /// </summary>
 public class Attack
 {
     /// <summary>
-    /// Basic attack that does damage at a range
+    /// Performs a basic ranged attack on an enemy within range.
+    /// Displays the attack range, waits for a valid target click, applies damage, and deducts action points.
     /// </summary>
-    /// <param name="attacker"></param>
-    /// <param name="range"></param>
-    /// <param name="damage"></param>
-    /// <param name="action"></param>
-    /// <returns></returns>
+    /// <param name="attacker">The being initiating the attack.</param>
+    /// <param name="range">The maximum distance the attack can reach.</param>
+    /// <param name="damage">The amount of health the attack removes from the target.</param>
+    /// <param name="action">The action context for coroutine management.</param>
+    /// <returns>An IEnumerator coroutine used for execution in Unity.</returns>
     public static IEnumerator BasicAttack(Being attacker, float range, int damage, CharacterAction action)
     {
         bool inAttack = true;
-        Vector3 scale = attacker.rangeIndicator.gameObject.transform.localScale;
+        Vector3 scale = attacker.rangeIndicator.transform.localScale;
         attacker.rangeIndicatorColor = attacker.rangeIndicatorCombatColor;
+
         while (inAttack)
         {
-            attacker.rangeIndicator.gameObject.SetActive(true);
-            attacker.rangeIndicator.gameObject.transform.localScale = new Vector3(range * 2, scale.y, range * 2);
+            attacker.rangeIndicator.SetActive(true);
+            attacker.rangeIndicator.transform.localScale = new Vector3(range * 2, scale.y, range * 2);
+
             if (Input.GetMouseButtonDown(0))
             {
                 UIManager.CheckForUIElement();
+
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Attackable")))
                 {
@@ -36,19 +37,24 @@ public class Attack
                     continue;
                 }
 
-                Being target = hit.collider.gameObject.GetComponentInParent<Being>();
+                Being target = hit.collider.GetComponentInParent<Being>();
                 if (target == null)
                 {
                     yield return null;
                     continue;
                 }
+
                 float distanceToTarget = Vector3.Distance(target.transform.position, attacker.transform.position);
                 if (target == attacker || distanceToTarget > range)
                 {
                     yield return null;
                     continue;
                 }
+
+                // Apply damage to target
                 target.health -= damage;
+
+                // Deduct action point and end action for player
                 if (attacker is PlayerCharacter player)
                 {
                     player.actionPoints -= 1;
@@ -56,14 +62,15 @@ public class Attack
                     break;
                 }
             }
+
             if (Input.GetMouseButtonDown(1) || action.endSignal)
             {
                 inAttack = false;
             }
+
             yield return null;
         }
-        attacker.rangeIndicator.gameObject.SetActive(false);
+
+        attacker.rangeIndicator.SetActive(false);
     }
-
-
 }

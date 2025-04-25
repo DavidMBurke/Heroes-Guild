@@ -5,36 +5,32 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 /// <summary>
-/// Playable character
+/// Player-controlled character with race, class, attributes, inventory, equipment, and combat logic.
 /// </summary>
 public class PlayerCharacter : Being
 {
+    // ========== Character Meta ==========
     public Race race = Race.races[(int)Race.Enum.Unassigned];
     public Class playerClass = Class.classes[(int)Class.Enum.Unassigned];
+    public int levelAttained;
+    public int salary = 1;
+
+    // ========== Core Systems ==========
     public Attributes attributes = new Attributes();
     public Affinities affinities = new Affinities();
-    [SerializeField]
-    public CombatSkills combatSkills = new CombatSkills();
-    [SerializeField]
-    public NonCombatSkills nonCombatSkills = new NonCombatSkills();
+    [SerializeField] public CombatSkills combatSkills = new CombatSkills();
+    [SerializeField] public NonCombatSkills nonCombatSkills = new NonCombatSkills();
+    [SerializeField] public EquipmentSlots equipmentSlots = new EquipmentSlots();
     public List<CharacterAction> actionList = new List<CharacterAction>();
-    [SerializeField]
-    public EquipmentSlots equipmentSlots = new EquipmentSlots();
 
+    // ========== Action & Movement ==========
     public int maxActionPoints = 1;
     public int actionPoints = 0;
     public bool hasMovement = true;
-    public bool endMove = false; // Used to signal move action to end mid-movement.
+    public bool endMove = false;
 
-    public delegate void InventoryUpdated();
-    public event InventoryUpdated OnInventoryUpdated = null!; 
+    // ========== Inventory ==========
     private List<Item> _inventory = new List<Item>();
-
-    public int levelAttained; // checked against being.level to prompt leveling up.
-
-    public int salary = 1; //coin per day
-
-
     public new List<Item> inventory
     {
         get => _inventory;
@@ -45,23 +41,32 @@ public class PlayerCharacter : Being
         }
     }
 
+    public delegate void InventoryUpdated();
+    public event InventoryUpdated OnInventoryUpdated = null!;
+
+    // ========== Unity Lifecycle Methods ==========
+
     new void Start()
     {
         base.Start();
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
         {
             transform.position = hit.position;
-        } else
+        }
+        else
         {
             Debug.LogWarning($"{name} could not snap to NavMesh. Check if terrain is baked");
         }
     }
 
-    private new void Update()
-    {
-        base.Update();
-    }
+    private new void Update() => base.Update();
+    new private void FixedUpdate() => base.FixedUpdate();
 
+    // ========== Turn Logic ==========
+
+    /// <summary>
+    /// Initializes values at the start of a character's turn.
+    /// </summary>
     public void StartTurn()
     {
         isTurn = true;
@@ -70,49 +75,52 @@ public class PlayerCharacter : Being
         actionPoints = maxActionPoints;
     }
 
+    /// <summary>
+    /// Ends the character's turn and any active action.
+    /// </summary>
     public void EndTurn()
     {
         endMove = true;
         isTurn = false;
         hasMovement = false;
-        if (isInCharacterAction)
-        {
-            EndCharacterAction();
-        }
+        if (isInCharacterAction) EndCharacterAction();
     }
 
+    /// <summary>
+    /// Begins a coroutine-based character action.
+    /// </summary>
     public void StartCharacterAction(CharacterAction action)
     {
-        if (isInCharacterAction)
-        {
-            EndCharacterAction();
-        }
+        if (isInCharacterAction) EndCharacterAction();
         action.endSignal = false;
         currentAction = action;
         StartCoroutine(action.action(action.character, action));
     }
 
+    /// <summary>
+    /// Ends the currently executing action.
+    /// </summary>
     public void EndCharacterAction()
     {
         isInCharacterAction = false;
         currentAction.EndAction();
     }
 
-    new private void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
+    // ========== Inventory Management ==========
 
+    /// <summary>
+    /// Adds an item to the inventory.
+    /// </summary>
     public void AddToInventory(Item item)
     {
-        if (item == null)
-        {
-            return;
-        }
+        if (item == null) return;
         item.AddToInventory(inventory, item.quantity);
         OnInventoryUpdated?.Invoke();
     }
 
+    /// <summary>
+    /// Removes an item or quantity of item from the inventory.
+    /// </summary>
     public void RemoveFromInventory(Item item, int quantity = 1)
     {
         Item inventoryItem = inventory.First(i => i.itemName == item.itemName && i.description == item.description);
@@ -121,14 +129,21 @@ public class PlayerCharacter : Being
             Debug.LogWarning("Attempted to remove item not in inventory");
             return;
         }
+
         inventoryItem.quantity -= quantity;
         if (inventoryItem.quantity <= 0)
         {
             inventory.Remove(inventoryItem);
         }
+
         OnInventoryUpdated?.Invoke();
     }
 
+    // ========== Character Generation & Stats ==========
+
+    /// <summary>
+    /// Rolls a stat using dice and enforces a minimum.
+    /// </summary>
     public static void RollStat(ref int stat, int minVal, int diceCount, int diceMin, int diceMax)
     {
         stat = 0;
@@ -140,9 +155,8 @@ public class PlayerCharacter : Being
     }
 
     /// <summary>
-    /// Generate a new random character with random race, class and stats rolled
+    /// Creates and returns a new randomized PlayerCharacter.
     /// </summary>
-    /// <returns></returns>
     public static PlayerCharacter CreateNewCharacter()
     {
         GameObject gameObject = new GameObject();
@@ -153,98 +167,81 @@ public class PlayerCharacter : Being
     }
 
     /// <summary>
-    /// Roll race, class, attributes, affinities, combat and non-combat skills
-    /// TODO - Move this somewhere else for static character generation methods
+    /// Rolls new stats and generates race, class, skills, and actions.
     /// </summary>
     public void RollNewStats()
     {
         int raceRoll = Random.Range(1, Race.races.Count);
         race = Race.races[raceRoll];
         characterName = AssignNewName(raceRoll);
+
         int classRoll = Random.Range(0, race.rollableClasses.Count);
         int classNum = race.rollableClasses[classRoll];
         playerClass = Class.classes[classNum];
+
         attributes = Attributes.RollBaseAttributes(race.attributeMods);
         affinities = Affinities.RollBaseAffinities(race.affinityMods);
         combatSkills = CombatSkills.RollBaseSkills(playerClass.combatSkillMods);
         nonCombatSkills = NonCombatSkills.RollBaseSkills(race.nonCombatSkillMods);
+
         level = CalculateCharacterLevel();
         salary = level;
 
-        /// vvv PLACEHOLDER GARBAGE TO MAKE THIS WORK ON FRONT END vvv
-        /// This will be dynamically generated and stored in the future
-
+        // TEMPORARY: Action setup (should move to class logic later)
         if (classNum == (int)Class.Enum.Paladin)
         {
-            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 2, 10, act), this, "Melee Attack"));
         }
         if (classNum == (int)Class.Enum.Rogue)
         {
-            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 2, 10, action), this, "Melee Attack"));
-            actionList.Add(new CharacterAction((attacker, action) => Attack.BasicAttack(attacker, 15, 10, action), this, "Ranged Attack"));
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 2, 10, act), this, "Melee Attack"));
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 15, 10, act), this, "Ranged Attack"));
         }
         if (classNum == (int)Class.Enum.Wizard)
         {
-            actionList.Add(new CharacterAction((caster, action) => Spells.FireBall(caster, action), this, "Fireball"));
+            actionList.Add(new CharacterAction((a, act) => Spells.FireBall(a, act), this, "Fireball"));
         }
+
         ApplyEquipmentSkillModifiers();
     }
 
+    /// <summary>
+    /// Assigns a new name based on race.
+    /// </summary>
     private string AssignNewName(int raceRoll)
     {
-        if (raceRoll == (int)Race.Enum.Felis)
+        return raceRoll switch
         {
-            return NameGenerator.GenerateFelisName();
-        }
-        if (raceRoll == (int)Race.Enum.Canid)
-        {
-            return NameGenerator.GenerateCanidName();
-        }
-        if (raceRoll == (int)Race.Enum.MouseFolk)
-        {
-            return NameGenerator.GenerateMouseFolkName();
-        }
-        return "";
+            (int)Race.Enum.Felis => NameGenerator.GenerateFelisName(),
+            (int)Race.Enum.Canid => NameGenerator.GenerateCanidName(),
+            (int)Race.Enum.MouseFolk => NameGenerator.GenerateMouseFolkName(),
+            _ => ""
+        };
     }
 
+    /// <summary>
+    /// Calculates level based on skill values using weighted scaling.
+    /// </summary>
     public int CalculateCharacterLevel()
     {
         float totalLevelPoints = 0;
         int pointsPerLevelUp = 4;
-        List<int> nonCombatSkillLevels = new();
-        List<int> combatSkillLevels = new();
-        foreach (var skill in nonCombatSkills.skills)
-        {
-            nonCombatSkillLevels.Add(skill.Value.level);
-        }
-        foreach (var skill in combatSkills.skills)
-        {
-            combatSkillLevels.Add(skill.Value.level);
-        }
-        nonCombatSkillLevels.Sort((a,b) => b.CompareTo(a));
-        combatSkillLevels.Sort((a,b) => b.CompareTo(a));
-        string logText = "Noncombat Skills: ";
-        for(int i = 0; i < nonCombatSkillLevels.Count; i++)
-        {
-            totalLevelPoints += ((float)nonCombatSkillLevels[i] - 1) / (i + 1);
-            logText += " ";
-            logText += nonCombatSkillLevels[i].ToString();
-        }
-        logText += "Combat Skills: ";
-        for(int i = 0; i < combatSkillLevels.Count; i++)
-        {
-            totalLevelPoints += ((float)combatSkillLevels[i] - 1) / (i + 1);
-            logText += " ";
-            logText += combatSkillLevels[i];
-        }
 
-        logText += $" totalLevelPoints: {totalLevelPoints}";
-        int level = (int)(totalLevelPoints / pointsPerLevelUp);
-        logText += $" level: {level}";
-        
-        return level;
+        var nonCombatLevels = nonCombatSkills.skills.Values.Select(s => s.level).OrderByDescending(l => l).ToList();
+        var combatLevels = combatSkills.skills.Values.Select(s => s.level).OrderByDescending(l => l).ToList();
+
+        for (int i = 0; i < nonCombatLevels.Count; i++)
+            totalLevelPoints += (nonCombatLevels[i] - 1f) / (i + 1);
+
+        for (int i = 0; i < combatLevels.Count; i++)
+            totalLevelPoints += (combatLevels[i] - 1f) / (i + 1);
+
+        return (int)(totalLevelPoints / pointsPerLevelUp);
     }
 
+    /// <summary>
+    /// Applies equipment-based skill bonuses to the character.
+    /// </summary>
     public void ApplyEquipmentSkillModifiers()
     {
         Dictionary<string, float> totalFlatBonuses = new();
@@ -253,31 +250,30 @@ public class PlayerCharacter : Being
         foreach (var slot in equipmentSlots.equipmentSlots)
         {
             Item equippedItem = slot.Value.item;
-            if (equippedItem != null)
-            {
-                foreach (var bonus in equippedItem.skillBonuses)
-                {
-                    if (!totalFlatBonuses.ContainsKey(bonus.Key))
-                    {
-                        totalFlatBonuses[bonus.Key] = 0;
-                    }
-                    totalFlatBonuses[bonus.Key] += bonus.Value;
-                }
+            if (equippedItem == null) continue;
 
-                foreach (var multiplier in equippedItem.skillMultipliers)
-                {
-                    if (!totalMultipliers.ContainsKey(multiplier.Key))
-                    {
-                        totalMultipliers[multiplier.Key] = 0;
-                    }
-                    totalMultipliers[multiplier.Key] += multiplier.Value;
-                }
+            foreach (var bonus in equippedItem.skillBonuses)
+            {
+                if (!totalFlatBonuses.ContainsKey(bonus.Key))
+                    totalFlatBonuses[bonus.Key] = 0;
+                totalFlatBonuses[bonus.Key] += bonus.Value;
+            }
+
+            foreach (var multiplier in equippedItem.skillMultipliers)
+            {
+                if (!totalMultipliers.ContainsKey(multiplier.Key))
+                    totalMultipliers[multiplier.Key] = 0;
+                totalMultipliers[multiplier.Key] += multiplier.Value;
             }
         }
+
         combatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
         nonCombatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
     }
-    
+
+    /// <summary>
+    /// Logs all equipment currently worn by the character.
+    /// </summary>
     public void LogEquipment()
     {
         Debug.Log($"Equipment - {name}:");
@@ -287,5 +283,4 @@ public class PlayerCharacter : Being
             Debug.Log($"Slot: {slot.Key} - Item: {itemName}");
         }
     }
-
 }
