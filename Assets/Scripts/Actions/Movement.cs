@@ -65,7 +65,7 @@ public class Movement
 
                         foreach (Vector3 corner in path.corners)
                         {
-                            while (Vector3.Distance(player.transform.position, corner) > 0.01f && player.isMoving)
+                            while (Vector3.Distance(player.transform.position, corner) > 0.01f && player.isMoving && !player.endMove && !action.endSignal)
                             {
                                 Vector3 direction = (corner - player.transform.position).normalized;
                                 if (direction != Vector3.zero)
@@ -83,7 +83,15 @@ public class Movement
 
                                 yield return null;
                             }
+                            if (player.endMove || action.endSignal)
+                            {
+                                foreach (PlayerCharacter follower in PartyManager.instance.movementGroup)
+                                {
+                                    PartyManager.instance.StopFollowerMovement(follower);
+                                }
+                            }
                         }
+
                     }
                     else
                     {
