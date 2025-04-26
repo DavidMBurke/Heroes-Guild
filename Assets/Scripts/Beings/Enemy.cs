@@ -89,7 +89,12 @@ public class Enemy : Being
 
         if (distance > attackRange)
         {
+            yield return new WaitForSeconds(0.5f);
+
             NavMeshPath path = new NavMeshPath();
+
+            Vector3 targetPosition = Movement.FindNearestUnoccupiedSpaces(this, target.transform.position, skipCenter: false, spacesToFind: 1).First();
+
             NavMesh.CalculatePath(transform.position, target.transform.position, NavMesh.AllAreas, path);
 
             foreach (Vector3 corner in path.corners)
@@ -97,22 +102,24 @@ public class Enemy : Being
                 if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
                     break;
 
-                while (Vector3.Distance(transform.position, corner) > 0.1f)
+                while (Vector3.Distance(transform.position, corner) > 0.1f && (Vector3.Distance(transform.position, target.transform.position) + 0.01f) >= attackRange)
                 {
                     Vector3 direction = (corner - transform.position).normalized;
                     Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 360 * Time.deltaTime);
                     transform.position = Vector3.MoveTowards(transform.position, corner, moveSpeed * Time.deltaTime);
-
+                    distance = Vector3.Distance(transform.position, target.transform.position);
                     yield return null;
                 }
             }
 
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.5f);
         }
 
         if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
         {
+            yield return new WaitForSeconds(0.5f);
+
             target.health -= attackDamage;
 
             yield return new WaitForSeconds(0.5f);

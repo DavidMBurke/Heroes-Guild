@@ -65,9 +65,20 @@ public class Spells
                     yield return null;
                     continue;
                 }
-                foreach (Being being in overlappingBeings)
+
+                Vector3 spellCenter = sphere.transform.position;
+                float spellRadius = sphere.transform.localScale.x / 2f;
+                int attackableLayerMask = 1 << LayerMask.NameToLayer("Attackable");
+
+                Collider[] hitColliders = Physics.OverlapSphere(spellCenter, spellRadius, attackableLayerMask, QueryTriggerInteraction.Ignore);
+
+                foreach (Collider collider in hitColliders)
                 {
-                    being.health -= 10;
+                    Being being = collider.GetComponentInParent<Being>();
+                    if (being != null)
+                    {
+                        being.health -= 10;
+                    }
                 }
                 if (caster is PlayerCharacter player)
                 {

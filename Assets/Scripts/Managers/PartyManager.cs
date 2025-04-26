@@ -20,7 +20,10 @@ public class PartyManager : MonoBehaviour
     {
         if (followerMovementCoroutines.TryGetValue(follower, out Coroutine existing))
         {
-            StopCoroutine(existing);
+            if (existing != null)
+            {
+                StopCoroutine(existing);
+            }
         }
 
         Coroutine newCoroutine = StartCoroutine(routine);

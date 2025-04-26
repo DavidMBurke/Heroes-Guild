@@ -56,10 +56,10 @@ public class Movement
                     {
                         player.rangeIndicator.gameObject.SetActive(false);
                         player.isMoving = true;
-
+                        Queue<Vector3> followerPositions = FindNearestUnoccupiedSpaces(player, targetPosition, skipCenter: true, spacesToFind: PartyManager.instance.movementGroup.Count);
                         foreach (PlayerCharacter follower in PartyManager.instance.movementGroup)
                         {
-                            Vector3 followerTarget = targetPosition + (follower.transform.position - player.transform.position).normalized * 1.5f;
+                            Vector3 followerTarget = followerPositions.Dequeue();
                             PartyManager.instance.StartFollowerMovement(follower, MoveFollower(follower, followerTarget, player.moveSpeed));
                         }
 
@@ -205,5 +205,66 @@ public class Movement
     {
         player.transform.position = player.startingPosition;
         player.rangeIndicator.gameObject.SetActive(false);
+    }
+
+    public static Queue<Vector3> FindNearestUnoccupiedSpaces(Being being, Vector3 targetPostion, bool skipCenter = false, float startRadius = 0f, float maxSearchRadius = 10f, float angleIncrement = 60f, float radiusIncrement = 1f, int spacesToFind = 1)
+    {
+        Queue<Vector3> unoccupiedSpaces = new();
+        if (spacesToFind <= 0) return unoccupiedSpaces;
+        Collider moverCollider = being.GetComponentInChildren<Collider>();
+        if (moverCollider == null) {
+            Debug.LogWarning("Mover does not have a collider!");
+            unoccupiedSpaces.Enqueue(targetPostion);
+            return unoccupiedSpaces;
+        }
+        Vector3 searchCenter = targetPostion;
+        float searchRadius = moverCollider.bounds.extents.magnitude * 1.5f;
+
+        int layerMask = 1 << LayerMask.NameToLayer("Attackable");
+
+        while (searchRadius <= maxSearchRadius && unoccupiedSpaces.Count < spacesToFind)
+        {
+            CapsuleCollider capsule = being.GetComponentInChildren<CapsuleCollider>();
+            float checkRadius = capsule != null ? capsule.radius * 1.5f : 1f;
+            if (!skipCenter && !Physics.CheckSphere(searchCenter, checkRadius, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                NavMeshPath path = new NavMeshPath();
+                if (NavMesh.CalculatePath(being.transform.position, searchCenter, NavMesh.AllAreas, path) && path.status == NavMeshPathStatus.PathComplete)
+                {
+                    unoccupiedSpaces.Enqueue(searchCenter);
+                }
+            }
+
+            for (float angle = 0; angle < 360f; angle += angleIncrement)
+            {
+
+                if (unoccupiedSpaces.Count >= spacesToFind)
+                {
+                    return unoccupiedSpaces;
+                }
+                float rad = angle * Mathf.Deg2Rad;
+                Vector3 offset = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad)) * searchRadius;
+                Vector3 testPosition = searchCenter + offset;
+
+                if (!Physics.CheckSphere(testPosition, checkRadius, layerMask, QueryTriggerInteraction.Ignore))
+                {
+                    NavMeshPath path = new NavMeshPath();
+                    if (NavMesh.CalculatePath(being.transform.position, testPosition, NavMesh.AllAreas, path) && path.status == NavMeshPathStatus.PathComplete)
+                    {
+                        unoccupiedSpaces.Enqueue(testPosition);
+                    }
+                }
+            }
+
+            searchRadius += radiusIncrement;
+        }
+
+        while (unoccupiedSpaces.Count <= spacesToFind)
+        {
+            Debug.Log($"Could not find a space for one of {being.characterName}'s followers");
+            unoccupiedSpaces.Enqueue(targetPostion);
+        }
+
+        return unoccupiedSpaces;
     }
 }
