@@ -175,7 +175,7 @@ public class ActionManager : MonoBehaviour
         }
         else if (currentBeing is Enemy enemy)
         {
-            enemy.StartTurn(this);
+            enemy.StartTurn();
         }
     }
 

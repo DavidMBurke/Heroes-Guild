@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Enemy NPC that can detect players and participate in turn-based combat.
@@ -18,6 +19,9 @@ public class Enemy : Being
     public GameObject sightSphere = null!;
     private List<Being> overlappingBeings = new List<Being>();
     private OverlapDetector detector = null!;
+
+    public float attackRange = 1.5f;
+    public int attackDamage = 10;
 
     /// <summary>
     /// Unity Start method. Initializes vision detector and base class.
@@ -43,20 +47,19 @@ public class Enemy : Being
     }
 
     /// <summary>
-    /// Starts the enemy's turn. Skips if dead, otherwise begins a coroutine for action delay.
+    /// Starts the enemy's turn. Skips if dead, otherwise moves towards the closest player and attacks.
     /// </summary>
-    /// <param name="combatManager">The action manager controlling turn order.</param>
-    public void StartTurn(ActionManager combatManager)
+    public void StartTurn()
     {
         if (!isAlive)
         {
-            combatManager.NextTurn();
+            ActionManager.instance.NextTurn();
             return;
         }
 
         isTurn = true;
         startingPosition = transform.position;
-        StartCoroutine(EnemyTurnCoroutine(combatManager));
+        StartCoroutine(EnemyTurnCoroutine());
     }
 
     /// <summary>
@@ -70,19 +73,74 @@ public class Enemy : Being
     /// <summary>
     /// Coroutine that simulates a thinking delay during the enemy's turn.
     /// </summary>
-    /// <param name="combatManager">The action manager controlling turn order.</param>
     /// <returns>Waits for the duration of enemyTurnTime before ending turn.</returns>
-    private IEnumerator EnemyTurnCoroutine(ActionManager combatManager)
+    private IEnumerator EnemyTurnCoroutine()
     {
-        float timer = 0f;
-        while (timer < enemyTurnTime)
+        PlayerCharacter target = FindNearestPlayer();
+        if (target == null)
         {
-            timer += Time.deltaTime;
-            yield return null;
+            yield return new WaitForSeconds(0.5f);
+            EndTurn();
+            ActionManager.instance.NextTurn();
+            yield break;
         }
 
-        isTurn = false;
-        combatManager.NextTurn();
+        float distance = Vector3.Distance(transform.position, target.transform.position);
+
+        if (distance > attackRange)
+        {
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(transform.position, target.transform.position, NavMesh.AllAreas, path);
+
+            foreach (Vector3 corner in path.corners)
+            {
+                if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
+                    break;
+
+                while (Vector3.Distance(transform.position, corner) > 0.1f)
+                {
+                    Vector3 direction = (corner - transform.position).normalized;
+                    Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 360 * Time.deltaTime);
+                    transform.position = Vector3.MoveTowards(transform.position, corner, moveSpeed * Time.deltaTime);
+
+                    yield return null;
+                }
+            }
+
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
+        {
+            target.health -= attackDamage;
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        ActionManager.instance.NextTurn();
+    }
+
+    /// <summary>
+    /// Returns the closest player to the enemy
+    /// </summary>
+    private PlayerCharacter FindNearestPlayer()
+    {
+        List<PlayerCharacter> players = PartyManager.instance.partyMembers.Where(p => p.isAlive).ToList();
+        PlayerCharacter closest = null!;
+        float minDistance = float.MaxValue;
+
+        foreach (var player in players)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (distance < minDistance)
+            {
+                closest = player;
+                minDistance = distance;
+            }
+        }
+
+        return closest;
     }
 
     /// <summary>

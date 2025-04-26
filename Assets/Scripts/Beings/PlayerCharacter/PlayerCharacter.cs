@@ -169,11 +169,20 @@ public class PlayerCharacter : Being
     /// <summary>
     /// Rolls new stats and generates race, class, skills, and actions.
     /// </summary>
-    public void RollNewStats()
+    /// <param name="raceNum">Race enumerator number</param>
+    public void RollNewStats(int raceNum = -1)
     {
-        int raceRoll = Random.Range(1, Race.races.Count);
-        race = Race.races[raceRoll];
-        characterName = AssignNewName(raceRoll);
+        if (raceNum < 0)
+        {
+            int raceRoll = Random.Range(1, Race.races.Count);
+            race = Race.races[raceRoll];
+            characterName = AssignNewName(raceRoll);
+        }
+        else
+        {
+            race = Race.races[raceNum];
+            characterName = AssignNewName(raceNum);
+        }
 
         int classRoll = Random.Range(0, race.rollableClasses.Count);
         int classNum = race.rollableClasses[classRoll];
