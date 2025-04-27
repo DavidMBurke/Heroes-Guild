@@ -19,9 +19,10 @@ public class Attack
     {
         bool inAttack = true;
         Vector3 scale = attacker.rangeIndicator.transform.localScale;
+        attacker.isInCharacterAction = true;
         attacker.rangeIndicatorColor = attacker.rangeIndicatorCombatColor;
 
-        while (inAttack)
+        while (inAttack && !action.endSignal)
         {
             attacker.rangeIndicator.SetActive(true);
             attacker.rangeIndicator.transform.localScale = new Vector3(range * 2, scale.y, range * 2);

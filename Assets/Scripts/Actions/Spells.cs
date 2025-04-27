@@ -49,10 +49,10 @@ public class Spells
         List<Being> overlappingBeings = new List<Being>();
         OverlapDetector detector = sphere.AddComponent<OverlapDetector>();
         detector.SetBeingList(overlappingBeings);
+        caster.isInCharacterAction = true;
 
-        while (inSpell)
+        while (inSpell && !action.endSignal)
         {
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Ground")))
             {
