@@ -389,6 +389,8 @@ MonoBehaviour:
   group: 0
   isAwareOfPlayers: 0
   sightSphere: {fileID: 1743100904304940506}
+  attackRange: 1.5
+  attackDamage: 10
 --- !u!114 &1344529433266658803
 MonoBehaviour:
   m_ObjectHideFlags: 0

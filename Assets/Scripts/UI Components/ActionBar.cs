@@ -15,6 +15,7 @@ public class ActionBar : MonoBehaviour
     private List<Button> playerActionButtons = new List<Button>();
     public ActionButtons actionButtons = null!;
     public Button buttonPrefab = null!;
+    public InteractableDisplay interactableDisplay = null!;
 
     private void Start()
     {
@@ -93,6 +94,8 @@ public class ActionBar : MonoBehaviour
         {
 
             Button newButton = Instantiate(buttonPrefab, parent: actionButtons.gameObject.transform);
+            TooltipTrigger tooltip = newButton.gameObject.AddComponent<TooltipTrigger>();
+            tooltip.tooltipText = action.actionName + " - Add description";
             newButton.GetComponentInChildren<TextMeshProUGUI>().text = action.actionName;
             CharacterAction copiedAction = new CharacterAction(action.action, action.character, action.actionName);
             newButton.onClick.AddListener(() => ActionManager.instance.ExecuteCharacterAction(copiedAction));
