@@ -52,8 +52,10 @@ public class Attack
                     continue;
                 }
 
-                // Apply damage to target
-                target.health -= damage;
+                int toHit = DiceRoller.Roll(1, 100, (int)attacker.combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel);
+                Debug.Log($"{attacker.characterName} rolled {toHit} to hit.");
+
+                bool successfulHit = target.AttemptAttackOnThisBeing(toHit, damage);
 
                 // Deduct action point and end action for player
                 if (attacker is PlayerCharacter player)

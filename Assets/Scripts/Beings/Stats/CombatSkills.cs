@@ -43,6 +43,11 @@ public class CombatSkills
         return Names.TryGetValue(skillEnum, out var name) ? name : "Unknown";
     }
 
+    public Skill GetSkill(CombatSkills.Enum skillEnum)
+    {
+        return skills[GetName(skillEnum)];
+    }
+
     public enum Enum
     {
         Dodge = 1,

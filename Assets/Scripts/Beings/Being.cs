@@ -6,14 +6,9 @@ using UnityEngine;
 /// </summary>
 public class Being : MonoBehaviour
 {
-    // =====================
-    // Info
-    // =====================
+    // ========== Info ==========
     public string characterName = null!;
 
-    // =====================
-    // Movement
-    // =====================
     public float moveDistance = 5f;
     public float moveSpeed = 5f;
     public bool isMoving = false; // To prevent mid-movement, probably will expand this to isInterruptable for any action that needs to complete
@@ -21,26 +16,35 @@ public class Being : MonoBehaviour
     protected Vector3 targetPosition;
     public Vector3 startingPosition;
 
-    // =====================
-    // Action
-    // =====================
+    // ========== Action & Movement ========== TODO work these into enemy logic
+    public int maxActionPoints = 1;
+    public int actionPoints = 0;
+    public bool hasMovement = true;
+    public bool endMove = false;
+    public bool dodgeEnabled = true;
+
+    // ========== Core Systems ==========
+    public Attributes attributes = new Attributes();
+    public Affinities affinities = new Affinities();
+    [SerializeField] public CombatSkills combatSkills = new CombatSkills();
+    [SerializeField] public NonCombatSkills nonCombatSkills = new NonCombatSkills();
+    [SerializeField] public EquipmentSlots equipmentSlots = new EquipmentSlots();
+    public List<CharacterAction> actionList = new List<CharacterAction>();
+
+    // ========== Action ==========
     public bool isTurn = false;
     public bool isInCharacterAction = false;
     public CharacterAction currentAction = null!;
     public float initiative;
     public bool isInScene = false;
 
-    // =====================
-    // Stats
-    // =====================
+    // ========== Stats ==========
     public int health = 100;
     public int maxHealth = 100;
     public bool isAlive = true;
     public int level = 1;
 
-    // =====================
-    // Model and Visuals
-    // =====================
+    // ========== Model ==========
     private Rigidbody rb = null!;
     public GameObject model = null!;
     public Color characterColor;
@@ -54,9 +58,7 @@ public class Being : MonoBehaviour
     public Color turnIndicatorColor = new Color(0, 1f, 0, .2f);
     public float interactDistance = 1.5f;
 
-    // =====================
-    // Inventory
-    // =====================
+    // ========== Inventory ==========
     public List<Item> inventory;
 
     /// <summary>
@@ -81,6 +83,13 @@ public class Being : MonoBehaviour
 
         turnIndicator.SetActive(isTurn);
         ApplyColors();
+    }
+
+    public void ModifyHealth(int changeInHealth)
+    {
+        health += changeInHealth;
+        Color textColor = changeInHealth > 0 ? Color.green : Color.red;
+        ActionManager.instance.floatingTextSpawner.ShowText($"{changeInHealth}", transform.position, textColor);
         CheckStatus();
     }
 
@@ -173,12 +182,45 @@ public class Being : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    /// <summary>
-    /// Resets the position to align with the model's transform.
-    /// </summary>
-    private void FixPosition()
+    public bool AttemptAttackOnThisBeing(int toHit, int damage)
     {
-        transform.position = model.transform.position;
-        model.transform.localPosition = Vector3.zero;
+        if (actionPoints > 0 && dodgeEnabled)
+        {
+            if (AttemptDodge(toHit))
+            {
+                return false;
+            };
+        }
+        if (AttemptBlock(toHit))
+        {
+            return false;
+        };
+        ModifyHealth(-damage);
+        return true;
+    }
+
+    public bool AttemptDodge(int toHit)
+    {
+        int toDodge = DiceRoller.Roll(1, 100, (int)combatSkills.GetSkill(CombatSkills.Enum.Dodge).modifiedLevel);
+        Debug.Log($"{characterName} rolled {toDodge} to dodge.");
+        if (toDodge >= toHit)
+        {
+            Debug.Log($"{characterName} dodged successfully.");
+            ActionManager.instance.floatingTextSpawner.ShowText("Dodged!", transform.position, Color.black);
+            return true;
+        }
+        return false;
+    }
+    public bool AttemptBlock(int toHit)
+    {
+        int toBlock = DiceRoller.Roll(1, 100, (int)combatSkills.GetSkill(CombatSkills.Enum.Block).modifiedLevel);
+        Debug.Log($"{characterName} rolled {toBlock} to block.");
+        if (toBlock >= toHit)
+        {
+            Debug.Log($"{characterName} blocked successfully.");
+            ActionManager.instance.floatingTextSpawner.ShowText("Blocked!", transform.position, Color.black);
+            return true;
+        }
+        return false;
     }
 }

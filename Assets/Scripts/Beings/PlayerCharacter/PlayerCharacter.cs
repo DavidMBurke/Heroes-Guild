@@ -15,20 +15,6 @@ public class PlayerCharacter : Being
     public int levelAttained;
     public int salary = 1;
 
-    // ========== Core Systems ==========
-    public Attributes attributes = new Attributes();
-    public Affinities affinities = new Affinities();
-    [SerializeField] public CombatSkills combatSkills = new CombatSkills();
-    [SerializeField] public NonCombatSkills nonCombatSkills = new NonCombatSkills();
-    [SerializeField] public EquipmentSlots equipmentSlots = new EquipmentSlots();
-    public List<CharacterAction> actionList = new List<CharacterAction>();
-
-    // ========== Action & Movement ==========
-    public int maxActionPoints = 1;
-    public int actionPoints = 0;
-    public bool hasMovement = true;
-    public bool endMove = false;
-
     // ========== Inventory ==========
     private List<Item> _inventory = new List<Item>();
     public new List<Item> inventory

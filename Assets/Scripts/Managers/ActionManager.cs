@@ -17,6 +17,8 @@ public class ActionManager : MonoBehaviour
     public delegate void PlayerSelected(PlayerCharacter newPlayer);
     public event PlayerSelected OnPlayerSelected = null!;
 
+    public FloatingTextSpawner floatingTextSpawner;
+
     public enum ActionModes
     {
         TurnBased,

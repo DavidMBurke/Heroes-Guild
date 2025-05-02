@@ -77,7 +77,7 @@ public class Spells
                     Being being = collider.GetComponentInParent<Being>();
                     if (being != null)
                     {
-                        being.health -= 10;
+                        being.ModifyHealth(-10);
                     }
                 }
                 if (caster is PlayerCharacter player)

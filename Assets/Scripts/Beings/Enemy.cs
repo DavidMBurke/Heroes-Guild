@@ -120,7 +120,7 @@ public class Enemy : Being
         {
             yield return new WaitForSeconds(0.5f);
 
-            target.health -= attackDamage;
+            target.ModifyHealth(-10);
 
             yield return new WaitForSeconds(0.5f);
         }
