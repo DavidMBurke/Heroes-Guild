@@ -362,11 +362,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Enemy 1
-  moveDistance: 5
+  moveDistance: 15
   moveSpeed: 5
   isMoving: 0
   isInMovementAction: 0
   startingPosition: {x: 0, y: 0, z: 0}
+  maxActionPoints: 1
+  actionPoints: 0
+  hasMovement: 1
+  endMove: 0
+  dodgeEnabled: 1
   isTurn: 0
   isInCharacterAction: 0
   initiative: 0

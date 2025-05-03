@@ -68,6 +68,7 @@ public class LevelManager : MonoBehaviour
             }
 
             playerCharacter.RollNewStats(raceNum: i%3+1);
+            playerCharacter.name = playerCharacter.characterName;
             playerCharacter.isInScene = true;
             partyManager.partyMembers[i] = playerCharacter;
         }

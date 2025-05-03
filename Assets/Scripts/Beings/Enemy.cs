@@ -9,9 +9,6 @@ using UnityEngine.AI;
 /// </summary>
 public class Enemy : Being
 {
-    // =====================
-    // Enemy-Specific Fields
-    // =====================
     public float enemyTurnTime = 3f;
     public int group;
     public bool isAwareOfPlayers = false;
@@ -59,7 +56,10 @@ public class Enemy : Being
 
         isTurn = true;
         startingPosition = transform.position;
-        StartCoroutine(EnemyTurnCoroutine());
+        actionPoints = maxActionPoints;
+
+        CharacterAction enemyAction = new CharacterAction((being, action) => EnemyTurnRoutine(this, action), this, "Enemy Turn");
+        StartCharacterAction(enemyAction);
     }
 
     /// <summary>
@@ -74,57 +74,42 @@ public class Enemy : Being
     /// Coroutine that simulates a thinking delay during the enemy's turn.
     /// </summary>
     /// <returns>Waits for the duration of enemyTurnTime before ending turn.</returns>
-    private IEnumerator EnemyTurnCoroutine()
+    private IEnumerator EnemyTurnRoutine(Enemy enemy, CharacterAction action)
     {
+        yield return new WaitForSeconds(0.5f);
+
         PlayerCharacter target = FindNearestPlayer();
+
         if (target == null)
         {
             yield return new WaitForSeconds(0.5f);
-            EndTurn();
             ActionManager.instance.NextTurn();
             yield break;
         }
 
         float distance = Vector3.Distance(transform.position, target.transform.position);
-
         if (distance > attackRange)
         {
             yield return new WaitForSeconds(0.5f);
 
             NavMeshPath path = new NavMeshPath();
 
-            Vector3 targetPosition = Movement.FindNearestUnoccupiedSpaces(this, target.transform.position, skipCenter: false, spacesToFind: 1).First();
+            Vector3 targetPosition = Movement.FindNearestUnoccupiedSpaces(enemy, target.transform.position, skipCenter: false, spacesToFind: 1).First();
+            enemy.startingPosition = enemy.transform.position;
 
-            NavMesh.CalculatePath(transform.position, target.transform.position, NavMesh.AllAreas, path);
-
-            foreach (Vector3 corner in path.corners)
-            {
-                if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
-                    break;
-
-                while (Vector3.Distance(transform.position, corner) > 0.1f && (Vector3.Distance(transform.position, target.transform.position) + 0.01f) >= attackRange)
-                {
-                    Vector3 direction = (corner - transform.position).normalized;
-                    Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 360 * Time.deltaTime);
-                    transform.position = Vector3.MoveTowards(transform.position, corner, moveSpeed * Time.deltaTime);
-                    distance = Vector3.Distance(transform.position, target.transform.position);
-                    yield return null;
-                }
-            }
-
-            yield return new WaitForSeconds(0.5f);
+            CharacterAction moveAction = new CharacterAction((being, act) => Movement.MoveToTarget(enemy, targetPosition, enemy.moveSpeed, act), enemy, "Enemy Move");
+            yield return enemy.StartCoroutine(moveAction.action(enemy, moveAction));
         }
 
-        if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
+        distance = Vector3.Distance(enemy.transform.position, target.transform.position);
+        if (distance <= attackRange)
         {
-            yield return new WaitForSeconds(0.5f);
-
-            target.ModifyHealth(-10);
-
-            yield return new WaitForSeconds(0.5f);
+            CharacterAction attackAction = new CharacterAction((being, act) => Attack.BasicAutoAttack(enemy, target, attackRange, attackDamage, act), enemy, "Enemy Attack");
+            yield return enemy.StartCoroutine(attackAction.action(enemy, attackAction));
         }
 
+        EndCharacterAction();
+        EndTurn();
         ActionManager.instance.NextTurn();
     }
 

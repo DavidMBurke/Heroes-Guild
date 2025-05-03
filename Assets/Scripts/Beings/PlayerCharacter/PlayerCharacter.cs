@@ -72,26 +72,6 @@ public class PlayerCharacter : Being
         if (isInCharacterAction) EndCharacterAction();
     }
 
-    /// <summary>
-    /// Begins a coroutine-based character action.
-    /// </summary>
-    public void StartCharacterAction(CharacterAction action)
-    {
-        if (isInCharacterAction) EndCharacterAction();
-        action.endSignal = false;
-        currentAction = action;
-        StartCoroutine(action.action(action.character, action));
-    }
-
-    /// <summary>
-    /// Ends the currently executing action.
-    /// </summary>
-    public void EndCharacterAction()
-    {
-        isInCharacterAction = false;
-        currentAction.EndAction();
-    }
-
     // ========== Inventory Management ==========
 
     /// <summary>

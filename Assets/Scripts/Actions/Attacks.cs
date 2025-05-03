@@ -57,11 +57,9 @@ public class Attack
 
                 bool successfulHit = target.AttemptAttackOnThisBeing(toHit, damage);
 
-                // Deduct action point and end action for player
                 if (attacker is PlayerCharacter player)
                 {
                     player.actionPoints -= 1;
-                    player.EndCharacterAction();
                     break;
                 }
             }
@@ -75,5 +73,33 @@ public class Attack
         }
 
         attacker.rangeIndicator.SetActive(false);
+    }
+
+    public static IEnumerator BasicAutoAttack(Being attacker, Being target, float range, int damage, CharacterAction action)
+    {
+        attacker.isInCharacterAction = true;
+
+        if (target == null || !target.isAlive)
+        {
+            Debug.LogWarning("Target is null or dead");
+            yield break;
+        }
+
+        float distanceToTarget = Vector3.Distance(attacker.transform.position, target.transform.position);
+        if (distanceToTarget > range)
+        {
+            Debug.Log($"{attacker.characterName} is out of range for attack ");
+            yield break;
+        }
+
+        int toHit = DiceRoller.Roll(1, 100, (int)attacker.combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel);
+        Debug.Log($"{attacker.characterName} auto-attacks {target.characterName} with roll {toHit}");
+
+        bool hitSuccess = target.AttemptAttackOnThisBeing(toHit, damage);
+
+        yield return new WaitForSeconds(0.5f);
+
+        attacker.actionPoints -= 1;
+        
     }
 }

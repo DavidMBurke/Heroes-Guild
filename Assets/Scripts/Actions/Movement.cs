@@ -267,4 +267,63 @@ public class Movement
 
         return unoccupiedSpaces;
     }
+
+    /// <summary>
+    /// Automatic movement for non player characters
+    /// </summary>
+    /// <param name="being"></param>
+    /// <param name="destination"></param>
+    /// <param name="speed"></param>
+    /// <param name="action"></param>
+    /// <returns></returns>
+    public static IEnumerator MoveToTarget(Being being, Vector3 destination, float speed, CharacterAction action)
+    {
+        NavMeshPath path = new();
+        if (!NavMesh.CalculatePath(being.transform.position, destination, NavMesh.AllAreas, path))
+        {
+            Debug.LogWarning("Enemy Path Invalid");
+            yield break;
+        }
+
+        being.isMoving = true;
+        float remainingDistance = being.moveDistance;
+        Vector3 currentPos = being.transform.position;
+
+        foreach (Vector3 corner in path.corners)
+        {
+            while (Vector3.Distance(being.transform.position, corner) > 0.01f && !action.endSignal)
+            {
+                float step = speed * Time.deltaTime;
+
+                float moveDistanceThisFrame = Mathf.Min(step, Vector3.Distance(being.transform.position, corner));
+                if (moveDistanceThisFrame > remainingDistance)
+                {
+                    Vector3 direction = (corner - being.transform.position).normalized;
+                    being.transform.position += direction * remainingDistance;
+
+                    being.isMoving = false;
+                    yield break;
+                }
+
+                remainingDistance -= moveDistanceThisFrame;
+
+                Vector3 directionStep = (corner - being.transform.position).normalized;
+                if (directionStep != Vector3.zero)
+                {
+                    Quaternion toRotation = Quaternion.LookRotation(directionStep, Vector3.up);
+                    being.transform.rotation = Quaternion.RotateTowards(being.transform.rotation, toRotation, 360 * Time.deltaTime);
+                }
+
+                being.transform.position = Vector3.MoveTowards(being.transform.position, corner, step);
+                yield return null;
+            }
+
+            if (remainingDistance <= 0 || action.endSignal)
+            {
+                break;
+            }
+        }
+
+        being.isMoving = false;
+    }
 }

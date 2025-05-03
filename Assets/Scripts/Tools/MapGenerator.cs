@@ -609,6 +609,8 @@ public class MapGenerator : MonoBehaviour
                 if (being is Enemy enemy)
                 {
                     enemy.group = group;
+                    enemy.characterName = $"enemy {i}-{j}";
+                    enemy.name = enemy.characterName;
                     LevelManager.instance.enemies.Add(enemy);
                 }
                 beings.Add(being);
