@@ -15,10 +15,11 @@ public class Being : MonoBehaviour
     public bool isInMovementAction = false; // For button logic
     protected Vector3 targetPosition;
     public Vector3 startingPosition;
-
-    // ========== Action & Movement ========== TODO work these into enemy logic
     public int maxActionPoints = 1;
     public int actionPoints = 0;
+    public bool hasDashed = false;
+
+    // ========== Action & Movement ========== TODO work these into enemy logic
     public bool hasMovement = true;
     public bool endMove = false;
     public bool dodgeEnabled = true;
@@ -242,5 +243,16 @@ public class Being : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void Dash()
+    {
+        if (actionPoints < 1)
+        {
+            return;
+        }
+        actionPoints -= 1;
+        hasMovement = true;
+        hasDashed = true;
     }
 }

@@ -300,7 +300,6 @@ public class Movement
                 {
                     Vector3 direction = (corner - being.transform.position).normalized;
                     being.transform.position += direction * remainingDistance;
-
                     being.isMoving = false;
                     yield break;
                 }
@@ -320,10 +319,15 @@ public class Movement
 
             if (remainingDistance <= 0 || action.endSignal)
             {
+                being.hasMovement = false;
+                being.isMoving = false;
                 break;
             }
         }
 
+        being.hasMovement = false;
         being.isMoving = false;
     }
+
+    
 }

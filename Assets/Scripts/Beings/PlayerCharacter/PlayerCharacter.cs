@@ -69,6 +69,7 @@ public class PlayerCharacter : Being
         endMove = true;
         isTurn = false;
         hasMovement = false;
+        hasDashed = false;
         if (isInCharacterAction) EndCharacterAction();
     }
 

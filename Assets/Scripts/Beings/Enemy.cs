@@ -68,6 +68,7 @@ public class Enemy : Being
     public void EndTurn()
     {
         isTurn = false;
+        hasDashed = false;
     }
 
     /// <summary>
@@ -88,7 +89,8 @@ public class Enemy : Being
         }
 
         float distance = Vector3.Distance(transform.position, target.transform.position);
-        if (distance > attackRange)
+
+        while (distance > attackRange && hasMovement)
         {
             yield return new WaitForSeconds(0.5f);
 
@@ -96,13 +98,19 @@ public class Enemy : Being
 
             Vector3 targetPosition = Movement.FindNearestUnoccupiedSpaces(enemy, target.transform.position, skipCenter: false, spacesToFind: 1).First();
             enemy.startingPosition = enemy.transform.position;
-
             CharacterAction moveAction = new CharacterAction((being, act) => Movement.MoveToTarget(enemy, targetPosition, enemy.moveSpeed, act), enemy, "Enemy Move");
             yield return enemy.StartCoroutine(moveAction.action(enemy, moveAction));
+            distance = Vector3.Distance(enemy.transform.position, target.transform.position);
+            hasMovement = false;
+            if (distance > attackRange && actionPoints >= 1 && !hasDashed)
+            {
+                ActionManager.instance.floatingTextSpawner.ShowText("Dash!", enemy.transform.position, Color.blue);
+                Dash();
+            }
         }
+        
 
-        distance = Vector3.Distance(enemy.transform.position, target.transform.position);
-        if (distance <= attackRange)
+        if (distance <= attackRange && actionPoints >= 1)
         {
             CharacterAction attackAction = new CharacterAction((being, act) => Attack.BasicAutoAttack(enemy, target, attackRange, attackDamage, act), enemy, "Enemy Attack");
             yield return enemy.StartCoroutine(attackAction.action(enemy, attackAction));
