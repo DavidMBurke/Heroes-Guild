@@ -57,6 +57,8 @@ public class Enemy : Being
         isTurn = true;
         startingPosition = transform.position;
         actionPoints = maxActionPoints;
+        hasMovement = true;
+        hasDashed = false;
 
         CharacterAction enemyAction = new CharacterAction((being, action) => EnemyTurnRoutine(this, action), this, "Enemy Turn");
         StartCharacterAction(enemyAction);
@@ -98,7 +100,7 @@ public class Enemy : Being
 
             Vector3 targetPosition = Movement.FindNearestUnoccupiedSpaces(enemy, target.transform.position, skipCenter: false, spacesToFind: 1).First();
             enemy.startingPosition = enemy.transform.position;
-            CharacterAction moveAction = new CharacterAction((being, act) => Movement.MoveToTarget(enemy, targetPosition, enemy.moveSpeed, act), enemy, "Enemy Move");
+            CharacterAction moveAction = new CharacterAction((being, act) => Movement.MoveToTarget(enemy, target, attackRange, act), enemy, "Enemy Move");
             yield return enemy.StartCoroutine(moveAction.action(enemy, moveAction));
             distance = Vector3.Distance(enemy.transform.position, target.transform.position);
             hasMovement = false;
@@ -116,6 +118,7 @@ public class Enemy : Being
             yield return enemy.StartCoroutine(attackAction.action(enemy, attackAction));
         }
 
+        yield return new WaitForSeconds(.5f);
         EndCharacterAction();
         EndTurn();
         ActionManager.instance.NextTurn();

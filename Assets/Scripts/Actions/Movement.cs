@@ -276,10 +276,11 @@ public class Movement
     /// <param name="speed"></param>
     /// <param name="action"></param>
     /// <returns></returns>
-    public static IEnumerator MoveToTarget(Being being, Vector3 destination, float speed, CharacterAction action)
+    public static IEnumerator MoveToTarget(Being being, Being target, float attackRange, CharacterAction action)
     {
         NavMeshPath path = new();
-        if (!NavMesh.CalculatePath(being.transform.position, destination, NavMesh.AllAreas, path))
+        Vector3 targetPosition = FindNearestUnoccupiedSpaces(being, target.transform.position, skipCenter: true, angleIncrement: 30, radiusIncrement: .5f).Dequeue();
+        if (!NavMesh.CalculatePath(being.transform.position, targetPosition, NavMesh.AllAreas, path))
         {
             Debug.LogWarning("Enemy Path Invalid");
             yield break;
@@ -287,13 +288,13 @@ public class Movement
 
         being.isMoving = true;
         float remainingDistance = being.moveDistance;
-        Vector3 currentPos = being.transform.position;
+        float distanceToTarget = Mathf.Infinity;
 
         foreach (Vector3 corner in path.corners)
         {
-            while (Vector3.Distance(being.transform.position, corner) > 0.01f && !action.endSignal)
+            while (Vector3.Distance(being.transform.position, corner) > 0.01f && !action.endSignal && distanceToTarget > attackRange * .9)
             {
-                float step = speed * Time.deltaTime;
+                float step = being.moveSpeed * Time.deltaTime;
 
                 float moveDistanceThisFrame = Mathf.Min(step, Vector3.Distance(being.transform.position, corner));
                 if (moveDistanceThisFrame > remainingDistance)
@@ -314,6 +315,7 @@ public class Movement
                 }
 
                 being.transform.position = Vector3.MoveTowards(being.transform.position, corner, step);
+                distanceToTarget = Vector3.Distance(being.transform.position, target.transform.position);
                 yield return null;
             }
 
