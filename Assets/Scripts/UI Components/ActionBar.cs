@@ -12,6 +12,7 @@ public class ActionBar : MonoBehaviour
     public Button endTurnButton = null!;
     public Button moveButton = null!;
     public Button endMoveButton = null!;
+    public Button dashButton = null!;
     private List<Button> playerActionButtons = new List<Button>();
     public ActionButtons actionButtons = null!;
     public Button buttonPrefab = null!;
@@ -65,6 +66,10 @@ public class ActionBar : MonoBehaviour
             if (!player.hasMovement && ActionManager.instance.IsTurnBasedMode())
             {
                 moveButton.gameObject.SetActive(false);
+                if (!player.hasDashed)
+                {
+                    dashButton.gameObject.SetActive(true);
+                }
             }
             if (player.actionPoints == 0 && ActionManager.instance.IsTurnBasedMode())
             {
@@ -95,12 +100,16 @@ public class ActionBar : MonoBehaviour
 
             Button newButton = Instantiate(buttonPrefab, parent: actionButtons.gameObject.transform);
             TooltipTrigger tooltip = newButton.gameObject.AddComponent<TooltipTrigger>();
-            tooltip.tooltipText = action.actionName + " - Add description";
-            newButton.GetComponentInChildren<TextMeshProUGUI>().text = action.actionName;
+            tooltip.tooltipText = string.IsNullOrEmpty(action.description)
+                ? action.actionName
+                : $"{action.actionName}\n{action.description}"; newButton.GetComponentInChildren<TextMeshProUGUI>().text = action.actionName;
             CharacterAction copiedAction = new CharacterAction(action.action, action.character, action.actionName);
             newButton.onClick.AddListener(() => ActionManager.instance.ExecuteCharacterAction(copiedAction));
             playerActionButtons.Add(newButton);
+            dashButton.onClick.RemoveAllListeners();
         }
+
+        dashButton.onClick.AddListener(() => player.Dash());
     }
 
     private void ClearActionButtons()
@@ -118,11 +127,14 @@ public class ActionBar : MonoBehaviour
     /// <param name="endTurn"></param>
     /// <param name="move"></param>
     /// <param name="endMove"></param>
-    void SetButtonsActive(bool endTurn = false, bool move = false, bool endMove = false, bool playerActions = false)
+    /// <param name="dash"></param>
+    /// <param name="playerActions"></param>
+    void SetButtonsActive(bool endTurn = false, bool move = false, bool endMove = false, bool dash = false, bool playerActions = false)
     {
         endTurnButton.gameObject.SetActive(endTurn);
         moveButton.gameObject.SetActive(move);
         endMoveButton.gameObject.SetActive(endMove);
+        dashButton.gameObject.SetActive(dash);
         foreach (Button button in playerActionButtons)
         {
             button.gameObject.SetActive(playerActions);

@@ -15,7 +15,7 @@ public class Attack
     /// <param name="damage">The amount of health the attack removes from the target.</param>
     /// <param name="action">The action context for coroutine management.</param>
     /// <returns>An IEnumerator coroutine used for execution in Unity.</returns>
-    public static IEnumerator BasicAttack(Being attacker, float range, int damage, CharacterAction action)
+    public static IEnumerator BasicAttack(Being attacker, float range, CombatSkills.Enum toHitSkill, Attributes.Enum damageAttribute, CharacterAction action)
     {
         bool inAttack = true;
         Vector3 scale = attacker.rangeIndicator.transform.localScale;
@@ -51,11 +51,11 @@ public class Attack
                     yield return null;
                     continue;
                 }
+                DiceRoll toHitDice = DiceRoll.StandardRoll((int)attacker.combatSkills.GetSkill(toHitSkill).modifiedLevel);
+                DiceRoll damageDice = new(1, 10, (int)attacker.attributes.GetAttribute(damageAttribute).modifiedLevel);
+                Debug.Log($"{attacker.characterName} rolled {toHitDice.GetResult()} ({toHitDice.GetResultText()}) to hit.");
 
-                int toHit = DiceRoller.Roll(1, 100, (int)attacker.combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel);
-                Debug.Log($"{attacker.characterName} rolled {toHit} to hit.");
-
-                bool successfulHit = target.AttemptAttackOnThisBeing(toHit, damage);
+                bool successfulHit = target.AttemptAttackOnThisBeing(toHitDice, damageDice);
 
                 if (attacker is PlayerCharacter player)
                 {
@@ -75,7 +75,7 @@ public class Attack
         attacker.rangeIndicator.SetActive(false);
     }
 
-    public static IEnumerator BasicAutoAttack(Being attacker, Being target, float range, int damage, CharacterAction action)
+    public static IEnumerator BasicAutoAttack(Being attacker, Being target, float range)
     {
         attacker.isInCharacterAction = true;
 
@@ -92,10 +92,11 @@ public class Attack
             yield break;
         }
 
-        int toHit = DiceRoller.Roll(1, 100, (int)attacker.combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel);
-        Debug.Log($"{attacker.characterName} auto-attacks {target.characterName} with roll {toHit}");
+        DiceRoll toHitDice = DiceRoll.StandardRoll((int)attacker.combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel);
+        DiceRoll damageDice = new(1, 10, (int)attacker.attributes.GetAttribute(Attributes.Enum.Strength).modifiedLevel);
+        Debug.Log($"{attacker.characterName} auto-attacks {target.characterName} with roll {toHitDice.GetResult()}({toHitDice.GetResultText()})");
 
-        bool hitSuccess = target.AttemptAttackOnThisBeing(toHit, damage);
+        bool hitSuccess = target.AttemptAttackOnThisBeing(toHitDice, damageDice);
 
         yield return new WaitForSeconds(0.5f);
 

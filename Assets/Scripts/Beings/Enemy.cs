@@ -114,7 +114,7 @@ public class Enemy : Being
 
         if (distance <= attackRange && actionPoints >= 1)
         {
-            CharacterAction attackAction = new CharacterAction((being, act) => Attack.BasicAutoAttack(enemy, target, attackRange, attackDamage, act), enemy, "Enemy Attack");
+            CharacterAction attackAction = new CharacterAction((being, act) => Attack.BasicAutoAttack(enemy, target, attackRange), enemy, "Enemy Attack");
             yield return enemy.StartCoroutine(attackAction.action(enemy, attackAction));
         }
 

@@ -166,16 +166,28 @@ public class PlayerCharacter : Being
         // TEMPORARY: Action setup (should move to class logic later)
         if (classNum == (int)Class.Enum.Paladin)
         {
-            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 2, 10, act), this, "Melee Attack"));
+            int range = 2;
+            string description = $"Attack target within {range} units for 1d10 + {(int)attributes.GetAttribute(Attributes.Enum.Strength).modifiedLevel} (Strength)." +
+                $"\n +{(int)combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel} (Melee) to hit";
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, range, CombatSkills.Enum.Melee, Attributes.Enum.Strength, act), this, "Melee Attack", description));
         }
         if (classNum == (int)Class.Enum.Rogue)
         {
-            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 2, 10, act), this, "Melee Attack"));
-            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, 15, 10, act), this, "Ranged Attack"));
+            int range1 = 2;
+            string description1 = $"Attack target within {range1} units for 1d10 + {(int)attributes.GetAttribute(Attributes.Enum.Strength).modifiedLevel} (Strength)" +
+                $"\n +{(int)combatSkills.GetSkill(CombatSkills.Enum.Melee).modifiedLevel} (Melee) to hit";
+            int range2 = 10;
+            string description2 = $"Attack target within {range2} units for 1d10 + {(int)attributes.GetAttribute(Attributes.Enum.Agility).modifiedLevel} (Agility)" +
+                $"\n +{(int)combatSkills.GetSkill(CombatSkills.Enum.Ranged).modifiedLevel} (Ranged) to hit";
+
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, range1, CombatSkills.Enum.Melee, Attributes.Enum.Strength, act), this, "Melee Attack", description1));
+            actionList.Add(new CharacterAction((a, act) => Attack.BasicAttack(a, range2, CombatSkills.Enum.Ranged, Attributes.Enum.Agility, act), this, "Ranged Attack", description2));
         }
         if (classNum == (int)Class.Enum.Wizard)
         {
-            actionList.Add(new CharacterAction((a, act) => Spells.FireBall(a, act), this, "Fireball"));
+            string description = $"Attack all beings in a radius for 1d10 + {(int)attributes.GetAttribute(Attributes.Enum.Agility).modifiedLevel} (Agility) damage." +
+                $"\n +{(int)combatSkills.GetSkill(CombatSkills.Enum.Evocation).modifiedLevel} (Evocation) to hit vs Fortitude Save for 1/2 damage.";
+            actionList.Add(new CharacterAction((a, act) => Spells.FireBall(a, act), this, "Fireball", description));
         }
 
         ApplyEquipmentSkillModifiers();
@@ -245,6 +257,7 @@ public class PlayerCharacter : Being
 
         combatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
         nonCombatSkills.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
+        attributes.ApplyEquipmentBonuses(totalFlatBonuses, totalMultipliers);
     }
 
     /// <summary>

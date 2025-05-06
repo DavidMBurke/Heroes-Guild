@@ -51,6 +51,10 @@ public class Spells
         detector.SetBeingList(overlappingBeings);
         caster.isInCharacterAction = true;
 
+        DiceRoll toHitDice = DiceRoll.StandardRoll((int)caster.combatSkills.GetSkill(CombatSkills.Enum.Evocation).modifiedLevel);
+
+        DiceRoll damageDice = new(5, 6, (int)caster.attributes.GetAttribute(Attributes.Enum.Intelligence).modifiedLevel);
+
         while (inSpell && !action.endSignal)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -77,7 +81,14 @@ public class Spells
                     Being being = collider.GetComponentInParent<Being>();
                     if (being != null)
                     {
-                        being.ModifyHealth(-10);
+                        DiceRoll toSaveDice = DiceRoll.StandardRoll((int)being.attributes.GetAttribute(Attributes.Enum.Fortitude).modifiedLevel);
+                        if (toSaveDice.GetResult() < toHitDice.GetResult())
+                        {
+                            being.ModifyHealth(-damageDice.GetResult());
+                        } else
+                        {
+                            being.ModifyHealth(-damageDice.GetResult() / 2);
+                        }
                     }
                 }
                 if (caster is PlayerCharacter player)

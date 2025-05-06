@@ -181,7 +181,6 @@ public class Being : MonoBehaviour
         if (!isInScene) return;
 
         FixVertical();
-        //FixPosition(); // Optional: Re-enable if needed for fixing Y-axis offset
     }
 
     /// <summary>
@@ -203,28 +202,30 @@ public class Being : MonoBehaviour
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    public bool AttemptAttackOnThisBeing(int toHit, int damage)
+
+
+    public bool AttemptAttackOnThisBeing(DiceRoll toHitDice, DiceRoll damageDice)
     {
         if (actionPoints > 0 && dodgeEnabled)
         {
-            if (AttemptDodge(toHit))
+            if (AttemptDodge(toHitDice))
             {
                 return false;
             };
         }
-        if (AttemptBlock(toHit))
+        if (AttemptBlock(toHitDice))
         {
             return false;
         };
-        ModifyHealth(-damage);
+        ModifyHealth(-damageDice.GetResult());
         return true;
     }
 
-    public bool AttemptDodge(int toHit)
+    public bool AttemptDodge(DiceRoll toHitDice)
     {
-        int toDodge = DiceRoller.Roll(1, 100, (int)combatSkills.GetSkill(CombatSkills.Enum.Dodge).modifiedLevel);
-        Debug.Log($"{characterName} rolled {toDodge} to dodge.");
-        if (toDodge >= toHit)
+        DiceRoll toDodgeRoll = DiceRoll.StandardRoll((int)combatSkills.GetSkill(CombatSkills.Enum.Dodge).modifiedLevel);
+        Debug.Log($"{characterName} rolled {toDodgeRoll.GetResult()} ({toDodgeRoll.GetResultText()}) to dodge.");
+        if (toDodgeRoll.GetResult() >= toHitDice.GetResult())
         {
             Debug.Log($"{characterName} dodged successfully.");
             ActionManager.instance.floatingTextSpawner.ShowText("Dodged!", transform.position, Color.black);
@@ -232,11 +233,11 @@ public class Being : MonoBehaviour
         }
         return false;
     }
-    public bool AttemptBlock(int toHit)
+    public bool AttemptBlock(DiceRoll toHitDice)
     {
-        int toBlock = DiceRoller.Roll(1, 100, (int)combatSkills.GetSkill(CombatSkills.Enum.Block).modifiedLevel);
-        Debug.Log($"{characterName} rolled {toBlock} to block.");
-        if (toBlock >= toHit)
+        DiceRoll toBlockDice = DiceRoll.StandardRoll((int)combatSkills.GetSkill(CombatSkills.Enum.Block).modifiedLevel);
+        Debug.Log($"{characterName} rolled {toBlockDice.GetResult()} ({toBlockDice.GetResultText()}) to block.");
+        if (toBlockDice.GetResult() >= toHitDice.GetResult())
         {
             Debug.Log($"{characterName} blocked successfully.");
             ActionManager.instance.floatingTextSpawner.ShowText("Blocked!", transform.position, Color.black);

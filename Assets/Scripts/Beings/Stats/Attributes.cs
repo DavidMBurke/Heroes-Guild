@@ -26,9 +26,25 @@ public class Attributes
         return rolledAttributes;
     }
 
+    public Attribute GetAttribute(Enum attributeEnum)
+    {
+        return attributes[GetName(attributeEnum)];
+    }
+
     public static string GetName(Enum attributeEnum)
     {
         return Names.TryGetValue(attributeEnum, out var name) ? name : "Unknown";
+    }
+
+    public void ApplyEquipmentBonuses(Dictionary<string, float> flatBonuses, Dictionary<string, float> multipliers)
+    {
+        foreach (var attribute in attributes)
+        {
+            float flatBonus = flatBonuses.ContainsKey(attribute.Key) ? flatBonuses[attribute.Key] : 0f;
+            float multiplier = multipliers.ContainsKey(attribute.Key) ? multipliers[attribute.Key] + 1f : 1f;
+
+            attribute.Value.ApplyModifiers(flatBonus, multiplier);
+        }
     }
 
     public enum Enum
@@ -40,7 +56,6 @@ public class Attributes
         Will = 5,
         Fortitude = 6
     }
-
 
     private static readonly Dictionary<Enum, string> Names = new Dictionary<Enum, string>
     {
